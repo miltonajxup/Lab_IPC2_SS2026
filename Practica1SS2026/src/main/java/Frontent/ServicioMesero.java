@@ -4,9 +4,7 @@
  */
 package Frontent;
 
-import Modelos.Mesa.Mesa;
 import java.awt.GridLayout;
-import java.util.List;
 
 /**
  *
@@ -14,12 +12,8 @@ import java.util.List;
  */
 public class ServicioMesero extends javax.swing.JInternalFrame {
     
-    private final List<Mesa> mesas;
-    
-    public ServicioMesero(List<Mesa> mesas) {
+    public ServicioMesero() {
         initComponents();
-        this.mesas = mesas;
-        agregarMesas();
     }
 
     /**
@@ -38,7 +32,7 @@ public class ServicioMesero extends javax.swing.JInternalFrame {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 808, Short.MAX_VALUE)
+            .addGap(0, 999, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -51,17 +45,17 @@ public class ServicioMesero extends javax.swing.JInternalFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(151, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 810, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(147, 147, 147))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(57, 57, 57)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1001, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(50, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(103, Short.MAX_VALUE)
+                .addContainerGap(101, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 457, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(54, 54, 54))
+                .addGap(56, 56, 56))
         );
 
         pack();
@@ -73,12 +67,20 @@ public class ServicioMesero extends javax.swing.JInternalFrame {
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
     
-    private void agregarMesas() {
-        jPanel1.setLayout(new GridLayout(mesas.size()/2, 2));
-        for (int i = 0; i < mesas.size(); i++) {
-            PlantillaMesa plantillaMesa = new PlantillaMesa();
-            jPanel1.add(plantillaMesa);
-        }
+    public void setCuadricula(int filas) {
+        jPanel1.setLayout(new GridLayout(filas, 2, 5, 5));
+    }
+    
+    public void agregarMesa(PlantillaMesa plantillaMesa) {
+        jPanel1.add(plantillaMesa);
+    }
+    
+    public void limpiar() {
+        jPanel1.removeAll();
+    }
+    
+    public void mostrar(boolean mostrar) {
+        this.setVisible(mostrar);
     }
     
 }

@@ -4,8 +4,7 @@
  */
 package Frontent;
 
-import Modelos.Mesa.Mesa;
-import java.util.List;
+import Backend.Mesero.ControladorMesero;
 
 /**
  *
@@ -13,24 +12,32 @@ import java.util.List;
  */
 public class JavaBeansCafe extends javax.swing.JFrame {
     
-    private List<String> empleados;
-    private final Menu menu;
-    private final ServicioMesero servicioMesero;
-    private final SubMenu subMenu;
+    private final MenuProducto menu;
+    private ServicioMesero servicioMesero;
+    private ControladorMesero controladorMesero;
+    private SubMenuMeseros subMenu;
     
-    public JavaBeansCafe(List<String> empleados, List<Mesa> mesas) {
+    public JavaBeansCafe(MenuProducto menuProductos) {
         initComponents();
-        this.empleados = empleados;
-        this.menu = new Menu();
+        this.menu = menuProductos;
         jDesktopPane1.add(menu);
-        this.servicioMesero = new ServicioMesero(mesas);
-        jDesktopPane1.add(servicioMesero);
-        this.subMenu = new SubMenu();
-        jDesktopPane1.add(subMenu);
         ocultarSubMenus();
-        
     }
 
+    public void setServicioMesero(ServicioMesero servicioMesero) {
+        this.servicioMesero = servicioMesero;
+        jDesktopPane1.add(servicioMesero);
+    }
+    
+    public void setSubMenu(SubMenuMeseros subMenu) {
+        this.subMenu = subMenu;
+        jDesktopPane1.add(subMenu);
+    }
+    
+    public void setControladorMesero(ControladorMesero controladorMesero) {
+        this.controladorMesero = controladorMesero;
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -42,14 +49,14 @@ public class JavaBeansCafe extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        botonMenu = new javax.swing.JButton();
+        botonServicioMesero = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         jDesktopPane1 = new javax.swing.JDesktopPane();
         subMenuMesero = new javax.swing.JPanel();
         jButton6 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
+        botonSubMenuMeseros = new javax.swing.JButton();
         subMenuAdministrador = new javax.swing.JPanel();
         jButton7 = new javax.swing.JButton();
 
@@ -58,13 +65,13 @@ public class JavaBeansCafe extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Liberation Sans", 0, 30)); // NOI18N
         jLabel1.setText("JavaBeans Cafe");
 
-        jButton1.setFont(new java.awt.Font("Liberation Sans", 0, 24)); // NOI18N
-        jButton1.setText("Menu");
-        jButton1.addActionListener(this::jButton1ActionPerformed);
+        botonMenu.setFont(new java.awt.Font("Liberation Sans", 0, 24)); // NOI18N
+        botonMenu.setText("Menu");
+        botonMenu.addActionListener(this::botonMenuActionPerformed);
 
-        jButton2.setFont(new java.awt.Font("Liberation Sans", 0, 24)); // NOI18N
-        jButton2.setText("Servicio de Mesero");
-        jButton2.addActionListener(this::jButton2ActionPerformed);
+        botonServicioMesero.setFont(new java.awt.Font("Liberation Sans", 0, 24)); // NOI18N
+        botonServicioMesero.setText("Servicio de Mesero");
+        botonServicioMesero.addActionListener(this::botonServicioMeseroActionPerformed);
 
         jButton3.setFont(new java.awt.Font("Liberation Sans", 0, 24)); // NOI18N
         jButton3.setText("Inventario");
@@ -83,9 +90,9 @@ public class JavaBeansCafe extends javax.swing.JFrame {
                         .addComponent(jLabel1))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jButton1)
+                        .addComponent(botonMenu)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton2)
+                        .addComponent(botonServicioMesero)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -98,8 +105,8 @@ public class JavaBeansCafe extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2)
+                    .addComponent(botonMenu)
+                    .addComponent(botonServicioMesero)
                     .addComponent(jButton3)
                     .addComponent(jButton4))
                 .addContainerGap())
@@ -119,9 +126,9 @@ public class JavaBeansCafe extends javax.swing.JFrame {
         jButton6.setFont(new java.awt.Font("Liberation Sans", 0, 24)); // NOI18N
         jButton6.setText("Servicio de Adminstrador");
 
-        jButton5.setFont(new java.awt.Font("Liberation Sans", 0, 24)); // NOI18N
-        jButton5.setText("Servicio de Adminstrador");
-        jButton5.addActionListener(this::jButton5ActionPerformed);
+        botonSubMenuMeseros.setFont(new java.awt.Font("Liberation Sans", 0, 24)); // NOI18N
+        botonSubMenuMeseros.setText("Elegir Mesero");
+        botonSubMenuMeseros.addActionListener(this::botonSubMenuMeserosActionPerformed);
 
         javax.swing.GroupLayout subMenuMeseroLayout = new javax.swing.GroupLayout(subMenuMesero);
         subMenuMesero.setLayout(subMenuMeseroLayout);
@@ -129,7 +136,7 @@ public class JavaBeansCafe extends javax.swing.JFrame {
             subMenuMeseroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, subMenuMeseroLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jButton5)
+                .addComponent(botonSubMenuMeseros)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton6)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -139,7 +146,7 @@ public class JavaBeansCafe extends javax.swing.JFrame {
             .addGroup(subMenuMeseroLayout.createSequentialGroup()
                 .addGroup(subMenuMeseroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton6)
-                    .addComponent(jButton5))
+                    .addComponent(botonSubMenuMeseros))
                 .addGap(0, 6, Short.MAX_VALUE))
         );
 
@@ -187,35 +194,35 @@ public class JavaBeansCafe extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void botonMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonMenuActionPerformed
         menu.setVisible(!menu.isVisible());
         servicioMesero.setVisible(false);
         ocultarSubMenus();
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_botonMenuActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void botonServicioMeseroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonServicioMeseroActionPerformed
         boolean visible = !servicioMesero.isVisible();
         servicioMesero.setVisible(visible);
-        menu.setVisible(false);
         subMenuMesero.setVisible(visible);
+        controladorMesero.colocarMesas(visible);
+        menu.setVisible(false);
         subMenuAdministrador.setVisible(false);
-    }//GEN-LAST:event_jButton2ActionPerformed
-
-    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        subMenu.setVisible(true);
-        subMenu.toFront();
-        subMenu.agregarNombres(empleados);
-        if (!subMenu.isVisible()) {
-            subMenu.limpiar();
+        if (!visible) {
+            servicioMesero.limpiar();
         }
-    }//GEN-LAST:event_jButton5ActionPerformed
+    }//GEN-LAST:event_botonServicioMeseroActionPerformed
+
+    private void botonSubMenuMeserosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonSubMenuMeserosActionPerformed
+        controladorMesero.colocarMeseros(!subMenu.isVisible());
+        subMenu.toFront();
+    }//GEN-LAST:event_botonSubMenuMeserosActionPerformed
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton botonMenu;
+    private javax.swing.JButton botonServicioMesero;
+    private javax.swing.JButton botonSubMenuMeseros;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;
     private javax.swing.JDesktopPane jDesktopPane1;
@@ -228,6 +235,10 @@ public class JavaBeansCafe extends javax.swing.JFrame {
     private void ocultarSubMenus() {
         subMenuMesero.setVisible(false);
         subMenuAdministrador.setVisible(false);
+    }
+    
+    public void ocultarSubMenu() {
+        subMenu.setVisible(false);
     }
     
 }

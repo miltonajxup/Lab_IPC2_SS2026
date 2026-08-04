@@ -4,16 +4,24 @@
  */
 package Frontent;
 
+import Backend.Mesero.ControladorMesero;
+import Modelos.Personal;
+
 /**
  *
  * @author milton
  */
-public class OpcionSubMenu extends javax.swing.JPanel {
+public class OpcionSMMesero extends javax.swing.JPanel {
     
+    private final ControladorMesero controladorMesero;
+    private final Personal mesero;
     
-    public OpcionSubMenu(String nombre) {
+    public OpcionSMMesero(ControladorMesero controladorMesero, SubMenuMeseros subMenuMeseros, Personal mesero) {
         initComponents();
-        jLabel1.setText("Nombre : " + nombre);
+        this.controladorMesero = controladorMesero;
+        this.mesero = mesero;
+        jLabel1.setText("DPI: " + mesero.getDpi());
+        jLabel2.setText("Nombre: " + mesero.getNombre());
     }
 
     /**
@@ -37,6 +45,7 @@ public class OpcionSubMenu extends javax.swing.JPanel {
 
         jButton1.setFont(new java.awt.Font("Liberation Sans", 0, 24)); // NOI18N
         jButton1.setText("Elegir");
+        jButton1.addActionListener(this::jButton1ActionPerformed);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -65,6 +74,10 @@ public class OpcionSubMenu extends javax.swing.JPanel {
                 .addGap(20, 20, 20))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        controladorMesero.elegirMesero(mesero);
+    }//GEN-LAST:event_jButton1ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

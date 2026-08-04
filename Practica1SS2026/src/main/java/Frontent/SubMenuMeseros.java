@@ -5,18 +5,17 @@
 package Frontent;
 
 import java.awt.GridLayout;
-import java.util.List;
 
 /**
  *
  * @author milton
  */
-public class SubMenu extends javax.swing.JInternalFrame {
+public class SubMenuMeseros extends javax.swing.JInternalFrame {
     
-    public SubMenu() {
+    public SubMenuMeseros() {
         initComponents();
     }
-
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -37,7 +36,7 @@ public class SubMenu extends javax.swing.JInternalFrame {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 409, Short.MAX_VALUE)
+            .addGap(0, 421, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -50,7 +49,7 @@ public class SubMenu extends javax.swing.JInternalFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 423, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel1)
@@ -75,15 +74,23 @@ public class SubMenu extends javax.swing.JInternalFrame {
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
     
-    public void agregarNombres(List<String> empleados) {
-        jPanel1.setLayout(new GridLayout(empleados.size(), 1, 5, 5));
-        for (int i = 0; i < empleados.size(); i++) {
-            OpcionSubMenu opcion = new OpcionSubMenu(empleados.get(i));
-            jPanel1.add(opcion);
-        }
+    
+    public void setCuadricula(int filas) {
+        jPanel1.setLayout(new GridLayout(filas, 1, 5, 5));
+    }
+    
+    public void agregarMesero(OpcionSMMesero opcion) {
+        jPanel1.add(opcion);
     }
     
     public void limpiar() {
         jPanel1.removeAll();
+    }
+    
+    public void mostrar(boolean mostrar) {
+        this.setVisible(mostrar);
+        if (!mostrar) {
+            limpiar();
+        }
     }
 }

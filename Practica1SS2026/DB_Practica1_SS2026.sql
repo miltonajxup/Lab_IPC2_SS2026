@@ -38,7 +38,7 @@ CREATE TABLE personal (
     CONSTRAINT fk_jornada FOREIGN KEY (jornada) REFERENCES jornada(id)
 );
 
-INSERT INTO personal (dpi, salario, rol, jornada) VALUES 
+INSERT INTO personal (dpi, nombre, salario, rol, jornada) VALUES 
 ('1000000000001','Juan Pérez',3500.00,1,1),
 ('1000000000002','Ana López',4200.00,2,2),
 ('1000000000003','Carlos Méndez',3900.00,3,1),
@@ -70,7 +70,7 @@ CREATE TABLE pago (
     fecha_emision DATETIME DEFAULT CURRENT_TIMESTAMP,
     monto_a_pagar DECIMAL(6,2) NOT NULL,
     estado INT NOT NULL,
-    empleado VARCHAR(12) NOT NULL,
+    empleado VARCHAR(13) NOT NULL,
     tipo INT NOT NULL,
     CONSTRAINT pk_pago PRIMARY KEY (codigo_nomina),
     CONSTRAINT fk_estado FOREIGN KEY (estado) REFERENCES estado_pago(id),
@@ -81,11 +81,24 @@ CREATE TABLE pago (
 INSERT INTO pago
 (monto_a_pagar, estado, empleado, tipo)
 VALUES
-(1750.00,2,'100000000001',1),
-(2100.00,1,'100000000002',1),
-(3900.00,2,'100000000003',2),
-(6500.00,1,'100000000004',2),
-(1750.00,2,'100000000005',1);
+(1750.00,2,'1000000000001',1),
+(2100.00,1,'1000000000002',1),
+(3900.00,2,'1000000000003',2),
+(6500.00,1,'1000000000004',2),
+(1750.00,2,'1000000000005',1);
+
+CREATE TABLE mesa (
+    numero_mesa INT AUTO_INCREMENT,
+    capacidad INT NOT NULL,
+    estado BOOLEAN DEFAULT FALSE,
+    CONSTRAINT pk_mesa PRIMARY KEY (numero_mesa)
+);
+
+INSERT INTO mesa (capacidad) VALUES 
+(4), (3), (6), (10), (2), (5), (7);
+
+UPDATE mesa SET estado = TRUE WHERE numero_mesa = 2;
+UPDATE mesa SET estado = TRUE WHERE numero_mesa = 5;
 
 CREATE TABLE unidad_medida (
     id INT AUTO_INCREMENT,
@@ -199,16 +212,18 @@ CREATE TABLE pedido (
     estado BOOLEAN DEFAULT FALSE,
     pago_total DECIMAL(6,2) NOT NULL,
     propina DECIMAL(4,2) DEFAULT 0.00,
-    mesero VARCHAR(12) NOT NULL,
+    mesero VARCHAR(13) NOT NULL,
+    mesa INT NOT NULL,
     CONSTRAINT pk_pedido PRIMARY KEY (numero_pedido),
-    CONSTRAINT fk_mesero FOREIGN KEY (mesero) REFERENCES personal(dpi)
+    CONSTRAINT fk_pedido_mesero FOREIGN KEY (mesero) REFERENCES personal(dpi),
+    CONSTRAINT fk_pedido_mesa FOREIGN KEY (mesa) REFERENCES mesa(numero_mesa)
 );
 
-INSERT INTO pedido (hora_liberacion,estado,pago_total,propina,mesero) VALUES
-(NOW(),TRUE,46.00,5.00,'100000000001'),
-(NULL,FALSE,58.00,0.00,'100000000005'),
-(NOW(),TRUE,84.00,10.00,'100000000001'),
-(NULL,FALSE,35.00,0.00,'100000000005');
+INSERT INTO pedido (hora_liberacion,estado,pago_total,propina,mesero, mesa) VALUES
+(NOW(),TRUE,46.00,5.00,'1000000000001', 1),
+(NULL,FALSE,58.00,0.00,'1000000000001', 2),
+(NOW(),TRUE,84.00,10.00,'1000000000005', 3),
+(NULL,FALSE,35.00,0.00,'1000000000005', 5);
 
 CREATE TABLE detalle_cuenta (
     id INT AUTO_INCREMENT,

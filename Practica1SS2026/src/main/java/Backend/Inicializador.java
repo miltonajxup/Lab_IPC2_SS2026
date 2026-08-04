@@ -4,10 +4,11 @@
  */
 package Backend;
 
+import Backend.Mesero.ControladorMesero;
 import Frontent.JavaBeansCafe;
-import Modelos.Mesa.Mesa;
-import java.util.ArrayList;
-import java.util.List;
+import Frontent.MenuProducto;
+import Frontent.ServicioMesero;
+import Frontent.SubMenuMeseros;
 
 /**
  *
@@ -15,26 +16,30 @@ import java.util.List;
  */
 public class Inicializador {
     
+    private JavaBeansCafe jbcafe;
+    private MenuProducto menuProductos;
+    private ServicioMesero servicioMesero;
+    private SubMenuMeseros subMenuMeseros;
+    
     public void iniciar() {
         
-        List<String> empleados = new ArrayList<>();
-        empleados.add("numero1");
-        empleados.add("numero2");
-        empleados.add("numero3");
-        empleados.add("numero4");
-        empleados.add("numero5");
-        empleados.add("numero6");
+        menuProductos = new MenuProducto();
+        //nombres de los productos mas mostrarlos .mostrar
         
-        List<Mesa> mesas = new ArrayList<>();
-        Mesa mesa = new Mesa(1, 2, 0);
-        Mesa mesa2 = new Mesa(2, 3, 0);
-        mesas.add(mesa);
-        mesas.add(mesa2);
-        
-        JavaBeansCafe jbcafe = new JavaBeansCafe(empleados, mesas);
+        jbcafe = new JavaBeansCafe(menuProductos);
         jbcafe.setLocationRelativeTo(null);
         jbcafe.setVisible(true);
         
+        servicioMesero = new ServicioMesero();
+        jbcafe.setServicioMesero(servicioMesero);
+        subMenuMeseros = new SubMenuMeseros();
+        jbcafe.setSubMenu(subMenuMeseros);
+        conectarControladores();
+    }
+    
+    private void conectarControladores() {
+        ControladorMesero controladorMesero = new ControladorMesero(servicioMesero, subMenuMeseros);
+        jbcafe.setControladorMesero(controladorMesero);
     }
     
 }

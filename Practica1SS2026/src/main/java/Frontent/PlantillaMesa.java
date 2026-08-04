@@ -4,17 +4,23 @@
  */
 package Frontent;
 
+import Modelos.Mesa;
+
 /**
  *
  * @author milton
  */
 public class PlantillaMesa extends javax.swing.JPanel {
-
-    /**
-     * Creates new form PlantillaMesa
-     */
-    public PlantillaMesa() {
+    
+    private final Mesa mesa;
+    
+    public PlantillaMesa(Mesa mesa, String mesero, String estado) {
         initComponents();
+        this.mesa = mesa;
+        textoEstado.setText("Estado: " + estado);
+        textoMesero.setText("Mesero " + mesero);
+        textoCapacidad.setText("Capacidad: " + mesa.getCapacidad());
+        botonMesa.setText("Mesa " + mesa.getNumeroMesa());
     }
 
     /**
@@ -26,18 +32,22 @@ public class PlantillaMesa extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jButton1 = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
+        botonMesa = new javax.swing.JButton();
+        textoEstado = new javax.swing.JLabel();
+        textoMesero = new javax.swing.JLabel();
+        textoCapacidad = new javax.swing.JLabel();
 
-        jButton1.setFont(new java.awt.Font("Liberation Sans", 0, 28)); // NOI18N
-        jButton1.setText("Mesa x");
+        botonMesa.setFont(new java.awt.Font("Liberation Sans", 0, 28)); // NOI18N
+        botonMesa.setText("Mesa x");
 
-        jLabel1.setFont(new java.awt.Font("Liberation Sans", 0, 24)); // NOI18N
-        jLabel1.setText("Estado : Ninguno");
+        textoEstado.setFont(new java.awt.Font("Liberation Sans", 0, 24)); // NOI18N
+        textoEstado.setText("Estado : Ninguno");
 
-        jLabel2.setFont(new java.awt.Font("Liberation Sans", 0, 24)); // NOI18N
-        jLabel2.setText("Mesero : Ninguno");
+        textoMesero.setFont(new java.awt.Font("Liberation Sans", 0, 24)); // NOI18N
+        textoMesero.setText("Mesero : Ninguno");
+
+        textoCapacidad.setFont(new java.awt.Font("Liberation Sans", 0, 24)); // NOI18N
+        textoCapacidad.setText("Capacidad: x");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -45,33 +55,51 @@ public class PlantillaMesa extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(24, 24, 24)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 38, Short.MAX_VALUE)
-                .addComponent(jButton1)
-                .addGap(30, 30, 30))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(textoMesero)
+                    .addComponent(textoEstado))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(botonMesa)
+                        .addGap(31, 31, 31))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(textoCapacidad)
+                        .addGap(20, 20, 20))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(26, 26, 26)
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel2))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(44, 44, 44)
-                        .addComponent(jButton1)))
-                .addContainerGap(26, Short.MAX_VALUE))
+                .addGap(19, 19, 19)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(textoEstado)
+                    .addComponent(botonMesa))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(textoMesero)
+                    .addComponent(textoCapacidad))
+                .addContainerGap(22, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
+    private javax.swing.JButton botonMesa;
+    private javax.swing.JLabel textoCapacidad;
+    private javax.swing.JLabel textoEstado;
+    private javax.swing.JLabel textoMesero;
     // End of variables declaration//GEN-END:variables
+    
+    public void setEstado(String estado, String mesero) {
+        textoEstado.setText("Estado : " + estado);
+        textoMesero.setText("Mesero : " + mesero);
+    }
+    
+    public void habilitarBoton(boolean habilitar) {
+        botonMesa.setEnabled(habilitar);
+    }
+    
+    public int getNumeroMesa() {
+        return mesa.getNumeroMesa();
+    }
 }

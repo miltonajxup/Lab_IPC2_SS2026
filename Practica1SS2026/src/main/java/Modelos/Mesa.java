@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package Modelos.Mesa;
+package Modelos;
 
 /**
  *
@@ -12,9 +12,9 @@ public class Mesa {
     
     private final int numeroMesa;
     private final int capacidad;
-    private final int estado;
+    private final boolean estado;
 
-    public Mesa(int numeroMesa, int capacidad, int estado) {
+    public Mesa(int numeroMesa, int capacidad, boolean estado) {
         this.numeroMesa = numeroMesa;
         this.capacidad = capacidad;
         this.estado = estado;
@@ -28,8 +28,8 @@ public class Mesa {
         return capacidad;
     }
 
-    public int getEstado() {
+    public boolean getEstado() {
         return estado;
     }
-    
+
 }

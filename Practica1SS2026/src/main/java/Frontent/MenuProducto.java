@@ -10,12 +10,12 @@ import java.awt.GridLayout;
  *
  * @author milton
  */
-public class Menu extends javax.swing.JInternalFrame {
+public class MenuProducto extends javax.swing.JInternalFrame {
 
     /**
      * Creates new form Menu
      */
-    public Menu() {
+    public MenuProducto() {
         initComponents();
     }
 
