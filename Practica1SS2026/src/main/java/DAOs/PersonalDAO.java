@@ -7,9 +7,9 @@ package DAOs;
 import Modelos.Personal;
 import com.mycompany.practica1ss2026.DBConnection;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,15 +31,15 @@ public class PersonalDAO {
                                         JOIN jornada AS j ON p.jornada = j.id
                                         WHERE r.tipo = 'MESERO'
                                         """;
-    private final String actualizarPersonal = "UPDATE personal SET estado = $d WHERE dpi = $s";
+    private final String actualizarPersonal = "UPDATE personal SET estado = ? WHERE dpi = ?";
     
     public List<Personal> getPersonal() {
         List<Personal> personal = new ArrayList<>();
         
         try {
             Connection connection = DBConnection.getConnection();
-            Statement selectStatement = connection.createStatement();
-            ResultSet resultSet = selectStatement.executeQuery(todoPersonal);
+            PreparedStatement select = connection.prepareStatement(todoPersonal);
+            ResultSet resultSet = select.executeQuery();
             while (resultSet.next()) {
                 personal.add(armarPersonal(resultSet));
             }
@@ -54,8 +54,8 @@ public class PersonalDAO {
         
         try {
             Connection connection = DBConnection.getConnection();
-            Statement selectStatement = connection.createStatement();
-            ResultSet resultSet = selectStatement.executeQuery(todosMeseros);
+            PreparedStatement select = connection.prepareStatement(todosMeseros);
+            ResultSet resultSet = select.executeQuery();
             while (resultSet.next()) {
                 personal.add(armarPersonal(resultSet));
             }
@@ -65,12 +65,13 @@ public class PersonalDAO {
         return personal;
     }
     
-    public void actulizarPersonal(int estado, String dpi) {
-        String update = String.format(actualizarPersonal, estado, dpi);
+    public void actulizarPersonal(boolean estado, String dpi) {
         try {
             Connection connection = DBConnection.getConnection();
-            Statement updateStatement = connection.createStatement();
-            updateStatement.executeUpdate(update);
+            PreparedStatement update = connection.prepareStatement(actualizarPersonal);
+            update.setBoolean(1, estado);
+            update.setString(2, dpi);
+            update.executeUpdate();
         } catch (SQLException e) {
             System.out.println("Error al actulizar personal " + e.getMessage());
         }

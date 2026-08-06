@@ -7,6 +7,7 @@ package Backend.Mesero;
 import DAOs.MesaDAO;
 import DAOs.PedidoDAO;
 import DAOs.PersonalDAO;
+import Frontent.JavaBeansCafe;
 import Frontent.OpcionSMMesero;
 import Frontent.PlantillaMesa;
 import Frontent.ServicioMesero;
@@ -32,46 +33,45 @@ public class ControladorMesero {
     private List<Pedido> pedidos;
     private final ServicioMesero servicioMesero;
     private final SubMenuMeseros subMenuMeseros;
+    private final JavaBeansCafe jbcafe;
 
-    public ControladorMesero(ServicioMesero servicioMesero, SubMenuMeseros subMenuMeseros) {
+    public ControladorMesero(ServicioMesero servicioMesero, SubMenuMeseros subMenuMeseros, JavaBeansCafe jbcafe) {
         this.personaldao = new PersonalDAO();
         this.mesadao = new MesaDAO();
         this.mesas = mesadao.getMesas();
         this.pedidodao = new PedidoDAO();
         this.servicioMesero = servicioMesero;
         this.subMenuMeseros = subMenuMeseros;
+        this.jbcafe = jbcafe;
     }
     
     public void traerCambiosMesa() {
         mesas = mesadao.getMesas();
         pedidos = pedidodao.geMesasOcupadas();
-        colocarMesas(true);
+        colocarMesas();
     }
     
-    public void colocarMesas(boolean mostrar) {
-        if (mostrar) {
-            String mesero;
-            String estado;
-            servicioMesero.setCuadricula(mesas.size() / 2 + 1);
-            pedidos = pedidodao.geMesasOcupadas();
-            plantillasMesa = new ArrayList<>();
-            for (int i = 0; i < mesas.size(); i++) {
-                Mesa actual = mesas.get(i);
-                Pedido pedido = mesaOcupada(actual.getNumeroMesa());
-                if (pedido != null) {
-                    mesero = pedido.getNombreMesero();
-                    estado = "OCUPADO";
-                } else {
-                    mesero = "Ninguno";
-                    estado = "LIBRE";
-                }
-                PlantillaMesa plantillaMesa = new PlantillaMesa(actual, mesero, estado);
-                plantillaMesa.habilitarBoton(false);
-                plantillasMesa.add(plantillaMesa);
-                servicioMesero.agregarMesa(plantillaMesa);
+    public void colocarMesas() {
+        String mesero;
+        String estado;
+        servicioMesero.limpiar();
+        servicioMesero.setCuadricula(mesas.size() / 2 + 1);
+        pedidos = pedidodao.geMesasOcupadas();
+        plantillasMesa = new ArrayList<>();
+        for (int i = 0; i < mesas.size(); i++) {
+            Mesa actual = mesas.get(i);
+            Pedido pedido = mesaOcupada(actual.getNumeroMesa());
+            if (pedido != null) {
+                mesero = pedido.getNombreMesero();
+                estado = "OCUPADO";
+            } else {
+                mesero = "Ninguno";
+                estado = "LIBRE";
             }
-        } else {
-            subMenuMeseros.mostrar(mostrar);
+            PlantillaMesa plantillaMesa = new PlantillaMesa(jbcafe, actual, mesero, estado);
+            plantillaMesa.habilitarBoton(false);
+            plantillasMesa.add(plantillaMesa);
+            servicioMesero.agregarMesa(plantillaMesa);
         }
     }
     
@@ -99,11 +99,16 @@ public class ControladorMesero {
     
     public void elegirMesero(Personal mesero) {
         subMenuMeseros.mostrar(false);
+        servicioMesero.setMesero(mesero.getNombre());
         Pedido pedido = meseroOcupado(mesero.getDpi());
         for (int i = 0; i < mesas.size(); i++) {
             PlantillaMesa plantilla = plantillasMesa.get(i);
             if (pedido == null) {
-                plantilla.habilitarBoton(true);
+                if (!plantilla.estaOcupado()) {
+                    plantilla.habilitarBoton(true);
+                } else {
+                    plantilla.habilitarBoton(false);
+                }
             } else if (pedido.getNumeroMesa() == plantilla.getNumeroMesa()) {
                 plantilla.habilitarBoton(true);
             } else {
@@ -122,8 +127,11 @@ public class ControladorMesero {
         return null;
     }
     
-    public void ocultarMesas() {
-        servicioMesero.mostrar(false);
+    public void bloquearMesas() {
+        servicioMesero.setMesero("Ninguno");
+        for (int i = 0; i < plantillasMesa.size(); i++) {
+            plantillasMesa.get(i).habilitarBoton(false);
+        }
     }
     
 }

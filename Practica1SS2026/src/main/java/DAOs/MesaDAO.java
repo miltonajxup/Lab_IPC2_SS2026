@@ -7,9 +7,9 @@ package DAOs;
 import Modelos.Mesa;
 import com.mycompany.practica1ss2026.DBConnection;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +20,7 @@ import java.util.List;
 public class MesaDAO {
     
     private final String todasMesas = "SELECT * FROM mesa";
-    private final String actualizarMesa = "UPDATE mesa SET estado = %d, mesero = %s WHERE numero_mesa = %d";
+    private final String actualizarMesa = "UPDATE mesa SET estado = ? WHERE numero_mesa = ?";
     
     public List<Mesa> getMesas() {
         
@@ -28,8 +28,8 @@ public class MesaDAO {
         
         try {
             Connection connection = DBConnection.getConnection();
-            Statement select = connection.createStatement();
-            ResultSet resultSet = select.executeQuery(todasMesas);
+            PreparedStatement select = connection.prepareStatement(todasMesas);
+            ResultSet resultSet = select.executeQuery();
             while (resultSet.next()) {
                 mesas.add(armarMesa(resultSet));
             }
@@ -39,15 +39,15 @@ public class MesaDAO {
         return mesas;
     }
     
-    public void actualizarMesa(int estado, String mesero, int numeroMesa) {
-        
-        String update = String.format(actualizarMesa, estado, mesero, numeroMesa);
+    public void actualizarMesa(boolean estado, String mesero, int numeroMesa) {
         
         try {
             Connection connection = DBConnection.getConnection();
-            Statement updateStatement = connection.createStatement();
+            PreparedStatement update = connection.prepareStatement(actualizarMesa);
+            update.setBoolean(1, estado);
+            update.setInt(2, numeroMesa);
             
-            updateStatement.executeUpdate(update);
+            update.executeUpdate();
         } catch (SQLException e) {
             System.out.println("Error al actualizar mesa " + e.getMessage());
         }

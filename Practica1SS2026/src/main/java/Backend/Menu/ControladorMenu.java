@@ -4,7 +4,10 @@
  */
 package Backend.Menu;
 
+import DAOs.ProductoDAO;
 import Frontent.MenuProducto;
+import Frontent.OpcionMenu;
+import Modelos.Insumo;
 import Modelos.ProductoMenu;
 import java.util.List;
 
@@ -14,16 +17,33 @@ import java.util.List;
  */
 public class ControladorMenu {
     
-    private final List<ProductoMenu> productos;
+    private final ProductoDAO productodao; 
+    private List<ProductoMenu> productos;
     private final MenuProducto menuProductos;
 
-    public ControladorMenu(List<ProductoMenu> productos, MenuProducto menuProductos) {
-        this.productos = productos;
+    public ControladorMenu(MenuProducto menuProductos) {
+        this.productodao = new ProductoDAO();
+        this.productos = productodao.getProductos();
         this.menuProductos = menuProductos;
+    }
+    
+    public void actualizarProductos() {
+        productos = productodao.getProductos();
+        colocarProductos();
     }
 
     public void colocarProductos() {
-        
+        menuProductos.setCuadricula(productos.size() / 2 + 1);
+        for (int i = 0; i < productos.size(); i++) {
+            ProductoMenu producto = productos.get(i);
+            OpcionMenu opcionMenu = new OpcionMenu(producto.getNombre(), producto.getPrecio(), "/imagenes/cafe1.jpg");
+            menuProductos.agregarProducto(opcionMenu);
+            opcionMenu.setCuadricula(producto.getInsumos().size());
+            for (int j = 0; j < producto.getInsumos().size(); j++) {
+                Insumo insumo = producto.getInsumos().get(j);
+                opcionMenu.agregarIngrediente(insumo.getNombre());
+            }
+        }
     }
     
 }

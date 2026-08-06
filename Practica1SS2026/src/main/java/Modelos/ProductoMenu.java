@@ -14,11 +14,15 @@ public class ProductoMenu {
     
     private final int codigo;
     private final String nombre;
+    private final double precio;
+    private final String categoria;
     private List<Insumo> insumos;
 
-    public ProductoMenu(int codigo, String nombre) {
+    public ProductoMenu(int codigo, String nombre, double precio, String categoria) {
         this.codigo = codigo;
         this.nombre = nombre;
+        this.precio = precio;
+        this.categoria = categoria;
     }
 
     public int getCodigo() {
@@ -28,9 +32,17 @@ public class ProductoMenu {
     public String getNombre() {
         return nombre;
     }
+    
+    public double getPrecio() {
+        return precio;
+    }
 
     public List<Insumo> getInsumos() {
         return insumos;
+    }
+
+    public String getCategoria() {
+        return categoria;
     }
 
     public void setInsumos(List<Insumo> insumos) {

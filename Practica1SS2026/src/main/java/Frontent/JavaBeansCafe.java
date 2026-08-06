@@ -16,6 +16,7 @@ public class JavaBeansCafe extends javax.swing.JFrame {
     private ServicioMesero servicioMesero;
     private ControladorMesero controladorMesero;
     private SubMenuMeseros subMenu;
+    private ServicioDeOrden servicioOrden;
     
     public JavaBeansCafe(MenuProducto menuProductos) {
         initComponents();
@@ -23,7 +24,7 @@ public class JavaBeansCafe extends javax.swing.JFrame {
         jDesktopPane1.add(menu);
         ocultarSubMenus();
     }
-
+    
     public void setServicioMesero(ServicioMesero servicioMesero) {
         this.servicioMesero = servicioMesero;
         jDesktopPane1.add(servicioMesero);
@@ -36,6 +37,11 @@ public class JavaBeansCafe extends javax.swing.JFrame {
     
     public void setControladorMesero(ControladorMesero controladorMesero) {
         this.controladorMesero = controladorMesero;
+    }
+    
+    public void setServicioOrden(ServicioDeOrden servicioOrden) {
+        this.servicioOrden = servicioOrden;
+        jDesktopPane1.add(servicioOrden);
     }
     
     /**
@@ -197,6 +203,7 @@ public class JavaBeansCafe extends javax.swing.JFrame {
     private void botonMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonMenuActionPerformed
         menu.setVisible(!menu.isVisible());
         servicioMesero.setVisible(false);
+        controladorMesero.bloquearMesas();
         ocultarSubMenus();
     }//GEN-LAST:event_botonMenuActionPerformed
 
@@ -204,11 +211,10 @@ public class JavaBeansCafe extends javax.swing.JFrame {
         boolean visible = !servicioMesero.isVisible();
         servicioMesero.setVisible(visible);
         subMenuMesero.setVisible(visible);
-        controladorMesero.colocarMesas(visible);
         menu.setVisible(false);
         subMenuAdministrador.setVisible(false);
         if (!visible) {
-            servicioMesero.limpiar();
+            controladorMesero.bloquearMesas();
         }
     }//GEN-LAST:event_botonServicioMeseroActionPerformed
 
@@ -232,13 +238,16 @@ public class JavaBeansCafe extends javax.swing.JFrame {
     private javax.swing.JPanel subMenuMesero;
     // End of variables declaration//GEN-END:variables
     
+    public void cambiarAOrden() {
+        boolean visible = !servicioMesero.isVisible();
+        subMenuMesero.setVisible(visible);
+        servicioMesero.setVisible(visible);
+        servicioOrden.setVisible(!visible);
+    } 
+    
     private void ocultarSubMenus() {
         subMenuMesero.setVisible(false);
         subMenuAdministrador.setVisible(false);
-    }
-    
-    public void ocultarSubMenu() {
-        subMenu.setVisible(false);
     }
     
 }

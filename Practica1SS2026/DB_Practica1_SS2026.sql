@@ -43,7 +43,8 @@ INSERT INTO personal (dpi, nombre, salario, rol, jornada) VALUES
 ('1000000000002','Ana López',4200.00,2,2),
 ('1000000000003','Carlos Méndez',3900.00,3,1),
 ('1000000000004','María García',6500.00,4,1),
-('1000000000005','Pedro Ramírez',3500.00,1,2);
+('1000000000005','Pedro Ramírez',3500.00,1,2), 
+('1000000000006','Byron Martinez',3500.00,1,1);
 
 CREATE TABLE tipo_pago (
     id INT AUTO_INCREMENT,
@@ -107,29 +108,33 @@ CREATE TABLE unidad_medida (
 );
 
 INSERT INTO unidad_medida (unidad) VALUES 
-('Kgs'),
-('Lts'),
+('Kg'),
+('g'), 
+('L'),
+('mL'),
 ('Unidad'), 
 ('Otro');
 
 CREATE TABLE insumo (
     codigo INT AUTO_INCREMENT,
     nombre VARCHAR(30) NOT NULL,
-    cantidad_stock INT NOT NULL,
-    stock_minimo INT NOT NULL,
-    costo DECIMAL(4,2) NOT NULL,
-    CONSTRAINT pk_insumo PRIMARY KEY (codigo)
+    cantidad_stock DECIMAL(8,2) NOT NULL,
+    stock_minimo DECIMAL(8,2) NOT NULL,
+    costo DECIMAL(8,2) NOT NULL, 
+    unidad INT NOT NULL,
+    CONSTRAINT pk_insumo PRIMARY KEY (codigo),
+    CONSTRAINT fk_insumo_unidad FOREIGN KEY (unidad) REFERENCES unidad_medida(id)
 );
 
-INSERT INTO insumo (nombre,cantidad_stock,stock_minimo,costo) VALUES
-('Café',30,10,25.50),
-('Leche',20,5,12.00),
-('Azúcar',50,10,6.50),
-('Chocolate',15,5,18.75),
-('Harina',40,10,8.25),
-('Huevos',100,20,1.25),
-('Crema Batida',12,4,22.50),
-('Jarabe Vainilla',8,3,35.00);
+INSERT INTO insumo (nombre,cantidad_stock,stock_minimo,costo, unidad) VALUES
+('Café',30.00,10.00,25.50,2),
+('Leche',20.00,5.00,12.00,3),
+('Azúcar',50.00,10.00,6.50,2),
+('Chocolate',15.00,5.00,18.75,2),
+('Harina',40.00,10.00,8.25,1),
+('Huevos',100.00,20.00,1.25,5),
+('Crema Batida',12.00,4.00,22.50,2),
+('Jarabe Vainilla',8.00,3.00,35.00,4);
 
 CREATE TABLE categoria_producto (
     id INT AUTO_INCREMENT,
@@ -147,18 +152,20 @@ CREATE TABLE producto_menu (
     codigo INT AUTO_INCREMENT,
     nombre VARCHAR(30) NOT NULL,
     precio DECIMAL(6,2) NOT NULL,
-    CONSTRAINT pk_producto PRIMARY KEY (codigo)
+    categoria INT NOT NULL,
+    CONSTRAINT pk_producto PRIMARY KEY (codigo), 
+    CONSTRAINT fk_pm_categoria FOREIGN KEY (categoria) REFERENCES categoria_producto(id)
 );
 
-INSERT INTO producto_menu (nombre,precio) VALUES
-('Café Americano',18.00),
-('Capuccino',28.00),
-('Latte',30.00),
-('Frappé',35.00),
-('Cheesecake',26.00),
-('Brownie',20.00),
-('Sandwich Club',42.00),
-('Panini',38.00);
+INSERT INTO producto_menu (nombre,precio,categoria) VALUES
+('Café Americano',18.00,1),
+('Capuccino',28.00,1),
+('Latte',30.00,1),
+('Frappé',35.00,2),
+('Cheesecake',26.00,3),
+('Brownie',20.00,3),
+('Sandwich Club',42.00,4),
+('Panini',38.00,4);
 
 CREATE TABLE receta (
     producto_id INT NOT NULL,

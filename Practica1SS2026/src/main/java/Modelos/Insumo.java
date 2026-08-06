@@ -10,27 +10,30 @@ package Modelos;
  */
 public class Insumo {
     
-    private String codigo;
+    private final int codigo;
     private final String nombre;
-    private String cantidadStock;
-    private String stockMinimo;
-    private String costo;
-    private int cantidadUtilizada;
+    private double cantidadStock;
+    private double stockMinimo;
+    private double costo;
+    private String undadMedida;
+    private int cantUtilizadaProducto;
 
-    public Insumo(String nombre, int cantidadUtilizada) {
+    public Insumo(int codigo, String nombre, int cantidadUtilizada) {
+        this.codigo = codigo;
         this.nombre = nombre;
-        this.cantidadUtilizada = cantidadUtilizada;
+        this.cantUtilizadaProducto = cantidadUtilizada;
     }
 
-    public Insumo(String codigo, String nombre, String cantidadStock, String stockMinimo, String costo) {
+    public Insumo(int codigo, String nombre, double cantidadStock, double stockMinimo, double costo, String undadMedida) {
         this.codigo = codigo;
         this.nombre = nombre;
         this.cantidadStock = cantidadStock;
         this.stockMinimo = stockMinimo;
         this.costo = costo;
+        this.undadMedida = undadMedida;
     }
 
-    public String getCodigo() {
+    public int getCodigo() {
         return codigo;
     }
 
@@ -38,22 +41,24 @@ public class Insumo {
         return nombre;
     }
 
-    public String getCantidadStock() {
+    public double getCantidadStock() {
         return cantidadStock;
     }
 
-    public String getStockMinimo() {
+    public double getStockMinimo() {
         return stockMinimo;
     }
 
-    public String getCosto() {
+    public double getCosto() {
         return costo;
     }
 
-    public int getCantidadUtilizada() {
-        return cantidadUtilizada;
+    public int getCantUtilizadaProducto() {
+        return cantUtilizadaProducto;
     }
-    
-    
+
+    public String getUndadMedida() {
+        return undadMedida;
+    }
     
 }

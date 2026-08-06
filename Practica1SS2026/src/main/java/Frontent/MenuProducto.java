@@ -11,10 +11,7 @@ import java.awt.GridLayout;
  * @author milton
  */
 public class MenuProducto extends javax.swing.JInternalFrame {
-
-    /**
-     * Creates new form Menu
-     */
+    
     public MenuProducto() {
         initComponents();
     }
@@ -81,13 +78,20 @@ public class MenuProducto extends javax.swing.JInternalFrame {
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
     
-    public void mostrarOpciones(String[] nombres) {
-        int filas = nombres.length / 2 + 1;
+    public void setCuadricula(int filas) {
         jPanel1.setLayout(new GridLayout(filas, 2, 5, 5));
-        for (int i = 0; i < nombres.length; i++) {
-            OpcionMenu opcion = new OpcionMenu(nombres[i], "/imagenes/cafe1.jpg");
-            jPanel1.add(opcion);
-        }
+    }
+    
+    public void agregarProducto(OpcionMenu opcionMenu) {
+        jPanel1.add(opcionMenu);
+    }
+    
+    public void limpiar() {
+        jPanel1.removeAll();
+    }
+    
+    public void mostrar(boolean mostrar) {
+        this.setVisible(mostrar);
     }
     
 }

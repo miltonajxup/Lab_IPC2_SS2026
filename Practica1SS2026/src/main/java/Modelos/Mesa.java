@@ -12,7 +12,7 @@ public class Mesa {
     
     private final int numeroMesa;
     private final int capacidad;
-    private final boolean estado;
+    private boolean estado;
 
     public Mesa(int numeroMesa, int capacidad, boolean estado) {
         this.numeroMesa = numeroMesa;
@@ -30,6 +30,10 @@ public class Mesa {
 
     public boolean getEstado() {
         return estado;
+    }
+    
+    public void setEstado(boolean estado) {
+        this.estado = estado;
     }
 
 }

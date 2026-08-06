@@ -12,15 +12,25 @@ import Modelos.Mesa;
  */
 public class PlantillaMesa extends javax.swing.JPanel {
     
+    private final JavaBeansCafe jbcafe;
     private final Mesa mesa;
     
-    public PlantillaMesa(Mesa mesa, String mesero, String estado) {
+    public PlantillaMesa(JavaBeansCafe jbcafe, Mesa mesa, String mesero, String estado) {
         initComponents();
+        this.jbcafe = jbcafe;
         this.mesa = mesa;
         textoEstado.setText("Estado: " + estado);
-        textoMesero.setText("Mesero " + mesero);
+        textoMesero.setText("Mesero: " + mesero);
         textoCapacidad.setText("Capacidad: " + mesa.getCapacidad());
-        botonMesa.setText("Mesa " + mesa.getNumeroMesa());
+        botonMesa.setText("Mesa: " + mesa.getNumeroMesa());
+    }
+    
+    public void setOcupado(boolean ocupado) {
+        mesa.setEstado(ocupado);
+    }
+    
+    public boolean estaOcupado() {
+        return mesa.getEstado();
     }
 
     /**
@@ -39,6 +49,7 @@ public class PlantillaMesa extends javax.swing.JPanel {
 
         botonMesa.setFont(new java.awt.Font("Liberation Sans", 0, 28)); // NOI18N
         botonMesa.setText("Mesa x");
+        botonMesa.addActionListener(this::botonMesaActionPerformed);
 
         textoEstado.setFont(new java.awt.Font("Liberation Sans", 0, 24)); // NOI18N
         textoEstado.setText("Estado : Ninguno");
@@ -82,6 +93,9 @@ public class PlantillaMesa extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void botonMesaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonMesaActionPerformed
+        jbcafe.cambiarAOrden();
+    }//GEN-LAST:event_botonMesaActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botonMesa;

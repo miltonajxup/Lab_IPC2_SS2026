@@ -7,9 +7,9 @@ package DAOs;
 import Modelos.Pedido;
 import com.mycompany.practica1ss2026.DBConnection;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,13 +24,15 @@ public class PedidoDAO {
                                           FROM pedido AS p 
                                           JOIN personal AS per ON p.mesero = per.dpi 
                                           WHERE hora_liberacion IS NULL""";
+    private final String AGREGAR_PEDIDO = "";
+    private final String ACTUALIZAR_PEDIDO = "";
     
     public List<Pedido> geMesasOcupadas() {
         List<Pedido> pedidos = new ArrayList<>();
         try {
             Connection connection = DBConnection.getConnection();
-            Statement selectStatement = connection.createStatement();
-            ResultSet resultSet = selectStatement.executeQuery(MESAS_OCUPADAS);
+            PreparedStatement select = connection.prepareStatement(MESAS_OCUPADAS);
+            ResultSet resultSet = select.executeQuery();
             while (resultSet.next()) {
                 pedidos.add(armarPedido(resultSet));
             }

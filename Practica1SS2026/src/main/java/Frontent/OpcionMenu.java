@@ -4,26 +4,38 @@
  */
 package Frontent;
 
+import Backend.Mesero.ControladorOrden;
+import Modelos.ProductoMenu;
+import java.awt.GridLayout;
 import java.awt.Image;
 import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 
 /**
  *
  * @author milton
  */
 public class OpcionMenu extends javax.swing.JPanel {
+    
+    private ControladorOrden controladorOrden;
+    private ProductoMenu producto;
+    private final boolean efectoHabilitado;
 
-    /**
-     * Creates new form OpcionMenu
-     * @param nombre
-     * @param pahtImagen
-     */
-    public OpcionMenu(String nombre, String pahtImagen) {
+    public OpcionMenu(String nombre, double precio, String pahtImagen) {
         initComponents();
-        jLabel1.setText(nombre);
-        ImageIcon imagen = new ImageIcon(getClass().getResource(pahtImagen));
-        jButton1.setIcon(new ImageIcon(imagen.getImage().getScaledInstance(160, 152, Image.SCALE_SMOOTH)));
-        //jButton1.setBorderPainted(false);
+        terminarCreacion(nombre, precio, pahtImagen);
+        jButton1.setBorderPainted(false);
+        espacioIngredientes.setVisible(true);
+        efectoHabilitado = false;
+    }
+
+    public OpcionMenu(ControladorOrden controladorOrden, ProductoMenu producto, String pahtImagen) {
+        initComponents();
+        this.controladorOrden = controladorOrden;
+        this.producto = producto;
+        terminarCreacion(producto.getNombre(), producto.getPrecio(), pahtImagen);
+        espacioIngredientes.setVisible(false);
+        efectoHabilitado = true;
     }
 
     /**
@@ -35,13 +47,56 @@ public class OpcionMenu extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
+        espacioNombre = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
+        espacioPrecio = new javax.swing.JLabel();
+        espacioIngredientes = new javax.swing.JPanel();
+        espacioPrecio1 = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jPanel3 = new javax.swing.JPanel();
 
-        jLabel1.setFont(new java.awt.Font("Liberation Sans", 0, 20)); // NOI18N
-        jLabel1.setText("jLabel1");
+        espacioNombre.setFont(new java.awt.Font("Liberation Sans", 0, 20)); // NOI18N
+        espacioNombre.setText("Nombre");
 
         jButton1.setFont(new java.awt.Font("Liberation Sans", 0, 20)); // NOI18N
+        jButton1.addActionListener(this::jButton1ActionPerformed);
+
+        espacioPrecio.setFont(new java.awt.Font("Liberation Sans", 0, 20)); // NOI18N
+        espacioPrecio.setText("Precio");
+
+        espacioPrecio1.setFont(new java.awt.Font("Liberation Sans", 0, 20)); // NOI18N
+        espacioPrecio1.setText("Ingredientes:");
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 210, Short.MAX_VALUE)
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
+
+        jScrollPane2.setViewportView(jPanel3);
+
+        javax.swing.GroupLayout espacioIngredientesLayout = new javax.swing.GroupLayout(espacioIngredientes);
+        espacioIngredientes.setLayout(espacioIngredientesLayout);
+        espacioIngredientesLayout.setHorizontalGroup(
+            espacioIngredientesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(espacioIngredientesLayout.createSequentialGroup()
+                .addComponent(espacioPrecio1)
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jScrollPane2)
+        );
+        espacioIngredientesLayout.setVerticalGroup(
+            espacioIngredientesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(espacioIngredientesLayout.createSequentialGroup()
+                .addComponent(espacioPrecio1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -49,26 +104,65 @@ public class OpcionMenu extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1)
-                .addContainerGap(331, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(espacioNombre)
+                            .addComponent(espacioPrecio))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(espacioIngredientes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(espacioNombre)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(espacioPrecio)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(espacioIngredientes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void terminarCreacion(String nombre, double precio, String pathImagen) {
+        espacioNombre.setText(nombre);
+        espacioPrecio.setText("Precio: Q"  + precio);
+        ImageIcon imagen = new ImageIcon(getClass().getResource(pathImagen));
+        jButton1.setIcon(new ImageIcon(imagen.getImage().getScaledInstance(170, 170, Image.SCALE_SMOOTH)));
+    }
+    
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        if (efectoHabilitado) {
+            controladorOrden.agregarAPedido(producto);
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel espacioIngredientes;
+    private javax.swing.JLabel espacioNombre;
+    private javax.swing.JLabel espacioPrecio;
+    private javax.swing.JLabel espacioPrecio1;
     private javax.swing.JButton jButton1;
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JScrollPane jScrollPane2;
     // End of variables declaration//GEN-END:variables
+    
+    public void setCuadricula(int filas) {
+        jPanel3.setLayout(new GridLayout(filas, 1));
+    }
+    
+    public void agregarIngrediente(String nombre) {
+        JLabel ingrediente = new JLabel();
+        ingrediente.setFont(new java.awt.Font("Liberation Sans", 0, 20)); // NOI18N
+        ingrediente.setText(nombre);
+        jPanel3.add(ingrediente);
+    }
 }
