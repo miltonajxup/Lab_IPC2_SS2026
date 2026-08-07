@@ -4,6 +4,7 @@
  */
 package Backend.Mesero;
 
+import DAOs.InsumoDAO;
 import DAOs.ProductoDAO;
 import Exceptions.AccesoALaDataException;
 import Frontent.OpcionMenu;
@@ -23,17 +24,18 @@ public class ControladorOrden {
     
     private final ServicioDeOrden servicioOrden;
     private final ProductoDAO productodao;
+    private final InsumoDAO insumodao;
     private List<ProductoMenu> productosdb;
     private List<Insumo> insumos;
     private List<ProductoMenu> productosPedido;
     private final List<InsumoPedido> insumosPedido;
     private List<PlantillaOrden> plantillasOrden;
 
-    public ControladorOrden(ServicioDeOrden servicioOrden, List<Insumo> insumos, List<InsumoPedido> insumosPedido, ProductoDAO productodao, List<ProductoMenu> productosdb) {
+    public ControladorOrden(ServicioDeOrden servicioOrden, List<InsumoPedido> insumosPedido, InsumoDAO insumodao, ProductoDAO productodao, List<ProductoMenu> productosdb) {
         this.servicioOrden = servicioOrden;
         this.productodao = productodao;
+        this.insumodao = insumodao;
         this.productosdb = productosdb;
-        this.insumos = insumos;
         this.productosPedido = new ArrayList<>();
         this.insumosPedido = insumosPedido;
         this.plantillasOrden = new ArrayList<>();
@@ -62,7 +64,8 @@ public class ControladorOrden {
         }
     }
     
-    public void agregarAPedido(ProductoMenu producto) {
+    public void agregarAPedido(ProductoMenu producto) throws AccesoALaDataException {
+        insumos = insumodao.getTodosInsumos();
         for (int i = 0; i < producto.getInsumos().size(); i++) {
             Insumo insumoProducto = producto.getInsumos().get(i);
             Insumo insumoLista = buscarInsumo(insumoProducto.getCodigo());

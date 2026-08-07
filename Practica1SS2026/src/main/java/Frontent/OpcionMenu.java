@@ -5,11 +5,13 @@
 package Frontent;
 
 import Backend.Mesero.ControladorOrden;
+import Exceptions.AccesoALaDataException;
 import Modelos.ProductoMenu;
 import java.awt.GridLayout;
 import java.awt.Image;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -140,7 +142,11 @@ public class OpcionMenu extends javax.swing.JPanel {
     
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         if (efectoHabilitado) {
-            controladorOrden.agregarAPedido(producto);
+            try {
+                controladorOrden.agregarAPedido(producto);
+            } catch (AccesoALaDataException e) {
+                JOptionPane.showConfirmDialog(null, e.getMessage());
+            }
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 

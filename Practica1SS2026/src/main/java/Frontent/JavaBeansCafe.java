@@ -4,6 +4,7 @@
  */
 package Frontent;
 
+import Backend.Inventario.ControladorInventario;
 import Frontent.Mesero.ServicioMesero;
 import Frontent.Mesero.SubMenuMeseros;
 import Frontent.Mesero.ServicioPagoCuenta;
@@ -24,6 +25,9 @@ public class JavaBeansCafe extends javax.swing.JFrame {
     private SubMenuMeseros subMenu;
     private ServicioDeOrden servicioOrden;
     private ServicioPagoCuenta servicioCuenta;
+    private ServicioInventario servicioInventario;
+    private ControladorInventario controladorInventario;
+    private ServicioAdminstrador servicioAdminstrador;
     
     public JavaBeansCafe(MenuProducto menuProductos) {
         initComponents();
@@ -32,20 +36,16 @@ public class JavaBeansCafe extends javax.swing.JFrame {
         ocultarSubMenus();
     }
     
-    public void setServicioMesero(ServicioMesero servicioMesero) {
+    public void setServicioMesero(ServicioMesero servicioMesero, ControladorMesero controladorMesero) {
         this.servicioMesero = servicioMesero;
         jDesktopPane1.add(servicioMesero);
+        this.controladorMesero = controladorMesero;
     }
     
     public void setSubMenu(SubMenuMeseros subMenu) {
         this.subMenu = subMenu;
         jDesktopPane1.add(subMenu);
     }
-    
-    public void setControladorMesero(ControladorMesero controladorMesero) {
-        this.controladorMesero = controladorMesero;
-    }
-    
     public void setServicioOrden(ServicioDeOrden servicioOrden) {
         this.servicioOrden = servicioOrden;
         jDesktopPane1.add(servicioOrden);
@@ -55,6 +55,19 @@ public class JavaBeansCafe extends javax.swing.JFrame {
         this.servicioCuenta = servicioCuenta;
         jDesktopPane1.add(servicioCuenta);
     }
+
+    public void setServicioInventario(ServicioInventario servicioInventario, ControladorInventario controladorInventario) {
+        this.servicioInventario = servicioInventario;
+        jDesktopPane1.add(servicioInventario);
+        this.controladorInventario = controladorInventario;
+    }
+
+    public void setServicioAdminstrador(ServicioAdminstrador servicioAdminstrador) {
+        this.servicioAdminstrador = servicioAdminstrador;
+        jDesktopPane1.add(servicioAdminstrador);
+        //controlador = controlador
+    }
+    
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -93,9 +106,11 @@ public class JavaBeansCafe extends javax.swing.JFrame {
 
         jButton3.setFont(new java.awt.Font("Liberation Sans", 0, 24)); // NOI18N
         jButton3.setText("Inventario");
+        jButton3.addActionListener(this::jButton3ActionPerformed);
 
         jButton4.setFont(new java.awt.Font("Liberation Sans", 0, 24)); // NOI18N
         jButton4.setText("Servicio de Adminstrador");
+        jButton4.addActionListener(this::jButton4ActionPerformed);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -214,9 +229,11 @@ public class JavaBeansCafe extends javax.swing.JFrame {
 
     private void botonMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonMenuActionPerformed
         menu.setVisible(!menu.isVisible());
-        servicioMesero.setVisible(false);
         controladorMesero.bloquearMesas();
         ocultarSubMenus();
+        servicioMesero.setVisible(false);
+        servicioInventario.setVisible(false);
+        servicioAdminstrador.setVisible(false);
     }//GEN-LAST:event_botonMenuActionPerformed
 
     private void botonServicioMeseroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonServicioMeseroActionPerformed
@@ -238,6 +255,8 @@ public class JavaBeansCafe extends javax.swing.JFrame {
         }
         menu.setVisible(false);
         subMenuAdministrador.setVisible(false);
+        servicioInventario.setVisible(false);
+        servicioAdminstrador.setVisible(false);
         if (!visible) {
             controladorMesero.bloquearMesas();
         }
@@ -251,6 +270,31 @@ public class JavaBeansCafe extends javax.swing.JFrame {
             mostrarError(e.getMessage());
         }
     }//GEN-LAST:event_botonSubMenuMeserosActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        try {
+            controladorInventario.colocarInventario();
+            servicioInventario.setVisible(!servicioInventario.isVisible());
+            ocultarSubMenus();
+            menu.setVisible(false);
+            servicioMesero.setVisible(false);
+            servicioAdminstrador.setVisible(false);
+            controladorMesero.bloquearMesas();
+        } catch (AccesoALaDataException e) {
+            mostrarError(e.getMessage());
+        }
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        boolean visible = !servicioAdminstrador.isVisible();
+        subMenuAdministrador.setVisible(visible);
+        servicioAdminstrador.setVisible(visible);
+        menu.setVisible(false);
+        subMenuMesero.setVisible(false);
+        servicioMesero.setVisible(false);
+        servicioInventario.setVisible(false);
+        controladorMesero.bloquearMesas();
+    }//GEN-LAST:event_jButton4ActionPerformed
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botonMenu;

@@ -1,7 +1,9 @@
 Modelos/Insumo.class
 Backend/Menu/ControladorMenu.class
+Frontent/ServicioInventario.class
 Modelos/Pedido.class
 Frontent/Mesero/OpcionSMMesero.class
+Backend/Inventario/ControladorInventario.class
 Backend/Inicializador.class
 Backend/Mesero/ControladorMesero.class
 DAOs/InsumoDAO.class
@@ -25,6 +27,7 @@ Frontent/Mesero/PlantillaMesa.class
 Modelos/Mesa.class
 DAOs/MesaDAO.class
 Frontent/OpcionMenu.class
+Frontent/ServicioAdminstrador.class
 Exceptions/AccesoALaDataException.class
 Modelos/DetalleCuenta.class
 Frontent/Mesero/ServicioPagoCuenta.class

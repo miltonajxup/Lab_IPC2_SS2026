@@ -15,13 +15,14 @@ public class Insumo {
     private double cantidadStock;
     private double stockMinimo;
     private double costo;
-    private String undadMedida;
+    private final String undadMedida;
     private int cantUtilizadaProducto;
 
-    public Insumo(int codigo, String nombre, int cantidadUtilizada) {
+    public Insumo(int codigo, String nombre, int cantidadUtilizada, String unidadMedida) {
         this.codigo = codigo;
         this.nombre = nombre;
         this.cantUtilizadaProducto = cantidadUtilizada;
+        this.undadMedida = unidadMedida;
     }
 
     public Insumo(int codigo, String nombre, double cantidadStock, double stockMinimo, double costo, String undadMedida) {

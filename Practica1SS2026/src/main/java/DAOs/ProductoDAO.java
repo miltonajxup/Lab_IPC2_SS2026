@@ -26,10 +26,11 @@ public class ProductoDAO {
                                              FROM producto_menu AS pro JOIN categoria_producto AS cat ON pro.categoria = cat.id""";
     private final String INSUMOS_PRODUCTO = """
                                             SELECT pro.codigo AS codigo_producto, pro.nombre AS nombre_producto, 
-                                            ins.codigo AS codigo_insumo, ins.nombre AS nombre_insumo, rec.cantidad_utilizada 
+                                            ins.codigo AS codigo_insumo, ins.nombre AS nombre_insumo, rec.cantidad_utilizada, uni.unidad 
                                             FROM producto_menu AS pro 
                                             JOIN receta AS rec ON pro.codigo = rec.producto_id 
-                                            JOIN insumo AS ins ON rec.insumo_id = ins.codigo WHERE pro.codigo = ?""";
+                                            JOIN insumo AS ins ON rec.insumo_id = ins.codigo 
+                                            JOIN unidad_medida AS uni ON ins.unidad = uni.id WHERE pro.codigo = ?""";
     
     public List<ProductoMenu> getProductos() throws AccesoALaDataException {
         List<ProductoMenu> productos = new ArrayList<>();
@@ -71,7 +72,7 @@ public class ProductoDAO {
     }
     
     private Insumo armarInsumo(ResultSet rs) throws SQLException {
-        Insumo insumo = new Insumo(rs.getInt("codigo_insumo"), rs.getString("nombre_insumo"), rs.getInt("cantidad_utilizada"));
+        Insumo insumo = new Insumo(rs.getInt("codigo_insumo"), rs.getString("nombre_insumo"), rs.getInt("cantidad_utilizada"), rs.getString("unidad"));
         return insumo;
     }
 }

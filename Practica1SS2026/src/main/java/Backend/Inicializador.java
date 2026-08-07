@@ -4,6 +4,7 @@
  */
 package Backend;
 
+import Backend.Inventario.ControladorInventario;
 import Backend.Menu.ControladorMenu;
 import Backend.Mesero.ControladorMesero;
 import Backend.Mesero.ControladorOrden;
@@ -18,6 +19,8 @@ import Frontent.Mesero.ServicioDeOrden;
 import Frontent.Mesero.ServicioMesero;
 import Frontent.Mesero.ServicioPagoCuenta;
 import Frontent.Mesero.SubMenuMeseros;
+import Frontent.ServicioAdminstrador;
+import Frontent.ServicioInventario;
 import Modelos.Insumo;
 import Modelos.InsumoPedido;
 import Modelos.Mesa;
@@ -37,6 +40,8 @@ public class Inicializador {
     private SubMenuMeseros subMenuMeseros;
     private ServicioDeOrden servicioOrden;
     private ServicioPagoCuenta servicioCuenta;
+    private ServicioInventario servicioInventario;
+    private ServicioAdminstrador servicioAdminstrador;
     private List<Insumo> insumos;
     
     public void iniciar() {
@@ -47,13 +52,17 @@ public class Inicializador {
         jbcafe.setLocationRelativeTo(null);
         
         servicioMesero = new ServicioMesero();
-        jbcafe.setServicioMesero(servicioMesero);
+        
         subMenuMeseros = new SubMenuMeseros();
         jbcafe.setSubMenu(subMenuMeseros);
         servicioOrden = new ServicioDeOrden(jbcafe);
         jbcafe.setServicioOrden(servicioOrden);
         servicioCuenta = new ServicioPagoCuenta(jbcafe);
         jbcafe.setServicioCuenta(servicioCuenta);
+        servicioInventario = new ServicioInventario();
+        servicioAdminstrador = new ServicioAdminstrador();
+        jbcafe.setServicioAdminstrador(servicioAdminstrador);
+        
         conectarControladores();
         
         jbcafe.setVisible(true);
@@ -71,7 +80,8 @@ public class Inicializador {
         List<InsumoPedido> insumosPedido = inicializarInsumos(insumodao);
         
         ControladorMesero controladorMesero = new ControladorMesero(servicioMesero, subMenuMeseros, jbcafe, servicioCuenta, mesas);
-        jbcafe.setControladorMesero(controladorMesero);
+        jbcafe.setServicioMesero(servicioMesero, controladorMesero);
+
         try {
             controladorMesero.colocarMesas();
         } catch (AccesoALaDataException e) {
@@ -89,7 +99,7 @@ public class Inicializador {
         ControladorMenu controladorMenu = new ControladorMenu(menuProductos, productodao, productos);
         controladorMenu.colocarProductos();
         
-        ControladorOrden controladorOrden = new ControladorOrden(servicioOrden, insumos, insumosPedido, productodao, productos);
+        ControladorOrden controladorOrden = new ControladorOrden(servicioOrden, insumosPedido, insumodao, productodao, productos);
         controladorOrden.colocarProductos();
         servicioOrden.setControlador(controladorOrden);
         
@@ -97,6 +107,9 @@ public class Inicializador {
         controladorMesero.setControladroOrden(controladorPago);
         servicioCuenta.setControladorPago(controladorPago);
         servicioOrden.setControladorPago(controladorPago);
+        
+        ControladorInventario controladorInventario = new ControladorInventario(servicioInventario, insumodao, productodao);
+        jbcafe.setServicioInventario(servicioInventario, controladorInventario);
     }
     
     private List<InsumoPedido> inicializarInsumos(InsumoDAO insumodao) {
