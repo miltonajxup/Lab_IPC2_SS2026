@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JInternalFrame.java to edit this template
  */
-package Frontent;
+package Frontent.Mesero;
 
 import java.awt.GridLayout;
 
@@ -10,12 +10,12 @@ import java.awt.GridLayout;
  *
  * @author milton
  */
-public class SubMenuMeseros extends javax.swing.JInternalFrame {
+public class ServicioMesero extends javax.swing.JInternalFrame {
     
-    public SubMenuMeseros() {
+    public ServicioMesero() {
         initComponents();
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -25,43 +25,47 @@ public class SubMenuMeseros extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jPanel1 = new javax.swing.JPanel();
-
-        jLabel1.setFont(new java.awt.Font("Liberation Sans", 0, 22)); // NOI18N
-        jLabel1.setText("Selecciona al Mesero");
+        jLabel1 = new javax.swing.JLabel();
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 421, Short.MAX_VALUE)
+            .addGap(0, 999, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 320, Short.MAX_VALUE)
+            .addGap(0, 455, Short.MAX_VALUE)
         );
 
         jScrollPane1.setViewportView(jPanel1);
+
+        jLabel1.setFont(new java.awt.Font("Liberation Sans", 0, 25)); // NOI18N
+        jLabel1.setText("Mesero Seleccinado: Ninguno");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 423, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(57, 57, 57)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1001, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(50, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel1)
-                .addGap(100, 100, 100))
+                .addGap(383, 383, 383))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(35, 35, 35)
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 457, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(56, 56, 56))
         );
 
         pack();
@@ -74,13 +78,16 @@ public class SubMenuMeseros extends javax.swing.JInternalFrame {
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
     
-    
-    public void setCuadricula(int filas) {
-        jPanel1.setLayout(new GridLayout(filas, 1, 5, 5));
+    public void setMesero(String mesero) {
+        jLabel1.setText("Mesero Seleccionado: " + mesero);
     }
     
-    public void agregarMesero(OpcionSMMesero opcion) {
-        jPanel1.add(opcion);
+    public void setCuadricula(int filas) {
+        jPanel1.setLayout(new GridLayout(filas, 2, 5, 5));
+    }
+    
+    public void agregarMesa(PlantillaMesa plantillaMesa) {
+        jPanel1.add(plantillaMesa);
     }
     
     public void limpiar() {
@@ -89,8 +96,6 @@ public class SubMenuMeseros extends javax.swing.JInternalFrame {
     
     public void mostrar(boolean mostrar) {
         this.setVisible(mostrar);
-        if (!mostrar) {
-            limpiar();
-        }
     }
+    
 }

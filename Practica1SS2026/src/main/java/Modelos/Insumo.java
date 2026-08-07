@@ -44,6 +44,10 @@ public class Insumo {
     public double getCantidadStock() {
         return cantidadStock;
     }
+    
+    public void setCantidadStock(double cantidadStock) {
+        this.cantidadStock = cantidadStock;
+    }
 
     public double getStockMinimo() {
         return stockMinimo;

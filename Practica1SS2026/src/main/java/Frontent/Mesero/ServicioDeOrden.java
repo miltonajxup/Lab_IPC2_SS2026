@@ -2,9 +2,13 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JInternalFrame.java to edit this template
  */
-package Frontent;
+package Frontent.Mesero;
 
 import Backend.Mesero.ControladorOrden;
+import Backend.Mesero.ControladorPago;
+import Exceptions.AccesoALaDataException;
+import Frontent.JavaBeansCafe;
+import Frontent.OpcionMenu;
 import java.awt.GridLayout;
 import javax.swing.JOptionPane;
 
@@ -16,6 +20,7 @@ public class ServicioDeOrden extends javax.swing.JInternalFrame {
     
     private final JavaBeansCafe jbcafe;
     private ControladorOrden controlador;
+    private ControladorPago controladorPago;
     private int numeroOrdenes;
     
     public ServicioDeOrden(JavaBeansCafe jbcafe) {
@@ -29,6 +34,10 @@ public class ServicioDeOrden extends javax.swing.JInternalFrame {
     
     public void setControlador(ControladorOrden controlador) {
         this.controlador = controlador;
+    }
+
+    public void setControladorPago(ControladorPago controladorPago) {
+        this.controladorPago = controladorPago;
     }
 
     /**
@@ -48,6 +57,7 @@ public class ServicioDeOrden extends javax.swing.JInternalFrame {
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
+        botonOrdenar = new javax.swing.JButton();
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -88,6 +98,10 @@ public class ServicioDeOrden extends javax.swing.JInternalFrame {
         jButton1.setText("Regresar");
         jButton1.addActionListener(this::jButton1ActionPerformed);
 
+        botonOrdenar.setFont(new java.awt.Font("Liberation Sans", 0, 25)); // NOI18N
+        botonOrdenar.setText("Ordenar");
+        botonOrdenar.addActionListener(this::botonOrdenarActionPerformed);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -103,8 +117,13 @@ public class ServicioDeOrden extends javax.swing.JInternalFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(38, 38, 38)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 530, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(31, 31, 31)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 470, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(31, 31, 31)
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 470, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(207, 207, 207)
+                                .addComponent(botonOrdenar))))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(341, 341, 341)
                         .addComponent(jLabel2)
@@ -124,9 +143,12 @@ public class ServicioDeOrden extends javax.swing.JInternalFrame {
                     .addComponent(jLabel3)
                     .addComponent(jLabel4))
                 .addGap(29, 29, 29)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 448, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 448, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 385, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(botonOrdenar)))
                 .addGap(29, 29, 29))
         );
 
@@ -135,12 +157,23 @@ public class ServicioDeOrden extends javax.swing.JInternalFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         jbcafe.cambiarAOrden();
-        controlador.reiniciarInsumos();
-        setNumeroOrdenes(0);
+        salirDeOrden();
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void botonOrdenarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonOrdenarActionPerformed
+//        try {
+//            controladorPago.generarPedido();
+//            jbcafe.cambiarAPago();
+//        } catch (AccesoALaDataException e) {
+//            JOptionPane.showMessageDialog(this, e.getMessage());
+//            return;
+//        }
+//        salirDeOrden();
+    }//GEN-LAST:event_botonOrdenarActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton botonOrdenar;
     private javax.swing.JPanel espacioPedidos;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel2;
@@ -193,6 +226,12 @@ public class ServicioDeOrden extends javax.swing.JInternalFrame {
     
     public void mostrarMensaje(String mensaje) {
         JOptionPane.showMessageDialog(this, mensaje);
+    }
+    
+    public void salirDeOrden() {
+        controlador.reiniciarInsumos();
+        setNumeroOrdenes(0);
+        controladorPago.eliminarPedidoMesero();
     }
     
 }

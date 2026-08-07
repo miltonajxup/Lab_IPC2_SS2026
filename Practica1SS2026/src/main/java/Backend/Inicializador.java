@@ -7,14 +7,21 @@ package Backend;
 import Backend.Menu.ControladorMenu;
 import Backend.Mesero.ControladorMesero;
 import Backend.Mesero.ControladorOrden;
+import Backend.Mesero.ControladorPago;
 import DAOs.InsumoDAO;
+import DAOs.MesaDAO;
+import DAOs.ProductoDAO;
+import Exceptions.AccesoALaDataException;
 import Frontent.JavaBeansCafe;
 import Frontent.MenuProducto;
-import Frontent.ServicioDeOrden;
-import Frontent.ServicioMesero;
-import Frontent.SubMenuMeseros;
+import Frontent.Mesero.ServicioDeOrden;
+import Frontent.Mesero.ServicioMesero;
+import Frontent.Mesero.ServicioPagoCuenta;
+import Frontent.Mesero.SubMenuMeseros;
 import Modelos.Insumo;
 import Modelos.InsumoPedido;
+import Modelos.Mesa;
+import Modelos.ProductoMenu;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,16 +36,15 @@ public class Inicializador {
     private ServicioMesero servicioMesero;
     private SubMenuMeseros subMenuMeseros;
     private ServicioDeOrden servicioOrden;
+    private ServicioPagoCuenta servicioCuenta;
     private List<Insumo> insumos;
     
     public void iniciar() {
         
         menuProductos = new MenuProducto();
-        //nombres de los productos mas mostrarlos .mostrar
         
         jbcafe = new JavaBeansCafe(menuProductos);
         jbcafe.setLocationRelativeTo(null);
-        jbcafe.setVisible(true);
         
         servicioMesero = new ServicioMesero();
         jbcafe.setServicioMesero(servicioMesero);
@@ -46,27 +52,59 @@ public class Inicializador {
         jbcafe.setSubMenu(subMenuMeseros);
         servicioOrden = new ServicioDeOrden(jbcafe);
         jbcafe.setServicioOrden(servicioOrden);
+        servicioCuenta = new ServicioPagoCuenta(jbcafe);
+        jbcafe.setServicioCuenta(servicioCuenta);
         conectarControladores();
+        
+        jbcafe.setVisible(true);
     }
     
     private void conectarControladores() {
-        List<InsumoPedido> insumosPedido = inicializarInsumos();
+        InsumoDAO insumodao = new InsumoDAO();
+        MesaDAO mesasdao = new MesaDAO();
+        List<Mesa> mesas = null;
+        try {
+            mesas = mesasdao.getMesas();
+        } catch (AccesoALaDataException e) {
+            jbcafe.mostrarError(e.getMessage());
+        }
+        List<InsumoPedido> insumosPedido = inicializarInsumos(insumodao);
         
-        ControladorMesero controladorMesero = new ControladorMesero(servicioMesero, subMenuMeseros, jbcafe);
+        ControladorMesero controladorMesero = new ControladorMesero(servicioMesero, subMenuMeseros, jbcafe, servicioCuenta, mesas);
         jbcafe.setControladorMesero(controladorMesero);
-        controladorMesero.colocarMesas();
+        try {
+            controladorMesero.colocarMesas();
+        } catch (AccesoALaDataException e) {
+            jbcafe.mostrarError(e.getMessage());
+        }
         
-        ControladorMenu controladorMenu = new ControladorMenu(menuProductos);
+        ProductoDAO productodao = new ProductoDAO();
+        List<ProductoMenu> productos = null;
+        try {
+            productos = productodao.getProductos();
+        } catch (AccesoALaDataException e) {
+            jbcafe.mostrarError(e.getMessage());
+        }
+        
+        ControladorMenu controladorMenu = new ControladorMenu(menuProductos, productodao, productos);
         controladorMenu.colocarProductos();
         
-        ControladorOrden controladorOrden = new ControladorOrden(servicioOrden, insumos, insumosPedido);
+        ControladorOrden controladorOrden = new ControladorOrden(servicioOrden, insumos, insumosPedido, productodao, productos);
         controladorOrden.colocarProductos();
         servicioOrden.setControlador(controladorOrden);
+        
+        ControladorPago controladorPago = new ControladorPago(servicioCuenta, controladorOrden, mesasdao, insumodao);
+        controladorMesero.setControladroOrden(controladorPago);
+        servicioCuenta.setControladorPago(controladorPago);
+        servicioOrden.setControladorPago(controladorPago);
     }
     
-    private List<InsumoPedido> inicializarInsumos() {
-        InsumoDAO insumodao = new InsumoDAO();
-        insumos = insumodao.getTodosInsumos();
+    private List<InsumoPedido> inicializarInsumos(InsumoDAO insumodao) {
+        try {
+            insumos = insumodao.getTodosInsumos();
+        } catch (AccesoALaDataException e) {
+            jbcafe.mostrarError(e.getMessage());
+        }
         List<InsumoPedido> insumosPedido = new ArrayList<>();
         for (int i = 0; i < insumos.size(); i++) {
             Insumo insumo = insumos.get(i);

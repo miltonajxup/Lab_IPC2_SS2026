@@ -2,10 +2,12 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
-package Frontent;
+package Frontent.Mesero;
 
 import Backend.Mesero.ControladorMesero;
+import Exceptions.AccesoALaDataException;
 import Modelos.Personal;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -76,7 +78,11 @@ public class OpcionSMMesero extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        controladorMesero.elegirMesero(mesero);
+        try {
+            controladorMesero.elegirMesero(mesero);
+        } catch (AccesoALaDataException e) {
+            JOptionPane.showMessageDialog(this, e.getMessage());
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
 

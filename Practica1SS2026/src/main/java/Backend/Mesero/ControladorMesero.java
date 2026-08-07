@@ -4,14 +4,18 @@
  */
 package Backend.Mesero;
 
+import DAOs.DetalleCuentaDAO;
 import DAOs.MesaDAO;
 import DAOs.PedidoDAO;
 import DAOs.PersonalDAO;
+import Exceptions.AccesoALaDataException;
 import Frontent.JavaBeansCafe;
-import Frontent.OpcionSMMesero;
-import Frontent.PlantillaMesa;
-import Frontent.ServicioMesero;
-import Frontent.SubMenuMeseros;
+import Frontent.Mesero.OpcionSMMesero;
+import Frontent.Mesero.PlantillaMesa;
+import Frontent.Mesero.ServicioMesero;
+import Frontent.Mesero.ServicioPagoCuenta;
+import Frontent.Mesero.SubMenuMeseros;
+import Modelos.DetalleCuenta;
 import Modelos.Mesa;
 import Modelos.Pedido;
 import Modelos.Personal;
@@ -34,29 +38,38 @@ public class ControladorMesero {
     private final ServicioMesero servicioMesero;
     private final SubMenuMeseros subMenuMeseros;
     private final JavaBeansCafe jbcafe;
-
-    public ControladorMesero(ServicioMesero servicioMesero, SubMenuMeseros subMenuMeseros, JavaBeansCafe jbcafe) {
+    private final ServicioPagoCuenta servicioCuenta;
+    private final DetalleCuentaDAO detalleCuentadao;
+    private ControladorPago controladorPago;
+    
+    public ControladorMesero(ServicioMesero servicioMesero, SubMenuMeseros subMenuMeseros, JavaBeansCafe jbcafe, ServicioPagoCuenta servicioCuenta, List<Mesa> mesas) {
         this.personaldao = new PersonalDAO();
         this.mesadao = new MesaDAO();
-        this.mesas = mesadao.getMesas();
+        this.mesas = mesas;
         this.pedidodao = new PedidoDAO();
         this.servicioMesero = servicioMesero;
         this.subMenuMeseros = subMenuMeseros;
         this.jbcafe = jbcafe;
+        this.servicioCuenta = servicioCuenta;
+        this.detalleCuentadao = new DetalleCuentaDAO();
     }
     
-    public void traerCambiosMesa() {
+    public void setControladroOrden(ControladorPago controldorOrden) {
+        this.controladorPago = controldorOrden;
+    }
+    
+    public void traerCambiosMesa() throws AccesoALaDataException {
         mesas = mesadao.getMesas();
-        pedidos = pedidodao.geMesasOcupadas();
+        pedidos = pedidodao.getMesasOcupadas();
         colocarMesas();
     }
     
-    public void colocarMesas() {
+    public void colocarMesas() throws AccesoALaDataException {
         String mesero;
         String estado;
         servicioMesero.limpiar();
         servicioMesero.setCuadricula(mesas.size() / 2 + 1);
-        pedidos = pedidodao.geMesasOcupadas();
+        pedidos = pedidodao.getMesasOcupadas();
         plantillasMesa = new ArrayList<>();
         for (int i = 0; i < mesas.size(); i++) {
             Mesa actual = mesas.get(i);
@@ -68,7 +81,7 @@ public class ControladorMesero {
                 mesero = "Ninguno";
                 estado = "LIBRE";
             }
-            PlantillaMesa plantillaMesa = new PlantillaMesa(jbcafe, actual, mesero, estado);
+            PlantillaMesa plantillaMesa = new PlantillaMesa(this, actual, mesero, estado);
             plantillaMesa.habilitarBoton(false);
             plantillasMesa.add(plantillaMesa);
             servicioMesero.agregarMesa(plantillaMesa);
@@ -85,7 +98,7 @@ public class ControladorMesero {
         return null;
     }
     
-    public void colocarMeseros(boolean mostrar) {
+    public void colocarMeseros(boolean mostrar) throws AccesoALaDataException {
         if (mostrar) {
             subMenuMeseros.mostrar(mostrar);
             meseros = personaldao.getMeseros();
@@ -97,10 +110,14 @@ public class ControladorMesero {
         }
     }
     
-    public void elegirMesero(Personal mesero) {
+    public void elegirMesero(Personal mesero) throws AccesoALaDataException {
         subMenuMeseros.mostrar(false);
         servicioMesero.setMesero(mesero.getNombre());
+        controladorPago.setMesero(mesero);
         Pedido pedido = meseroOcupado(mesero.getDpi());
+        if (pedido != null) {
+            controladorPago.setPedido(pedido);
+        }
         for (int i = 0; i < mesas.size(); i++) {
             PlantillaMesa plantilla = plantillasMesa.get(i);
             if (pedido == null) {
@@ -117,7 +134,8 @@ public class ControladorMesero {
         }
     }
     
-    private Pedido meseroOcupado(String dpi) {
+    private Pedido meseroOcupado(String dpi) throws AccesoALaDataException {
+        pedidos = pedidodao.getMesasOcupadas();
         for (int i = 0; i < pedidos.size(); i++) {
             Pedido actual = pedidos.get(i);
             if (actual.getMesero().equals(dpi)) {
@@ -131,6 +149,25 @@ public class ControladorMesero {
         servicioMesero.setMesero("Ninguno");
         for (int i = 0; i < plantillasMesa.size(); i++) {
             plantillasMesa.get(i).habilitarBoton(false);
+        }
+    }
+    
+    public void desicionMesero(Mesa mesa) throws AccesoALaDataException {
+        controladorPago.setMesa(mesa);
+        if (mesa.getEstado()) {
+            jbcafe.cambiarAPago();
+            List<DetalleCuenta> detallesCuenta = detalleCuentadao.getDetallesCuenta(controladorPago.getNumeroPedido());
+            servicioCuenta.setNumeroDetalles(detallesCuenta.size());
+            double pagoTotal = 0;
+            for (int i = 0; i < detallesCuenta.size(); i++) {
+                DetalleCuenta detalle = detallesCuenta.get(i);
+                servicioCuenta.agregarDetalle(detalle.getNombreProducto(), detalle.getPrecio(), detalle.getUnidades(), detalle.getSubTotal());
+                pagoTotal += detalle.getSubTotal();
+            }
+            servicioCuenta.setTotal(pagoTotal);
+            controladorPago.setPagoTotal(pagoTotal);
+        } else {
+            jbcafe.cambiarAOrden();
         }
     }
     

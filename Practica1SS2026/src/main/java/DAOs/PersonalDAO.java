@@ -4,6 +4,7 @@
  */
 package DAOs;
 
+import Exceptions.AccesoALaDataException;
 import Modelos.Personal;
 import com.mycompany.practica1ss2026.DBConnection;
 import java.sql.Connection;
@@ -33,7 +34,7 @@ public class PersonalDAO {
                                         """;
     private final String actualizarPersonal = "UPDATE personal SET estado = ? WHERE dpi = ?";
     
-    public List<Personal> getPersonal() {
+    public List<Personal> getPersonal() throws AccesoALaDataException {
         List<Personal> personal = new ArrayList<>();
         
         try {
@@ -44,12 +45,12 @@ public class PersonalDAO {
                 personal.add(armarPersonal(resultSet));
             }
         } catch (SQLException e) {
-            System.out.println("Ocurrio un erro al cargar al personal " + e.getMessage());
+            throw new AccesoALaDataException("Ocurrio un erro al cargar al personal " + e.getMessage());
         }
         return personal;
     }
     
-    public List<Personal> getMeseros() {
+    public List<Personal> getMeseros() throws AccesoALaDataException {
         List<Personal> personal = new ArrayList<>();
         
         try {
@@ -60,12 +61,12 @@ public class PersonalDAO {
                 personal.add(armarPersonal(resultSet));
             }
         } catch (SQLException e) {
-            System.out.println("Ocurrio un erro al cargar al personal " + e.getMessage());
+            throw new AccesoALaDataException("Ocurrio un erro al cargar al personal " + e.getMessage());
         }
         return personal;
     }
     
-    public void actulizarPersonal(boolean estado, String dpi) {
+    public void actulizarPersonal(boolean estado, String dpi) throws AccesoALaDataException {
         try {
             Connection connection = DBConnection.getConnection();
             PreparedStatement update = connection.prepareStatement(actualizarPersonal);
@@ -73,7 +74,7 @@ public class PersonalDAO {
             update.setString(2, dpi);
             update.executeUpdate();
         } catch (SQLException e) {
-            System.out.println("Error al actulizar personal " + e.getMessage());
+            throw new AccesoALaDataException("Error al actulizar personal " + e.getMessage());
         }
     }
     

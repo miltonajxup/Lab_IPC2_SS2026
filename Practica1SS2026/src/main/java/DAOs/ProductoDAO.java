@@ -4,6 +4,7 @@
  */
 package DAOs;
 
+import Exceptions.AccesoALaDataException;
 import Modelos.Insumo;
 import Modelos.ProductoMenu;
 import com.mycompany.practica1ss2026.DBConnection;
@@ -30,7 +31,7 @@ public class ProductoDAO {
                                             JOIN receta AS rec ON pro.codigo = rec.producto_id 
                                             JOIN insumo AS ins ON rec.insumo_id = ins.codigo WHERE pro.codigo = ?""";
     
-    public List<ProductoMenu> getProductos() {
+    public List<ProductoMenu> getProductos() throws AccesoALaDataException {
         List<ProductoMenu> productos = new ArrayList<>();
         try {
             Connection connection = DBConnection.getConnection();
@@ -43,12 +44,12 @@ public class ProductoDAO {
                 productos.add(producto);
             }
         } catch (SQLException e) {
-            System.out.println("Error al traer los productos del menu " + e.getMessage());
+            throw new AccesoALaDataException("Error al traer los productos del menu " + e.getMessage());
         }
         return productos;
     }
     
-    private List<Insumo> getInsumosProducto(int idProducto) {
+    private List<Insumo> getInsumosProducto(int idProducto) throws AccesoALaDataException {
         List<Insumo> listaInsumos = new ArrayList<>();
         try {
             Connection connection = DBConnection.getConnection();
@@ -59,7 +60,7 @@ public class ProductoDAO {
                 listaInsumos.add(armarInsumo(resultSet));
             }
         } catch (SQLException e) {
-            System.out.println("Error al traer los productos del menu " + e.getMessage());
+            throw new AccesoALaDataException("Error al traer los productos del menu " + e.getMessage());
         }
         return listaInsumos;
     }

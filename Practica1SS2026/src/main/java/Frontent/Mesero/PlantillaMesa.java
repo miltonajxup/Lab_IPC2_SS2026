@@ -2,9 +2,12 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
-package Frontent;
+package Frontent.Mesero;
 
+import Backend.Mesero.ControladorMesero;
+import Exceptions.AccesoALaDataException;
 import Modelos.Mesa;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -12,12 +15,12 @@ import Modelos.Mesa;
  */
 public class PlantillaMesa extends javax.swing.JPanel {
     
-    private final JavaBeansCafe jbcafe;
+    private final ControladorMesero controladorMesero;
     private final Mesa mesa;
     
-    public PlantillaMesa(JavaBeansCafe jbcafe, Mesa mesa, String mesero, String estado) {
+    public PlantillaMesa(ControladorMesero controladorMesero, Mesa mesa, String mesero, String estado) {
         initComponents();
-        this.jbcafe = jbcafe;
+        this.controladorMesero = controladorMesero;
         this.mesa = mesa;
         textoEstado.setText("Estado: " + estado);
         textoMesero.setText("Mesero: " + mesero);
@@ -94,7 +97,11 @@ public class PlantillaMesa extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void botonMesaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonMesaActionPerformed
-        jbcafe.cambiarAOrden();
+        try {
+            controladorMesero.desicionMesero(mesa);
+        } catch (AccesoALaDataException e) {
+            JOptionPane.showMessageDialog(this, e.getMessage());
+        }
     }//GEN-LAST:event_botonMesaActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

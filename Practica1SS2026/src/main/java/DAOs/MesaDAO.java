@@ -4,6 +4,7 @@
  */
 package DAOs;
 
+import Exceptions.AccesoALaDataException;
 import Modelos.Mesa;
 import com.mycompany.practica1ss2026.DBConnection;
 import java.sql.Connection;
@@ -22,7 +23,7 @@ public class MesaDAO {
     private final String todasMesas = "SELECT * FROM mesa";
     private final String actualizarMesa = "UPDATE mesa SET estado = ? WHERE numero_mesa = ?";
     
-    public List<Mesa> getMesas() {
+    public List<Mesa> getMesas() throws AccesoALaDataException {
         
         List<Mesa> mesas = new ArrayList<>();
         
@@ -34,12 +35,12 @@ public class MesaDAO {
                 mesas.add(armarMesa(resultSet));
             }
         } catch (SQLException e) {
-            System.out.println("Error al cargar Mesas " + e.getMessage());
+            throw new AccesoALaDataException("Error al cargar Mesas " + e.getMessage());
         }
         return mesas;
     }
     
-    public void actualizarMesa(boolean estado, String mesero, int numeroMesa) {
+    public void actualizarMesa(boolean estado, int numeroMesa) throws AccesoALaDataException {
         
         try {
             Connection connection = DBConnection.getConnection();
@@ -49,7 +50,7 @@ public class MesaDAO {
             
             update.executeUpdate();
         } catch (SQLException e) {
-            System.out.println("Error al actualizar mesa " + e.getMessage());
+            throw new AccesoALaDataException("Error al actualizar mesa " + e.getMessage());
         }
     }
     

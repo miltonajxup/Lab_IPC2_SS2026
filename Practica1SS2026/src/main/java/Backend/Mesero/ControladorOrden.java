@@ -5,9 +5,10 @@
 package Backend.Mesero;
 
 import DAOs.ProductoDAO;
+import Exceptions.AccesoALaDataException;
 import Frontent.OpcionMenu;
-import Frontent.PlantillaOrden;
-import Frontent.ServicioDeOrden;
+import Frontent.Mesero.PlantillaOrden;
+import Frontent.Mesero.ServicioDeOrden;
 import Modelos.Insumo;
 import Modelos.InsumoPedido;
 import Modelos.ProductoMenu;
@@ -23,22 +24,30 @@ public class ControladorOrden {
     private final ServicioDeOrden servicioOrden;
     private final ProductoDAO productodao;
     private List<ProductoMenu> productosdb;
-    private final List<Insumo> insumos;
+    private List<Insumo> insumos;
     private List<ProductoMenu> productosPedido;
     private final List<InsumoPedido> insumosPedido;
     private List<PlantillaOrden> plantillasOrden;
 
-    public ControladorOrden(ServicioDeOrden servicioOrden, List<Insumo> insumos, List<InsumoPedido> insumosPedido) {
+    public ControladorOrden(ServicioDeOrden servicioOrden, List<Insumo> insumos, List<InsumoPedido> insumosPedido, ProductoDAO productodao, List<ProductoMenu> productosdb) {
         this.servicioOrden = servicioOrden;
-        this.productodao = new ProductoDAO();
-        this.productosdb = productodao.getProductos();
+        this.productodao = productodao;
+        this.productosdb = productosdb;
         this.insumos = insumos;
         this.productosPedido = new ArrayList<>();
         this.insumosPedido = insumosPedido;
         this.plantillasOrden = new ArrayList<>();
     }
     
-    public void actualizarProductos() {
+    public List<InsumoPedido> getInsumosPedido() {
+        return insumosPedido;
+    }
+    
+    public void setInsumos(List<Insumo> insumos) {
+        this.insumos = insumos;
+    }
+    
+    public void actualizarProductos() throws AccesoALaDataException {
         productosdb = productodao.getProductos();
         colocarProductos();
     }
@@ -69,7 +78,7 @@ public class ControladorOrden {
                 plantillaLista.agregarUnidad(1);
                 return;
             } else {
-                servicioOrden.mostrarMensaje("No hay " +insumoLista.getNombre()+" suficientes añadir este elemento a la orden");
+                servicioOrden.mostrarMensaje("No hay " +insumoLista.getNombre()+" suficiente para añadir este elemento a la orden");
                 return;
             }
         }
@@ -91,7 +100,7 @@ public class ControladorOrden {
         return false;
     }
     
-    private Insumo buscarInsumo(int codigo) {
+    public Insumo buscarInsumo(int codigo) {
         for (int i = 0; i < insumos.size(); i++) {
             Insumo actual = insumos.get(i);
             if (actual.getCodigo() == codigo) {

@@ -4,7 +4,13 @@
  */
 package Frontent;
 
+import Frontent.Mesero.ServicioMesero;
+import Frontent.Mesero.SubMenuMeseros;
+import Frontent.Mesero.ServicioPagoCuenta;
+import Frontent.Mesero.ServicioDeOrden;
 import Backend.Mesero.ControladorMesero;
+import Exceptions.AccesoALaDataException;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -17,6 +23,7 @@ public class JavaBeansCafe extends javax.swing.JFrame {
     private ControladorMesero controladorMesero;
     private SubMenuMeseros subMenu;
     private ServicioDeOrden servicioOrden;
+    private ServicioPagoCuenta servicioCuenta;
     
     public JavaBeansCafe(MenuProducto menuProductos) {
         initComponents();
@@ -42,6 +49,11 @@ public class JavaBeansCafe extends javax.swing.JFrame {
     public void setServicioOrden(ServicioDeOrden servicioOrden) {
         this.servicioOrden = servicioOrden;
         jDesktopPane1.add(servicioOrden);
+    }
+    
+    public void setServicioCuenta(ServicioPagoCuenta servicioCuenta) {
+        this.servicioCuenta = servicioCuenta;
+        jDesktopPane1.add(servicioCuenta);
     }
     
     /**
@@ -211,6 +223,19 @@ public class JavaBeansCafe extends javax.swing.JFrame {
         boolean visible = !servicioMesero.isVisible();
         servicioMesero.setVisible(visible);
         subMenuMesero.setVisible(visible);
+        if (visible) {
+            try {
+                controladorMesero.colocarMesas();
+            } catch (AccesoALaDataException e) {
+                mostrarError(e.getMessage());
+            }
+        }
+        if (!visible) {
+            servicioOrden.setVisible(visible);
+        }
+        if (visible) {
+            servicioOrden.salirDeOrden();
+        }
         menu.setVisible(false);
         subMenuAdministrador.setVisible(false);
         if (!visible) {
@@ -219,8 +244,12 @@ public class JavaBeansCafe extends javax.swing.JFrame {
     }//GEN-LAST:event_botonServicioMeseroActionPerformed
 
     private void botonSubMenuMeserosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonSubMenuMeserosActionPerformed
-        controladorMesero.colocarMeseros(!subMenu.isVisible());
-        subMenu.toFront();
+        try {
+            controladorMesero.colocarMeseros(!subMenu.isVisible());
+            subMenu.toFront();
+        } catch (AccesoALaDataException e) {
+            mostrarError(e.getMessage());
+        }
     }//GEN-LAST:event_botonSubMenuMeserosActionPerformed
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -239,15 +268,37 @@ public class JavaBeansCafe extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
     
     public void cambiarAOrden() {
+        boolean visible = cambioDelMesero();
+        servicioOrden.setVisible(!visible);
+    }
+    
+    public void cambiarAPago() {
+        boolean visible = cambioDelMesero();
+        servicioCuenta.setVisible(!visible);
+        if (servicioOrden.isVisible()) {
+            servicioOrden.setVisible(false);
+        }
+    }
+    
+    private boolean cambioDelMesero() {
         boolean visible = !servicioMesero.isVisible();
         subMenuMesero.setVisible(visible);
         servicioMesero.setVisible(visible);
-        servicioOrden.setVisible(!visible);
-    } 
+        try {
+            controladorMesero.colocarMesas();
+        } catch (AccesoALaDataException e) {
+            mostrarError(e.getMessage());
+        }
+        return visible;
+    }
     
     private void ocultarSubMenus() {
         subMenuMesero.setVisible(false);
         subMenuAdministrador.setVisible(false);
+    }
+    
+    public void mostrarError(String mensaje) {
+        JOptionPane.showMessageDialog(this, mensaje);
     }
     
 }

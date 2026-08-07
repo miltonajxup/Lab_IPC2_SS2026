@@ -5,6 +5,7 @@
 package Backend.Menu;
 
 import DAOs.ProductoDAO;
+import Exceptions.AccesoALaDataException;
 import Frontent.MenuProducto;
 import Frontent.OpcionMenu;
 import Modelos.Insumo;
@@ -21,13 +22,13 @@ public class ControladorMenu {
     private List<ProductoMenu> productos;
     private final MenuProducto menuProductos;
 
-    public ControladorMenu(MenuProducto menuProductos) {
-        this.productodao = new ProductoDAO();
-        this.productos = productodao.getProductos();
+    public ControladorMenu(MenuProducto menuProductos, ProductoDAO productodao, List<ProductoMenu> productos) {
+        this.productodao = productodao;
+        this.productos = productos;
         this.menuProductos = menuProductos;
     }
     
-    public void actualizarProductos() {
+    public void actualizarProductos() throws AccesoALaDataException {
         productos = productodao.getProductos();
         colocarProductos();
     }
