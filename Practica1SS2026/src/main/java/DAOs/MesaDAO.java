@@ -41,9 +41,12 @@ public class MesaDAO {
     }
     
     public void actualizarMesa(boolean estado, int numeroMesa) throws AccesoALaDataException {
-        
+        Connection connection = DBConnection.getConnection();
+        actualizarMesa(connection, estado, numeroMesa);
+    }
+    
+    public void actualizarMesa(Connection connection, boolean estado, int numeroMesa) throws AccesoALaDataException {
         try {
-            Connection connection = DBConnection.getConnection();
             PreparedStatement update = connection.prepareStatement(actualizarMesa);
             update.setBoolean(1, estado);
             update.setInt(2, numeroMesa);

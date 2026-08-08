@@ -6,7 +6,7 @@ package Frontent;
 
 import Frontent.Administrador.ServicioAdminstrarInsumos;
 import Backend.Inventario.ControladorInventario;
-import Backend.Inventario.ControladorPagoEmpleado;
+import Backend.Administrador.ControladorPagoEmpleado;
 import Frontent.Mesero.ServicioMesero;
 import Frontent.Mesero.SubMenuMeseros;
 import Frontent.Mesero.ServicioPagoCuenta;

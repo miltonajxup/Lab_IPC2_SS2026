@@ -31,6 +31,10 @@ public class PedidoDAO {
                                                  FROM pedido AS p 
                                                  JOIN personal AS per ON p.mesero = per.dpi 
                                                  WHERE hora_liberacion IS NULL AND p.mesero = ?""";
+    private final String GET_ULTIMO_PEDIDO = """
+                                             SELECT p.*, per.nombre AS nombre_mesero 
+                                             FROM pedido AS p JOIN personal AS per ON p.mesero = per.dpi 
+                                             ORDER BY numero_pedido DESC LIMIT 1""";
     private final String ACTUALIZAR_PEDIDO = "UPDATE pedido SET hora_liberacion = NOW(), estado = TRUE, propina = ? WHERE numero_pedido = ?";
     
     public List<Pedido> getMesasOcupadas() throws AccesoALaDataException {
@@ -49,8 +53,12 @@ public class PedidoDAO {
     }
     
     public void agregarPedido(double pagoTotal, String mesero, int mesa) throws AccesoALaDataException {
+        Connection connection = DBConnection.getConnection();
+        agregarPedido(connection, pagoTotal, mesero, mesa);
+    }
+    
+    public void agregarPedido(Connection connection, double pagoTotal, String mesero, int mesa) throws AccesoALaDataException {
         try {
-            Connection connection = DBConnection.getConnection();
             PreparedStatement insert = connection.prepareStatement(AGREGAR_PEDIDO);
             insert.setDouble(1, pagoTotal);
             insert.setString(2, mesero);
@@ -72,6 +80,34 @@ public class PedidoDAO {
             }
         } catch (SQLException e) {
             throw new AccesoALaDataException("Error al buscar el pedido del mesero " + dpi + " : " + e.getMessage());
+        }
+        return null;
+    }
+    
+    public Pedido getUltimoPedido(Connection connection) throws AccesoALaDataException {
+        try {
+            PreparedStatement select = connection.prepareStatement(GET_ULTIMO_PEDIDO);
+            ResultSet rs = select.executeQuery();
+            if (rs.next()) {
+                return armarPedido(rs);
+            }
+        } catch (SQLException e) {
+            throw new AccesoALaDataException("Error al traer el ultimo pedido " + e.getMessage());
+        }
+        return null;
+    }
+    
+    
+    public Pedido getUltimoPedido() throws AccesoALaDataException {
+        Connection connection = DBConnection.getConnection();
+        try {
+            PreparedStatement select = connection.prepareStatement(GET_ULTIMO_PEDIDO);
+            ResultSet rs = select.executeQuery();
+            if (rs.next()) {
+                return armarPedido(rs);
+            }
+        } catch (SQLException e) {
+            throw new AccesoALaDataException("Error al traer el ultimo pedido " + e.getMessage());
         }
         return null;
     }

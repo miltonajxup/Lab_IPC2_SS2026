@@ -49,6 +49,10 @@ public class ControladorOrden {
         this.insumos = insumos;
     }
     
+    public List<ProductoMenu> getProductoPedido() {
+        return productosPedido;
+    }
+    
     public void actualizarProductos() throws AccesoALaDataException {
         productosdb = productodao.getProductos();
         colocarProductos();
@@ -69,38 +73,50 @@ public class ControladorOrden {
         for (int i = 0; i < producto.getInsumos().size(); i++) {
             Insumo insumoProducto = producto.getInsumos().get(i);
             Insumo insumoLista = buscarInsumo(insumoProducto.getCodigo());
-            boolean existenUnidadesInsumo = agregarInsumo(insumoProducto.getCodigo(), insumoProducto.getCantUtilizadaProducto(), insumoLista.getCantidadStock(), insumoLista.getStockMinimo());
-            PlantillaOrden plantillaLista = existePlantilla(producto);
-            if (existenUnidadesInsumo && plantillaLista == null) {
-                PlantillaOrden plantilla = new PlantillaOrden(this, producto, 1);
-                servicioOrden.agregarPedido(plantilla);
-                productosPedido.add(producto);
-                plantillasOrden.add(plantilla);
-                return;
-            } else if (existenUnidadesInsumo && plantillaLista != null) {
-                plantillaLista.agregarUnidad(1);
-                return;
-            } else {
+            boolean existenUnidadesInsumo = existenUnidades(insumoProducto.getCodigo(), insumoProducto.getCantUtilizadaProducto(), insumoLista.getCantidadStock(), insumoLista.getStockMinimo());
+            if (!existenUnidadesInsumo) {
                 servicioOrden.mostrarMensaje("No hay " +insumoLista.getNombre()+" suficiente para añadir este elemento a la orden");
                 return;
             }
         }
+        for (int i = 0; i < producto.getInsumos().size(); i++) {
+            Insumo insumoProducto = producto.getInsumos().get(i);
+            modificarCantidadesInsumo(insumoProducto.getCodigo(), insumoProducto.getCantUtilizadaProducto());
+        }
+        
+        productosPedido.add(producto);
+        PlantillaOrden plantillaLista = existePlantilla(producto);
+        if(plantillaLista == null) {
+            PlantillaOrden plantilla = new PlantillaOrden(this, producto, 1);
+            servicioOrden.agregarPedido(plantilla);
+            plantillasOrden.add(plantilla);
+        } else {
+            plantillaLista.agregarUnidad(1);
+        }
     }
     
-    private boolean agregarInsumo(int codigo, double cantidadUtilizada, double cantidadRestante, double limite) {
+    private boolean existenUnidades(int codigo, double cantidadUtilizada, double cantidadRestante, double limite) {
         double suma;
         for (int i = 0; i < insumosPedido.size(); i++) {
             InsumoPedido actual = insumosPedido.get(i);
             if (actual.getCodigo() == codigo) {
                 suma = actual.getCantidad() + cantidadUtilizada;
                 cantidadRestante = cantidadRestante - suma;
-                if (cantidadRestante >= limite) {
-                    actual.setCantidad(cantidadUtilizada);
-                    return true;
-                }
+                return cantidadRestante >= limite;
             }
         }
         return false;
+    }
+    
+    private void modificarCantidadesInsumo(int codigo, double cantidadUtilizada) {
+        double suma;
+        for (int i = 0; i < insumosPedido.size(); i++) {
+            InsumoPedido actual = insumosPedido.get(i);
+            if (actual.getCodigo() == codigo) {
+                suma = actual.getCantidad() + cantidadUtilizada;
+                actual.setCantidad(suma);
+            }
+        }
     }
     
     public Insumo buscarInsumo(int codigo) {
@@ -137,8 +153,7 @@ public class ControladorOrden {
         productosPedido.remove(producto);
         for (int i = 0; i < producto.getInsumos().size(); i++) {
             Insumo insumoProducto = producto.getInsumos().get(i);
-            Insumo insumoLista = buscarInsumo(insumoProducto.getCodigo());
-            agregarInsumo(insumoProducto.getCodigo(), -insumoProducto.getCantUtilizadaProducto(), insumoLista.getCantidadStock(), insumoLista.getStockMinimo());
+            modificarCantidadesInsumo(insumoProducto.getCodigo(), -insumoProducto.getCantUtilizadaProducto());
         }
         if (plantilla.getCantidad() <= 0) {
             plantillasOrden.remove(plantilla);

@@ -32,7 +32,11 @@ public class PersonalDAO {
                                         JOIN jornada AS j ON p.jornada = j.id
                                         WHERE r.tipo = 'MESERO'
                                         """;
-    private final String actualizarPersonal = "UPDATE personal SET estado = ? WHERE dpi = ?";
+    private final String GET_PERSONAL_POR_DPI = """
+                                        SELECT p.*, r.tipo AS nombre_rol, j.tipo AS nombre_jornada 
+                                        FROM personal AS p JOIN rol AS r ON p.rol = r.id 
+                                        JOIN jornada AS j ON p.jornada = j.id WHERE p.dpi = ?""";
+    private final String ACTUALIZAR_PERSONAL = "UPDATE personal SET estado = ? WHERE dpi = ?";
     
     public List<Personal> getPersonal() throws AccesoALaDataException {
         List<Personal> personal = new ArrayList<>();
@@ -66,10 +70,24 @@ public class PersonalDAO {
         return personal;
     }
     
+    public Personal getPersonalPorDpi(String dpi) throws AccesoALaDataException {
+        try {
+            Connection connection = DBConnection.getConnection();
+            PreparedStatement select = connection.prepareStatement(GET_PERSONAL_POR_DPI);
+            ResultSet rs = select.executeQuery();
+            if (rs.next()) {
+                return armarPersonal(rs);
+            }
+        } catch (SQLException e) {
+            throw new AccesoALaDataException("Error al buscar empleado por DPI " + e.getMessage());
+        }
+        return null;
+    }
+    
     public void actulizarPersonal(boolean estado, String dpi) throws AccesoALaDataException {
         try {
             Connection connection = DBConnection.getConnection();
-            PreparedStatement update = connection.prepareStatement(actualizarPersonal);
+            PreparedStatement update = connection.prepareStatement(ACTUALIZAR_PERSONAL);
             update.setBoolean(1, estado);
             update.setString(2, dpi);
             update.executeUpdate();

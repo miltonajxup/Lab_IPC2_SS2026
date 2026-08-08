@@ -1,6 +1,7 @@
+/home/milton/Lab_IPC2_SS2026/Practica1SS2026/src/main/java/Backend/Administrador/ControlParaEmpleado.java
+/home/milton/Lab_IPC2_SS2026/Practica1SS2026/src/main/java/Backend/Administrador/ControladorPagoEmpleado.java
 /home/milton/Lab_IPC2_SS2026/Practica1SS2026/src/main/java/Backend/Inicializador.java
 /home/milton/Lab_IPC2_SS2026/Practica1SS2026/src/main/java/Backend/Inventario/ControladorInventario.java
-/home/milton/Lab_IPC2_SS2026/Practica1SS2026/src/main/java/Backend/Inventario/ControladorPagoEmpleado.java
 /home/milton/Lab_IPC2_SS2026/Practica1SS2026/src/main/java/Backend/Menu/ControladorMenu.java
 /home/milton/Lab_IPC2_SS2026/Practica1SS2026/src/main/java/Backend/Mesero/ControladorMesero.java
 /home/milton/Lab_IPC2_SS2026/Practica1SS2026/src/main/java/Backend/Mesero/ControladorOrden.java
@@ -12,10 +13,13 @@
 /home/milton/Lab_IPC2_SS2026/Practica1SS2026/src/main/java/DAOs/PedidoDAO.java
 /home/milton/Lab_IPC2_SS2026/Practica1SS2026/src/main/java/DAOs/PersonalDAO.java
 /home/milton/Lab_IPC2_SS2026/Practica1SS2026/src/main/java/DAOs/ProductoDAO.java
+/home/milton/Lab_IPC2_SS2026/Practica1SS2026/src/main/java/DAOs/RolDAO.java
 /home/milton/Lab_IPC2_SS2026/Practica1SS2026/src/main/java/Exceptions/AccesoALaDataException.java
 /home/milton/Lab_IPC2_SS2026/Practica1SS2026/src/main/java/Exceptions/ErrorIngresarDatosException.java
 /home/milton/Lab_IPC2_SS2026/Practica1SS2026/src/main/java/Frontent/Administrador/PlantillaEmpleado.java
+/home/milton/Lab_IPC2_SS2026/Practica1SS2026/src/main/java/Frontent/Administrador/PlantillaEmpleadoHabilitado.java
 /home/milton/Lab_IPC2_SS2026/Practica1SS2026/src/main/java/Frontent/Administrador/PlantillaInsumo.java
+/home/milton/Lab_IPC2_SS2026/Practica1SS2026/src/main/java/Frontent/Administrador/ServDeshabilitarEmpleado.java
 /home/milton/Lab_IPC2_SS2026/Practica1SS2026/src/main/java/Frontent/Administrador/ServicioAdminstrarInsumos.java
 /home/milton/Lab_IPC2_SS2026/Practica1SS2026/src/main/java/Frontent/Administrador/ServicioPagoEmpleado.java
 /home/milton/Lab_IPC2_SS2026/Practica1SS2026/src/main/java/Frontent/JavaBeansCafe.java
@@ -37,5 +41,6 @@
 /home/milton/Lab_IPC2_SS2026/Practica1SS2026/src/main/java/Modelos/Pedido.java
 /home/milton/Lab_IPC2_SS2026/Practica1SS2026/src/main/java/Modelos/Personal.java
 /home/milton/Lab_IPC2_SS2026/Practica1SS2026/src/main/java/Modelos/ProductoMenu.java
+/home/milton/Lab_IPC2_SS2026/Practica1SS2026/src/main/java/Modelos/Rol.java
 /home/milton/Lab_IPC2_SS2026/Practica1SS2026/src/main/java/com/mycompany/practica1ss2026/DBConnection.java
 /home/milton/Lab_IPC2_SS2026/Practica1SS2026/src/main/java/com/mycompany/practica1ss2026/Practica1_SS2026_IPC2.java

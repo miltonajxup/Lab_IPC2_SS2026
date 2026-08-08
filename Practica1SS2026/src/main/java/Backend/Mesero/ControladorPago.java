@@ -4,19 +4,19 @@
  */
 package Backend.Mesero;
 
+import DAOs.DetalleCuentaDAO;
 import DAOs.InsumoDAO;
 import DAOs.MesaDAO;
 import DAOs.PedidoDAO;
 import Exceptions.AccesoALaDataException;
+import Exceptions.ErrorIngresarDatosException;
 import Frontent.Mesero.ServicioPagoCuenta;
 import Modelos.Insumo;
 import Modelos.InsumoPedido;
 import Modelos.Mesa;
 import Modelos.Pedido;
 import Modelos.Personal;
-import com.mycompany.practica1ss2026.DBConnection;
-import java.sql.Connection;
-import java.sql.SQLException;
+import Modelos.ProductoMenu;
 import java.util.List;
 
 /**
@@ -30,10 +30,10 @@ public class ControladorPago {
     private final PedidoDAO pedidodao;
     private final MesaDAO mesasdao;
     private final InsumoDAO insumodao;
+    private final DetalleCuentaDAO detalledao;
     private Mesa mesa;
     private Personal mesero;
     private Pedido pedido;
-    private double pagoTotal;
     
     public ControladorPago(ServicioPagoCuenta servicioPago, ControladorOrden controladorOrden, MesaDAO mesasdao, InsumoDAO insumodao) {
         this.servicioPago = servicioPago;
@@ -41,6 +41,7 @@ public class ControladorPago {
         this.pedidodao = new PedidoDAO();
         this.mesasdao = mesasdao;
         this.insumodao = insumodao;
+        this.detalledao = new DetalleCuentaDAO();
     }
     
     public void setMesa(Mesa mesa) {
@@ -55,10 +56,6 @@ public class ControladorPago {
         this.pedido = pedido;
     }
     
-    public void setPagoTotal(double pagoTotal) {
-        this.pagoTotal = pagoTotal;
-    }
-    
     public String getdpiMesero() {
         return mesero.getDpi();
     }
@@ -71,13 +68,14 @@ public class ControladorPago {
         mesa = null;
         mesero = null;
         pedido = null;
-        pagoTotal = 0;
     }
     
-    public void generarPedido() throws AccesoALaDataException {
-        Connection connection = DBConnection.getConnection();
+    public void generarPedido() throws AccesoALaDataException, ErrorIngresarDatosException {
+        if (controladorOrden.getProductoPedido().size() <= 0) {
+            throw new ErrorIngresarDatosException("No hay productos seleccionados para generar una orden");
+        }
+        double pagoTotal = calcularPagoTotal();
         try {
-            connection.setAutoCommit(false);
             List<InsumoPedido> insumosPedido = controladorOrden.getInsumosPedido();
             
             for (int i = 0; i < insumosPedido.size(); i++) {
@@ -89,24 +87,13 @@ public class ControladorPago {
                 insumodao.actualizarInsumo(stockActual, actual.getCodigo());
             }
             
-            pedidodao.agregarPedido(pagoTotal, mesero.getDpi(), mesa.getNumeroMesa());
-            
             mesa.setEstado(true);
             mesasdao.actualizarMesa(mesa.getEstado(), mesa.getNumeroMesa());
-            connection.commit();
-        } catch (SQLException e) {
-            try {
-                connection.rollback();
-                connection.setAutoCommit(true);
-            } catch (SQLException ex) {
-                servicioPago.mostrarError(e.getMessage());
-            }
-        } finally {
-            try {
-                connection.setAutoCommit(true);
-            } catch (SQLException ex) {
-                servicioPago.mostrarError(ex.getMessage());
-            }
+            pedidodao.agregarPedido(pagoTotal, mesero.getDpi(), mesa.getNumeroMesa());
+            Pedido ultimoPedido = pedidodao.getUltimoPedido();
+            generarDetallesCuenta(ultimoPedido);
+        } catch (AccesoALaDataException e) {
+            servicioPago.mostrarError(e.getMessage());
         }
     }
 
@@ -123,6 +110,30 @@ public class ControladorPago {
         pedidodao.actualizarPedido(pedido.getNumeroPedido(), propina);
         mesa.setEstado(false);
         mesasdao.actualizarMesa(mesa.getEstado(), mesa.getNumeroMesa());
+    }
+    
+    private void generarDetallesCuenta(Pedido pedido) throws AccesoALaDataException {
+        List<ProductoMenu> productosPedido = controladorOrden.getProductoPedido();
+        for (int i = 0; i < productosPedido.size(); i++) {
+            ProductoMenu actual = productosPedido.get(i);
+            int productoRepetido = 0;
+            for (int j = 0; j < productosPedido.size(); j++) {
+                if (actual.getCodigo() == productosPedido.get(j).getCodigo()) {
+                    productoRepetido++;
+                }
+            }
+            double subTotal = productoRepetido * actual.getPrecio();
+            detalledao.agregarDetalles(actual.getCodigo(), actual.getPrecio(), productoRepetido, subTotal, pedido.getNumeroPedido());
+        }
+    }
+    
+    private double calcularPagoTotal() {
+        double pagoTotal = 0;
+        List<ProductoMenu> productosPedido = controladorOrden.getProductoPedido();
+        for (int i = 0; i < productosPedido.size(); i++) {
+            pagoTotal += productosPedido.get(i).getPrecio();
+        }
+        return pagoTotal;
     }
     
 }

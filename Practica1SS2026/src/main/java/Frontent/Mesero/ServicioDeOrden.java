@@ -7,6 +7,7 @@ package Frontent.Mesero;
 import Backend.Mesero.ControladorOrden;
 import Backend.Mesero.ControladorPago;
 import Exceptions.AccesoALaDataException;
+import Exceptions.ErrorIngresarDatosException;
 import Frontent.JavaBeansCafe;
 import Frontent.OpcionMenu;
 import java.awt.GridLayout;
@@ -19,7 +20,7 @@ import javax.swing.JOptionPane;
 public class ServicioDeOrden extends javax.swing.JInternalFrame {
     
     private final JavaBeansCafe jbcafe;
-    private ControladorOrden controlador;
+    private ControladorOrden controladorOrden;
     private ControladorPago controladorPago;
     private int numeroOrdenes;
     
@@ -32,8 +33,8 @@ public class ServicioDeOrden extends javax.swing.JInternalFrame {
         this.numeroOrdenes = numeroOrdenes;
     }
     
-    public void setControlador(ControladorOrden controlador) {
-        this.controlador = controlador;
+    public void setControladorOrden(ControladorOrden controladorOrden) {
+        this.controladorOrden = controladorOrden;
     }
 
     public void setControladorPago(ControladorPago controladorPago) {
@@ -161,14 +162,13 @@ public class ServicioDeOrden extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void botonOrdenarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonOrdenarActionPerformed
-//        try {
-//            controladorPago.generarPedido();
-//            jbcafe.cambiarAPago();
-//        } catch (AccesoALaDataException e) {
-//            JOptionPane.showMessageDialog(this, e.getMessage());
-//            return;
-//        }
-//        salirDeOrden();
+        try {
+            controladorPago.generarPedido();
+            jbcafe.cambiarAPago();
+            salirDeOrden();
+        } catch (AccesoALaDataException | ErrorIngresarDatosException e) {
+            JOptionPane.showMessageDialog(this, e.getMessage());
+        }
     }//GEN-LAST:event_botonOrdenarActionPerformed
 
 
@@ -229,7 +229,7 @@ public class ServicioDeOrden extends javax.swing.JInternalFrame {
     }
     
     public void salirDeOrden() {
-        controlador.reiniciarInsumos();
+        controladorOrden.reiniciarInsumos();
         setNumeroOrdenes(0);
         controladorPago.eliminarPedidoMesero();
     }

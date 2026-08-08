@@ -4,7 +4,7 @@
  */
 package Frontent.Administrador;
 
-import Backend.Inventario.ControladorPagoEmpleado;
+import Backend.Administrador.ControladorPagoEmpleado;
 import Exceptions.AccesoALaDataException;
 import Exceptions.ErrorIngresarDatosException;
 import java.awt.GridLayout;

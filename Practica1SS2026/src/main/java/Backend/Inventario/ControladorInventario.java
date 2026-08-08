@@ -93,6 +93,7 @@ public class ControladorInventario {
         cantidadActual += insumosExtra;
         insumodao.actualizarInsumo(cantidadActual, insumoElegido.getCodigo());
         limpiarAgregarInsumos();
+        colocarInsumos();
     }
     
     public void limpiarAgregarInsumos() {

@@ -5,7 +5,7 @@
 package Backend;
 
 import Backend.Inventario.ControladorInventario;
-import Backend.Inventario.ControladorPagoEmpleado;
+import Backend.Administrador.ControladorPagoEmpleado;
 import Backend.Menu.ControladorMenu;
 import Backend.Mesero.ControladorMesero;
 import Backend.Mesero.ControladorOrden;
@@ -105,7 +105,7 @@ public class Inicializador {
         
         ControladorOrden controladorOrden = new ControladorOrden(servicioOrden, insumosPedido, insumodao, productodao, productos);
         controladorOrden.colocarProductos();
-        servicioOrden.setControlador(controladorOrden);
+        servicioOrden.setControladorOrden(controladorOrden);
         
         ControladorPago controladorPago = new ControladorPago(servicioCuenta, controladorOrden, mesasdao, insumodao);
         controladorMesero.setControladroOrden(controladorPago);

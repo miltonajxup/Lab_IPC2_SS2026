@@ -4,26 +4,25 @@
  */
 package Frontent.Administrador;
 
-import Backend.Administrador.ControladorPagoEmpleado;
+import Backend.Administrador.ControlParaEmpleado;
 import Exceptions.AccesoALaDataException;
+import Modelos.Personal;
 import javax.swing.JOptionPane;
 
 /**
  *
  * @author milton
  */
-public class PlantillaEmpleado extends javax.swing.JPanel {
+public class PlantillaEmpleadoHabilitado extends javax.swing.JPanel {
     
-    private final ControladorPagoEmpleado controladorPago;
-    private final String dpiEmpleado;
-    private final String fecha;
+    private final ControlParaEmpleado ctroldehabilitar;
+    private final Personal personal;
     
-    public PlantillaEmpleado(ControladorPagoEmpleado controladorPago, String dpiEmpleado, String nombreEmpleado, String fecha) {
+    public PlantillaEmpleadoHabilitado(ControlParaEmpleado ctroldehabilitar, Personal personal) {
         initComponents();
-        this.controladorPago = controladorPago;
-        this.dpiEmpleado = dpiEmpleado;
-        this.fecha = fecha;
-        jLabel1.setText("Empleado: " + nombreEmpleado);
+        this.ctroldehabilitar = ctroldehabilitar;
+        this.personal = personal;
+        jLabel1.setText("Empleado: " + personal.getJornada());
     }
 
     /**
@@ -69,7 +68,7 @@ public class PlantillaEmpleado extends javax.swing.JPanel {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         try {
-            controladorPago.pagarCuenta(fecha, dpiEmpleado, this);
+            ctroldehabilitar.habilitar(personal);
         } catch (AccesoALaDataException e) {
             JOptionPane.showMessageDialog(null, e.getMessage());
         }

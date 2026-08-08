@@ -1,5 +1,6 @@
 Modelos/Insumo.class
 Backend/Menu/ControladorMenu.class
+Frontent/Administrador/ServDeshabilitarEmpleado.class
 DAOs/PagoDAO.class
 Frontent/ServicioInventario.class
 Modelos/Pedido.class
@@ -9,14 +10,17 @@ Backend/Inicializador.class
 Backend/Mesero/ControladorMesero.class
 DAOs/InsumoDAO.class
 Frontent/Administrador/ServicioAdminstrarInsumos.class
-Backend/Inventario/ControladorPagoEmpleado.class
 Modelos/Pago.class
+Backend/Administrador/ControladorPagoEmpleado.class
 Frontent/Mesero/PlantillaOrden.class
+Backend/Administrador/ControlParaEmpleado.class
 Frontent/Administrador/PlantillaInsumo.class
+Frontent/Administrador/PlantillaEmpleadoHabilitado.class
 DAOs/PedidoDAO.class
 Modelos/InsumoPedido.class
 com/mycompany/practica1ss2026/Practica1_SS2026_IPC2.class
 com/mycompany/practica1ss2026/DBConnection.class
+DAOs/RolDAO.class
 Frontent/Mesero/SubMenuMeseros.class
 Modelos/Personal.class
 Frontent/JavaBeansCafe.class
@@ -34,6 +38,7 @@ Frontent/Mesero/PlantillaMesa.class
 Modelos/Mesa.class
 DAOs/MesaDAO.class
 Frontent/OpcionMenu.class
+Modelos/Rol.class
 Frontent/Administrador/ServicioPagoEmpleado.class
 Exceptions/AccesoALaDataException.class
 Modelos/DetalleCuenta.class

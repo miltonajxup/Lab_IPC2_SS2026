@@ -165,7 +165,6 @@ public class ControladorMesero {
                 pagoTotal += detalle.getSubTotal();
             }
             servicioCuenta.setTotal(pagoTotal);
-            controladorPago.setPagoTotal(pagoTotal);
         } else {
             jbcafe.cambiarAOrden();
         }

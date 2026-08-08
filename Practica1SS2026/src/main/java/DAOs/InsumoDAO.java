@@ -39,8 +39,12 @@ public class InsumoDAO {
     }
     
     public void actualizarInsumo(double cantidadStock, int codigo) throws AccesoALaDataException {
+        Connection connection = DBConnection.getConnection();
+        actualizarInsumo(connection, cantidadStock, codigo);
+    }
+    
+    public void actualizarInsumo(Connection connection, double cantidadStock, int codigo) throws AccesoALaDataException {
         try {
-            Connection connection = DBConnection.getConnection();
             PreparedStatement update = connection.prepareStatement(ACTUALIZAR_CANTIDAD_INSUMO);
             update.setDouble(1, cantidadStock);
             update.setInt(2, codigo);
