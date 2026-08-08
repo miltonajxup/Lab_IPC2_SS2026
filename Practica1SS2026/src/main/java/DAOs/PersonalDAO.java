@@ -21,12 +21,12 @@ import java.util.List;
 public class PersonalDAO {
     
     //SELECT p.*, r.tipo AS nombre_rol, j.tipo AS nombre_jornada FROM personal AS p JOIN rol AS r ON p.rol = r.id JOIN jornada AS j ON p.jornada = j.id
-    private final String todoPersonal = """
+    private final String TODOS_PERSONAL = """
                                         SELECT p.*, r.tipo AS nombre_rol, j.tipo AS nombre_jornada 
                                         FROM personal AS p JOIN rol AS r ON p.rol = r.id 
                                         JOIN jornada AS j ON p.jornada = j.id
                                         """;
-    private final String todosMeseros = """
+    private final String TODOS_MESEROS = """
                                         SELECT p.*, r.tipo AS nombre_rol, j.tipo AS nombre_jornada 
                                         FROM personal AS p JOIN rol AS r ON p.rol = r.id 
                                         JOIN jornada AS j ON p.jornada = j.id
@@ -39,7 +39,7 @@ public class PersonalDAO {
         
         try {
             Connection connection = DBConnection.getConnection();
-            PreparedStatement select = connection.prepareStatement(todoPersonal);
+            PreparedStatement select = connection.prepareStatement(TODOS_PERSONAL);
             ResultSet resultSet = select.executeQuery();
             while (resultSet.next()) {
                 personal.add(armarPersonal(resultSet));
@@ -55,7 +55,7 @@ public class PersonalDAO {
         
         try {
             Connection connection = DBConnection.getConnection();
-            PreparedStatement select = connection.prepareStatement(todosMeseros);
+            PreparedStatement select = connection.prepareStatement(TODOS_MESEROS);
             ResultSet resultSet = select.executeQuery();
             while (resultSet.next()) {
                 personal.add(armarPersonal(resultSet));

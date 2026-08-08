@@ -5,6 +5,7 @@
 package Backend;
 
 import Backend.Inventario.ControladorInventario;
+import Backend.Inventario.ControladorPagoEmpleado;
 import Backend.Menu.ControladorMenu;
 import Backend.Mesero.ControladorMesero;
 import Backend.Mesero.ControladorOrden;
@@ -19,7 +20,8 @@ import Frontent.Mesero.ServicioDeOrden;
 import Frontent.Mesero.ServicioMesero;
 import Frontent.Mesero.ServicioPagoCuenta;
 import Frontent.Mesero.SubMenuMeseros;
-import Frontent.ServicioAdminstrador;
+import Frontent.Administrador.ServicioAdminstrarInsumos;
+import Frontent.Administrador.ServicioPagoEmpleado;
 import Frontent.ServicioInventario;
 import Modelos.Insumo;
 import Modelos.InsumoPedido;
@@ -41,7 +43,8 @@ public class Inicializador {
     private ServicioDeOrden servicioOrden;
     private ServicioPagoCuenta servicioCuenta;
     private ServicioInventario servicioInventario;
-    private ServicioAdminstrador servicioAdminstrador;
+    private ServicioAdminstrarInsumos servicioAdminstrador;
+    private ServicioPagoEmpleado servicioPagoEmpleado;
     private List<Insumo> insumos;
     
     public void iniciar() {
@@ -60,9 +63,10 @@ public class Inicializador {
         servicioCuenta = new ServicioPagoCuenta(jbcafe);
         jbcafe.setServicioCuenta(servicioCuenta);
         servicioInventario = new ServicioInventario();
-        servicioAdminstrador = new ServicioAdminstrador();
-        jbcafe.setServicioAdminstrador(servicioAdminstrador);
-        
+        servicioAdminstrador = new ServicioAdminstrarInsumos();
+        jbcafe.setServAdministarInsumos(servicioAdminstrador);
+        servicioPagoEmpleado = new ServicioPagoEmpleado();
+        jbcafe.setServicioPagoEmpleado(servicioPagoEmpleado);
         conectarControladores();
         
         jbcafe.setVisible(true);
@@ -108,8 +112,13 @@ public class Inicializador {
         servicioCuenta.setControladorPago(controladorPago);
         servicioOrden.setControladorPago(controladorPago);
         
-        ControladorInventario controladorInventario = new ControladorInventario(servicioInventario, insumodao, productodao);
+        ControladorInventario controladorInventario = new ControladorInventario(servicioInventario, servicioAdminstrador, insumodao, productodao);
+        servicioAdminstrador.setControlador(controladorInventario);
         jbcafe.setServicioInventario(servicioInventario, controladorInventario);
+        
+        ControladorPagoEmpleado controladorPagoEmpleado = new ControladorPagoEmpleado(servicioPagoEmpleado);
+        servicioPagoEmpleado.setControladorPago(controladorPagoEmpleado);
+        
     }
     
     private List<InsumoPedido> inicializarInsumos(InsumoDAO insumodao) {

@@ -142,4 +142,9 @@ public class ServicioInventario extends javax.swing.JInternalFrame {
         jPanel2.add(ingrediente);
     }
     
+    public void limpiar() {
+        jPanel1.removeAll();
+        jPanel2.removeAll();
+    }
+    
 }

@@ -56,37 +56,24 @@ INSERT INTO tipo_pago (tipo) VALUES
 ('QUINCENA'),
 ('FIN_DE_MES');
 
-CREATE TABLE estado_pago (
-    id INT AUTO_INCREMENT, 
-    estado VARCHAR(20) NOT NULL UNIQUE,
-    CONSTRAINT pk_estado PRIMARY KEY (id)
-);
-
-INSERT INTO estado_pago (estado) VALUES 
-('PENDIENTE'),
-('PAGADO');
-
 CREATE TABLE pago (
     codigo_nomina INT AUTO_INCREMENT,
-    fecha_emision DATETIME DEFAULT CURRENT_TIMESTAMP,
+    fecha_emision DATE NOT NULL,
     monto_a_pagar DECIMAL(6,2) NOT NULL,
-    estado INT NOT NULL,
+    estado BOOLEAN DEFAULT FALSE,
     empleado VARCHAR(13) NOT NULL,
     tipo INT NOT NULL,
     CONSTRAINT pk_pago PRIMARY KEY (codigo_nomina),
-    CONSTRAINT fk_estado FOREIGN KEY (estado) REFERENCES estado_pago(id),
     CONSTRAINT fk_empleado FOREIGN KEY (empleado) REFERENCES personal(dpi),
     CONSTRAINT fk_tipo FOREIGN KEY (tipo) REFERENCES tipo_pago(id)
 );
 
-INSERT INTO pago
-(monto_a_pagar, estado, empleado, tipo)
-VALUES
-(1750.00,2,'1000000000001',1),
-(2100.00,1,'1000000000002',1),
-(3900.00,2,'1000000000003',2),
-(6500.00,1,'1000000000004',2),
-(1750.00,2,'1000000000005',1);
+INSERT INTO pago (fecha_emision, monto_a_pagar, empleado, tipo) VALUES
+('2026-1-10', 1750.00,'1000000000001',1),
+('2026-2-10', 2100.00,'1000000000002',1),
+('2026-3-25', 3900.00,'1000000000003',2),
+('2026-3-25', 6500.00,'1000000000004',2),
+('2026-4-10', 1750.00,'1000000000005',1);
 
 CREATE TABLE mesa (
     numero_mesa INT AUTO_INCREMENT,

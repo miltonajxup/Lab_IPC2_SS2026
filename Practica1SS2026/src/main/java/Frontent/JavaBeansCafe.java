@@ -4,13 +4,16 @@
  */
 package Frontent;
 
+import Frontent.Administrador.ServicioAdminstrarInsumos;
 import Backend.Inventario.ControladorInventario;
+import Backend.Inventario.ControladorPagoEmpleado;
 import Frontent.Mesero.ServicioMesero;
 import Frontent.Mesero.SubMenuMeseros;
 import Frontent.Mesero.ServicioPagoCuenta;
 import Frontent.Mesero.ServicioDeOrden;
 import Backend.Mesero.ControladorMesero;
 import Exceptions.AccesoALaDataException;
+import Frontent.Administrador.ServicioPagoEmpleado;
 import javax.swing.JOptionPane;
 
 /**
@@ -27,7 +30,9 @@ public class JavaBeansCafe extends javax.swing.JFrame {
     private ServicioPagoCuenta servicioCuenta;
     private ServicioInventario servicioInventario;
     private ControladorInventario controladorInventario;
-    private ServicioAdminstrador servicioAdminstrador;
+    private ServicioAdminstrarInsumos servAdministarInsumos;
+    private ControladorPagoEmpleado contrPagoEmpleado;
+    private ServicioPagoEmpleado servicioPagoEmpleado;
     
     public JavaBeansCafe(MenuProducto menuProductos) {
         initComponents();
@@ -62,11 +67,16 @@ public class JavaBeansCafe extends javax.swing.JFrame {
         this.controladorInventario = controladorInventario;
     }
 
-    public void setServicioAdminstrador(ServicioAdminstrador servicioAdminstrador) {
-        this.servicioAdminstrador = servicioAdminstrador;
-        jDesktopPane1.add(servicioAdminstrador);
-        //controlador = controlador
+    public void setServAdministarInsumos(ServicioAdminstrarInsumos servAdministarInsumos) {
+        this.servAdministarInsumos = servAdministarInsumos;
+        jDesktopPane1.add(servAdministarInsumos);
     }
+
+    public void setServicioPagoEmpleado(ServicioPagoEmpleado servicioPagoEmpleado) {
+        this.servicioPagoEmpleado = servicioPagoEmpleado;
+        jDesktopPane1.add(servicioPagoEmpleado);
+    }
+    
     
     
     /**
@@ -90,6 +100,8 @@ public class JavaBeansCafe extends javax.swing.JFrame {
         botonSubMenuMeseros = new javax.swing.JButton();
         subMenuAdministrador = new javax.swing.JPanel();
         jButton7 = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -153,7 +165,7 @@ public class JavaBeansCafe extends javax.swing.JFrame {
         );
         jDesktopPane1Layout.setVerticalGroup(
             jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 596, Short.MAX_VALUE)
+            .addGap(0, 598, Short.MAX_VALUE)
         );
 
         jButton6.setFont(new java.awt.Font("Liberation Sans", 0, 24)); // NOI18N
@@ -184,7 +196,15 @@ public class JavaBeansCafe extends javax.swing.JFrame {
         );
 
         jButton7.setFont(new java.awt.Font("Liberation Sans", 0, 24)); // NOI18N
-        jButton7.setText("Servicio de Adminstrador");
+        jButton7.setText("Administrar Inventario");
+        jButton7.addActionListener(this::jButton7ActionPerformed);
+
+        jButton1.setFont(new java.awt.Font("Liberation Sans", 0, 24)); // NOI18N
+        jButton1.setText("Administracion de Pagos");
+        jButton1.addActionListener(this::jButton1ActionPerformed);
+
+        jButton2.setFont(new java.awt.Font("Liberation Sans", 0, 24)); // NOI18N
+        jButton2.setText("Desabilitar Empleados");
 
         javax.swing.GroupLayout subMenuAdministradorLayout = new javax.swing.GroupLayout(subMenuAdministrador);
         subMenuAdministrador.setLayout(subMenuAdministradorLayout);
@@ -193,12 +213,19 @@ public class JavaBeansCafe extends javax.swing.JFrame {
             .addGroup(subMenuAdministradorLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jButton7)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jButton1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jButton2)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         subMenuAdministradorLayout.setVerticalGroup(
             subMenuAdministradorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(subMenuAdministradorLayout.createSequentialGroup()
-                .addComponent(jButton7)
+                .addGroup(subMenuAdministradorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton7)
+                    .addComponent(jButton1)
+                    .addComponent(jButton2))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -233,7 +260,7 @@ public class JavaBeansCafe extends javax.swing.JFrame {
         ocultarSubMenus();
         servicioMesero.setVisible(false);
         servicioInventario.setVisible(false);
-        servicioAdminstrador.setVisible(false);
+        servAdministarInsumos.setVisible(false);
     }//GEN-LAST:event_botonMenuActionPerformed
 
     private void botonServicioMeseroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonServicioMeseroActionPerformed
@@ -256,7 +283,7 @@ public class JavaBeansCafe extends javax.swing.JFrame {
         menu.setVisible(false);
         subMenuAdministrador.setVisible(false);
         servicioInventario.setVisible(false);
-        servicioAdminstrador.setVisible(false);
+        servAdministarInsumos.setVisible(false);
         if (!visible) {
             controladorMesero.bloquearMesas();
         }
@@ -278,28 +305,66 @@ public class JavaBeansCafe extends javax.swing.JFrame {
             ocultarSubMenus();
             menu.setVisible(false);
             servicioMesero.setVisible(false);
-            servicioAdminstrador.setVisible(false);
+            servAdministarInsumos.setVisible(false);
             controladorMesero.bloquearMesas();
+            if (!servicioInventario.isVisible()) {
+                servicioInventario.limpiar();
+            }
         } catch (AccesoALaDataException e) {
             mostrarError(e.getMessage());
         }
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        boolean visible = !servicioAdminstrador.isVisible();
+        boolean visible = !subMenuAdministrador.isVisible();
         subMenuAdministrador.setVisible(visible);
-        servicioAdminstrador.setVisible(visible);
+        servAdministarInsumos.setVisible(false);
+        servicioPagoEmpleado.setVisible(false);
+        //servHabilitarEmpleados
         menu.setVisible(false);
         subMenuMesero.setVisible(false);
         servicioMesero.setVisible(false);
         servicioInventario.setVisible(false);
         controladorMesero.bloquearMesas();
+        servicioInventario.limpiar();
+        controladorInventario.limpiarAgregarInsumos();
+        limpiarServPagos();
     }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+        try {
+            controladorInventario.colocarInsumos();
+        } catch (AccesoALaDataException e) {
+            mostrarError(e.getMessage());
+        }
+        boolean visible = !servAdministarInsumos.isVisible();
+        servAdministarInsumos.setVisible(visible);
+        servicioPagoEmpleado.setVisible(false);
+        //servHabilitarEmpleados.setVisible(false)
+        if (!servAdministarInsumos.isVisible()) {
+            controladorInventario.limpiarAgregarInsumos();
+        }
+    }//GEN-LAST:event_jButton7ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        boolean visible = !servicioPagoEmpleado.isVisible();
+        servAdministarInsumos.setVisible(false);
+        servicioPagoEmpleado.setVisible(visible);
+        //servHabilitarEmpleados.setVisible(false)
+        limpiarServPagos();
+    }//GEN-LAST:event_jButton1ActionPerformed
+    
+    private void limpiarServPagos() {
+        servicioPagoEmpleado.limpiar();
+        servicioPagoEmpleado.limpiarFecha();
+    }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botonMenu;
     private javax.swing.JButton botonServicioMesero;
     private javax.swing.JButton botonSubMenuMeseros;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton6;

@@ -1,5 +1,6 @@
 Modelos/Insumo.class
 Backend/Menu/ControladorMenu.class
+DAOs/PagoDAO.class
 Frontent/ServicioInventario.class
 Modelos/Pedido.class
 Frontent/Mesero/OpcionSMMesero.class
@@ -7,7 +8,11 @@ Backend/Inventario/ControladorInventario.class
 Backend/Inicializador.class
 Backend/Mesero/ControladorMesero.class
 DAOs/InsumoDAO.class
+Frontent/Administrador/ServicioAdminstrarInsumos.class
+Backend/Inventario/ControladorPagoEmpleado.class
+Modelos/Pago.class
 Frontent/Mesero/PlantillaOrden.class
+Frontent/Administrador/PlantillaInsumo.class
 DAOs/PedidoDAO.class
 Modelos/InsumoPedido.class
 com/mycompany/practica1ss2026/Practica1_SS2026_IPC2.class
@@ -23,11 +28,13 @@ Modelos/ProductoMenu.class
 Frontent/Mesero/ServicioDeOrden.class
 Backend/Mesero/ControladorOrden.class
 DAOs/DetalleCuentaDAO.class
+Exceptions/ErrorIngresarDatosException.class
+Frontent/Administrador/PlantillaEmpleado.class
 Frontent/Mesero/PlantillaMesa.class
 Modelos/Mesa.class
 DAOs/MesaDAO.class
 Frontent/OpcionMenu.class
-Frontent/ServicioAdminstrador.class
+Frontent/Administrador/ServicioPagoEmpleado.class
 Exceptions/AccesoALaDataException.class
 Modelos/DetalleCuenta.class
 Frontent/Mesero/ServicioPagoCuenta.class

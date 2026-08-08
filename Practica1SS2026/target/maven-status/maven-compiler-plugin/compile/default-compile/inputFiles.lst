@@ -1,5 +1,6 @@
 /home/milton/Lab_IPC2_SS2026/Practica1SS2026/src/main/java/Backend/Inicializador.java
 /home/milton/Lab_IPC2_SS2026/Practica1SS2026/src/main/java/Backend/Inventario/ControladorInventario.java
+/home/milton/Lab_IPC2_SS2026/Practica1SS2026/src/main/java/Backend/Inventario/ControladorPagoEmpleado.java
 /home/milton/Lab_IPC2_SS2026/Practica1SS2026/src/main/java/Backend/Menu/ControladorMenu.java
 /home/milton/Lab_IPC2_SS2026/Practica1SS2026/src/main/java/Backend/Mesero/ControladorMesero.java
 /home/milton/Lab_IPC2_SS2026/Practica1SS2026/src/main/java/Backend/Mesero/ControladorOrden.java
@@ -7,10 +8,16 @@
 /home/milton/Lab_IPC2_SS2026/Practica1SS2026/src/main/java/DAOs/DetalleCuentaDAO.java
 /home/milton/Lab_IPC2_SS2026/Practica1SS2026/src/main/java/DAOs/InsumoDAO.java
 /home/milton/Lab_IPC2_SS2026/Practica1SS2026/src/main/java/DAOs/MesaDAO.java
+/home/milton/Lab_IPC2_SS2026/Practica1SS2026/src/main/java/DAOs/PagoDAO.java
 /home/milton/Lab_IPC2_SS2026/Practica1SS2026/src/main/java/DAOs/PedidoDAO.java
 /home/milton/Lab_IPC2_SS2026/Practica1SS2026/src/main/java/DAOs/PersonalDAO.java
 /home/milton/Lab_IPC2_SS2026/Practica1SS2026/src/main/java/DAOs/ProductoDAO.java
 /home/milton/Lab_IPC2_SS2026/Practica1SS2026/src/main/java/Exceptions/AccesoALaDataException.java
+/home/milton/Lab_IPC2_SS2026/Practica1SS2026/src/main/java/Exceptions/ErrorIngresarDatosException.java
+/home/milton/Lab_IPC2_SS2026/Practica1SS2026/src/main/java/Frontent/Administrador/PlantillaEmpleado.java
+/home/milton/Lab_IPC2_SS2026/Practica1SS2026/src/main/java/Frontent/Administrador/PlantillaInsumo.java
+/home/milton/Lab_IPC2_SS2026/Practica1SS2026/src/main/java/Frontent/Administrador/ServicioAdminstrarInsumos.java
+/home/milton/Lab_IPC2_SS2026/Practica1SS2026/src/main/java/Frontent/Administrador/ServicioPagoEmpleado.java
 /home/milton/Lab_IPC2_SS2026/Practica1SS2026/src/main/java/Frontent/JavaBeansCafe.java
 /home/milton/Lab_IPC2_SS2026/Practica1SS2026/src/main/java/Frontent/MenuProducto.java
 /home/milton/Lab_IPC2_SS2026/Practica1SS2026/src/main/java/Frontent/Mesero/OpcionSMMesero.java
@@ -21,12 +28,12 @@
 /home/milton/Lab_IPC2_SS2026/Practica1SS2026/src/main/java/Frontent/Mesero/ServicioPagoCuenta.java
 /home/milton/Lab_IPC2_SS2026/Practica1SS2026/src/main/java/Frontent/Mesero/SubMenuMeseros.java
 /home/milton/Lab_IPC2_SS2026/Practica1SS2026/src/main/java/Frontent/OpcionMenu.java
-/home/milton/Lab_IPC2_SS2026/Practica1SS2026/src/main/java/Frontent/ServicioAdminstrador.java
 /home/milton/Lab_IPC2_SS2026/Practica1SS2026/src/main/java/Frontent/ServicioInventario.java
 /home/milton/Lab_IPC2_SS2026/Practica1SS2026/src/main/java/Modelos/DetalleCuenta.java
 /home/milton/Lab_IPC2_SS2026/Practica1SS2026/src/main/java/Modelos/Insumo.java
 /home/milton/Lab_IPC2_SS2026/Practica1SS2026/src/main/java/Modelos/InsumoPedido.java
 /home/milton/Lab_IPC2_SS2026/Practica1SS2026/src/main/java/Modelos/Mesa.java
+/home/milton/Lab_IPC2_SS2026/Practica1SS2026/src/main/java/Modelos/Pago.java
 /home/milton/Lab_IPC2_SS2026/Practica1SS2026/src/main/java/Modelos/Pedido.java
 /home/milton/Lab_IPC2_SS2026/Practica1SS2026/src/main/java/Modelos/Personal.java
 /home/milton/Lab_IPC2_SS2026/Practica1SS2026/src/main/java/Modelos/ProductoMenu.java
