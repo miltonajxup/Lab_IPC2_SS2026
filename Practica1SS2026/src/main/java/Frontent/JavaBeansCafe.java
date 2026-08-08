@@ -4,15 +4,16 @@
  */
 package Frontent;
 
+import Backend.Administrador.ControlParaEmpleado;
 import Frontent.Administrador.ServicioAdminstrarInsumos;
 import Backend.Inventario.ControladorInventario;
-import Backend.Administrador.ControladorPagoEmpleado;
 import Frontent.Mesero.ServicioMesero;
 import Frontent.Mesero.SubMenuMeseros;
 import Frontent.Mesero.ServicioPagoCuenta;
 import Frontent.Mesero.ServicioDeOrden;
 import Backend.Mesero.ControladorMesero;
 import Exceptions.AccesoALaDataException;
+import Frontent.Administrador.ServDeshabilitarEmpleado;
 import Frontent.Administrador.ServicioPagoEmpleado;
 import javax.swing.JOptionPane;
 
@@ -31,8 +32,9 @@ public class JavaBeansCafe extends javax.swing.JFrame {
     private ServicioInventario servicioInventario;
     private ControladorInventario controladorInventario;
     private ServicioAdminstrarInsumos servAdministarInsumos;
-    private ControladorPagoEmpleado contrPagoEmpleado;
     private ServicioPagoEmpleado servicioPagoEmpleado;
+    private ServDeshabilitarEmpleado servDeshabilitarEmpleado;
+    private ControlParaEmpleado controlParaEmpleado;
     
     public JavaBeansCafe(MenuProducto menuProductos) {
         initComponents();
@@ -76,8 +78,12 @@ public class JavaBeansCafe extends javax.swing.JFrame {
         this.servicioPagoEmpleado = servicioPagoEmpleado;
         jDesktopPane1.add(servicioPagoEmpleado);
     }
-    
-    
+
+    public void setServDeshabilitarEmpleado(ServDeshabilitarEmpleado servDeshabilitarEmpleado, ControlParaEmpleado controlParaEmpleado) {
+        this.servDeshabilitarEmpleado = servDeshabilitarEmpleado;
+        jDesktopPane1.add(servDeshabilitarEmpleado);
+        this.controlParaEmpleado = controlParaEmpleado;
+    }
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -96,7 +102,6 @@ public class JavaBeansCafe extends javax.swing.JFrame {
         jButton4 = new javax.swing.JButton();
         jDesktopPane1 = new javax.swing.JDesktopPane();
         subMenuMesero = new javax.swing.JPanel();
-        jButton6 = new javax.swing.JButton();
         botonSubMenuMeseros = new javax.swing.JButton();
         subMenuAdministrador = new javax.swing.JPanel();
         jButton7 = new javax.swing.JButton();
@@ -168,9 +173,6 @@ public class JavaBeansCafe extends javax.swing.JFrame {
             .addGap(0, 598, Short.MAX_VALUE)
         );
 
-        jButton6.setFont(new java.awt.Font("Liberation Sans", 0, 24)); // NOI18N
-        jButton6.setText("Servicio de Adminstrador");
-
         botonSubMenuMeseros.setFont(new java.awt.Font("Liberation Sans", 0, 24)); // NOI18N
         botonSubMenuMeseros.setText("Elegir Mesero");
         botonSubMenuMeseros.addActionListener(this::botonSubMenuMeserosActionPerformed);
@@ -182,16 +184,12 @@ public class JavaBeansCafe extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, subMenuMeseroLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(botonSubMenuMeseros)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton6)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         subMenuMeseroLayout.setVerticalGroup(
             subMenuMeseroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(subMenuMeseroLayout.createSequentialGroup()
-                .addGroup(subMenuMeseroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton6)
-                    .addComponent(botonSubMenuMeseros))
+                .addComponent(botonSubMenuMeseros)
                 .addGap(0, 6, Short.MAX_VALUE))
         );
 
@@ -204,7 +202,8 @@ public class JavaBeansCafe extends javax.swing.JFrame {
         jButton1.addActionListener(this::jButton1ActionPerformed);
 
         jButton2.setFont(new java.awt.Font("Liberation Sans", 0, 24)); // NOI18N
-        jButton2.setText("Desabilitar Empleados");
+        jButton2.setText("Administrar Empleados");
+        jButton2.addActionListener(this::jButton2ActionPerformed);
 
         javax.swing.GroupLayout subMenuAdministradorLayout = new javax.swing.GroupLayout(subMenuAdministrador);
         subMenuAdministrador.setLayout(subMenuAdministradorLayout);
@@ -320,7 +319,7 @@ public class JavaBeansCafe extends javax.swing.JFrame {
         subMenuAdministrador.setVisible(visible);
         servAdministarInsumos.setVisible(false);
         servicioPagoEmpleado.setVisible(false);
-        //servHabilitarEmpleados
+        servDeshabilitarEmpleado.setVisible(false);
         menu.setVisible(false);
         subMenuMesero.setVisible(false);
         servicioMesero.setVisible(false);
@@ -340,7 +339,7 @@ public class JavaBeansCafe extends javax.swing.JFrame {
         boolean visible = !servAdministarInsumos.isVisible();
         servAdministarInsumos.setVisible(visible);
         servicioPagoEmpleado.setVisible(false);
-        //servHabilitarEmpleados.setVisible(false)
+        servDeshabilitarEmpleado.setVisible(false);
         if (!servAdministarInsumos.isVisible()) {
             controladorInventario.limpiarAgregarInsumos();
         }
@@ -350,9 +349,21 @@ public class JavaBeansCafe extends javax.swing.JFrame {
         boolean visible = !servicioPagoEmpleado.isVisible();
         servAdministarInsumos.setVisible(false);
         servicioPagoEmpleado.setVisible(visible);
-        //servHabilitarEmpleados.setVisible(false)
+        servDeshabilitarEmpleado.setVisible(false);
         limpiarServPagos();
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        boolean visible = !servDeshabilitarEmpleado.isVisible();
+        servAdministarInsumos.setVisible(false);
+        servicioPagoEmpleado.setVisible(false);
+        servDeshabilitarEmpleado.setVisible(visible);
+        try {
+            controlParaEmpleado.colocarPersonal();
+        } catch (AccesoALaDataException e) {
+            mostrarError(e.getMessage());
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
     
     private void limpiarServPagos() {
         servicioPagoEmpleado.limpiar();
@@ -367,7 +378,6 @@ public class JavaBeansCafe extends javax.swing.JFrame {
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;
     private javax.swing.JDesktopPane jDesktopPane1;
     private javax.swing.JLabel jLabel1;

@@ -36,6 +36,7 @@ public class PersonalDAO {
                                         SELECT p.*, r.tipo AS nombre_rol, j.tipo AS nombre_jornada 
                                         FROM personal AS p JOIN rol AS r ON p.rol = r.id 
                                         JOIN jornada AS j ON p.jornada = j.id WHERE p.dpi = ?""";
+    private final String AGREGAR_PERSONAL = "INSERT INTO personal (dpi, nombre, salario, rol, jornada) VALUES (?,?,?,?,?)";
     private final String ACTUALIZAR_PERSONAL = "UPDATE personal SET estado = ? WHERE dpi = ?";
     
     public List<Personal> getPersonal() throws AccesoALaDataException {
@@ -74,6 +75,7 @@ public class PersonalDAO {
         try {
             Connection connection = DBConnection.getConnection();
             PreparedStatement select = connection.prepareStatement(GET_PERSONAL_POR_DPI);
+            select.setString(1, dpi);
             ResultSet rs = select.executeQuery();
             if (rs.next()) {
                 return armarPersonal(rs);
@@ -82,6 +84,21 @@ public class PersonalDAO {
             throw new AccesoALaDataException("Error al buscar empleado por DPI " + e.getMessage());
         }
         return null;
+    }
+    
+    public void agregarPersonal(String dpi, String nombre, double salario, int rol, int jornada) throws AccesoALaDataException {
+        try {
+            Connection connection = DBConnection.getConnection();
+            PreparedStatement insert = connection.prepareStatement(AGREGAR_PERSONAL);
+            insert.setString(1, dpi);
+            insert.setString(2, nombre);
+            insert.setDouble(3, salario);
+            insert.setInt(4, rol);
+            insert.setInt(5, jornada);
+            insert.executeUpdate();
+        } catch (SQLException e) {
+            throw new AccesoALaDataException("Error al intentar agregar un nuevo usuario " + e.getMessage());
+        }
     }
     
     public void actulizarPersonal(boolean estado, String dpi) throws AccesoALaDataException {

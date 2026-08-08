@@ -18,11 +18,12 @@ public class PlantillaEmpleadoHabilitado extends javax.swing.JPanel {
     private final ControlParaEmpleado ctroldehabilitar;
     private final Personal personal;
     
-    public PlantillaEmpleadoHabilitado(ControlParaEmpleado ctroldehabilitar, Personal personal) {
+    public PlantillaEmpleadoHabilitado(ControlParaEmpleado ctroldehabilitar, Personal personal, String estado) {
         initComponents();
         this.ctroldehabilitar = ctroldehabilitar;
         this.personal = personal;
-        jLabel1.setText("Empleado: " + personal.getJornada());
+        jLabel1.setText(personal.getNombre() + " Jor: " + personal.getJornada());
+        jButton1.setText(estado);
     }
 
     /**
@@ -37,11 +38,11 @@ public class PlantillaEmpleadoHabilitado extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
 
-        jLabel1.setFont(new java.awt.Font("Liberation Sans", 0, 25)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Liberation Sans", 0, 20)); // NOI18N
         jLabel1.setText("Empleado: ");
 
-        jButton1.setFont(new java.awt.Font("Liberation Sans", 0, 25)); // NOI18N
-        jButton1.setText("Pagar");
+        jButton1.setFont(new java.awt.Font("Liberation Sans", 0, 22)); // NOI18N
+        jButton1.setText("Habilitado");
         jButton1.addActionListener(this::jButton1ActionPerformed);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -49,26 +50,25 @@ public class PlantillaEmpleadoHabilitado extends javax.swing.JPanel {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 313, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 211, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(8, 8, 8)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jLabel1))
+                    .addComponent(jLabel1)
+                    .addComponent(jButton1))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         try {
-            ctroldehabilitar.habilitar(personal);
+            ctroldehabilitar.habilitar(this, personal);
         } catch (AccesoALaDataException e) {
             JOptionPane.showMessageDialog(null, e.getMessage());
         }
@@ -79,4 +79,8 @@ public class PlantillaEmpleadoHabilitado extends javax.swing.JPanel {
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     // End of variables declaration//GEN-END:variables
+    
+    public void setEstado(String estado) {
+        jButton1.setText(estado);
+    }
 }

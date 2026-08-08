@@ -4,6 +4,7 @@
  */
 package Backend;
 
+import Backend.Administrador.ControlParaEmpleado;
 import Backend.Inventario.ControladorInventario;
 import Backend.Administrador.ControladorPagoEmpleado;
 import Backend.Menu.ControladorMenu;
@@ -14,6 +15,7 @@ import DAOs.InsumoDAO;
 import DAOs.MesaDAO;
 import DAOs.ProductoDAO;
 import Exceptions.AccesoALaDataException;
+import Frontent.Administrador.ServDeshabilitarEmpleado;
 import Frontent.JavaBeansCafe;
 import Frontent.MenuProducto;
 import Frontent.Mesero.ServicioDeOrden;
@@ -45,6 +47,7 @@ public class Inicializador {
     private ServicioInventario servicioInventario;
     private ServicioAdminstrarInsumos servicioAdminstrador;
     private ServicioPagoEmpleado servicioPagoEmpleado;
+    private ServDeshabilitarEmpleado servHabilitarEmpleado;
     private List<Insumo> insumos;
     
     public void iniciar() {
@@ -67,6 +70,7 @@ public class Inicializador {
         jbcafe.setServAdministarInsumos(servicioAdminstrador);
         servicioPagoEmpleado = new ServicioPagoEmpleado();
         jbcafe.setServicioPagoEmpleado(servicioPagoEmpleado);
+        servHabilitarEmpleado = new ServDeshabilitarEmpleado();
         conectarControladores();
         
         jbcafe.setVisible(true);
@@ -118,6 +122,10 @@ public class Inicializador {
         
         ControladorPagoEmpleado controladorPagoEmpleado = new ControladorPagoEmpleado(servicioPagoEmpleado);
         servicioPagoEmpleado.setControladorPago(controladorPagoEmpleado);
+        
+        ControlParaEmpleado controlParaEmpleado = new ControlParaEmpleado(servHabilitarEmpleado);
+        servHabilitarEmpleado.setControlEmpleado(controlParaEmpleado);
+        jbcafe.setServDeshabilitarEmpleado(servHabilitarEmpleado, controlParaEmpleado);
         
     }
     

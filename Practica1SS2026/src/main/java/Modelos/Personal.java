@@ -14,7 +14,7 @@ public class Personal {
     private final String nombre;
     private final double salario;
     private final String fechaContratacion;
-    private final boolean estado;
+    private boolean estado;
     private final String rol;
     private final String jornada;
 
@@ -46,6 +46,10 @@ public class Personal {
 
     public boolean isEstado() {
         return estado;
+    }
+    
+    public void setEstado(boolean estado) {
+        this.estado = estado;
     }
 
     public String getRol() {
