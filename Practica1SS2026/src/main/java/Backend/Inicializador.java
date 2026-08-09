@@ -11,6 +11,7 @@ import Backend.Menu.ControladorMenu;
 import Backend.Mesero.ControladorMesero;
 import Backend.Mesero.ControladorOrden;
 import Backend.Mesero.ControladorPago;
+import Backend.Reporte.ControladorReportes;
 import DAOs.InsumoDAO;
 import DAOs.MesaDAO;
 import DAOs.ProductoDAO;
@@ -24,6 +25,7 @@ import Frontent.Mesero.ServicioPagoCuenta;
 import Frontent.Mesero.SubMenuMeseros;
 import Frontent.Administrador.ServicioAdminstrarInsumos;
 import Frontent.Administrador.ServicioPagoEmpleado;
+import Frontent.Reporte.VentanaReporte;
 import Frontent.ServicioInventario;
 import Modelos.Insumo;
 import Modelos.InsumoPedido;
@@ -48,6 +50,7 @@ public class Inicializador {
     private ServicioAdminstrarInsumos servicioAdminstrador;
     private ServicioPagoEmpleado servicioPagoEmpleado;
     private ServDeshabilitarEmpleado servHabilitarEmpleado;
+    private VentanaReporte ventanaReporte;
     private List<Insumo> insumos;
     
     public void iniciar() {
@@ -71,6 +74,7 @@ public class Inicializador {
         servicioPagoEmpleado = new ServicioPagoEmpleado();
         jbcafe.setServicioPagoEmpleado(servicioPagoEmpleado);
         servHabilitarEmpleado = new ServDeshabilitarEmpleado();
+        ventanaReporte = new VentanaReporte();
         conectarControladores();
         
         jbcafe.setVisible(true);
@@ -127,6 +131,9 @@ public class Inicializador {
         servHabilitarEmpleado.setControlEmpleado(controlParaEmpleado);
         jbcafe.setServDeshabilitarEmpleado(servHabilitarEmpleado, controlParaEmpleado);
         
+        ControladorReportes controladorReporte = new ControladorReportes(ventanaReporte, insumodao);
+        ventanaReporte.setControladorReportes(controladorReporte);
+        jbcafe.setControladorReporte(controladorReporte, ventanaReporte);
     }
     
     private List<InsumoPedido> inicializarInsumos(InsumoDAO insumodao) {

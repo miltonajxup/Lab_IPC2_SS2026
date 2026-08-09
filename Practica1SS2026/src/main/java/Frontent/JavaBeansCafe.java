@@ -12,9 +12,11 @@ import Frontent.Mesero.SubMenuMeseros;
 import Frontent.Mesero.ServicioPagoCuenta;
 import Frontent.Mesero.ServicioDeOrden;
 import Backend.Mesero.ControladorMesero;
+import Backend.Reporte.ControladorReportes;
 import Exceptions.AccesoALaDataException;
 import Frontent.Administrador.ServDeshabilitarEmpleado;
 import Frontent.Administrador.ServicioPagoEmpleado;
+import Frontent.Reporte.VentanaReporte;
 import javax.swing.JOptionPane;
 
 /**
@@ -35,6 +37,8 @@ public class JavaBeansCafe extends javax.swing.JFrame {
     private ServicioPagoEmpleado servicioPagoEmpleado;
     private ServDeshabilitarEmpleado servDeshabilitarEmpleado;
     private ControlParaEmpleado controlParaEmpleado;
+    private ControladorReportes controladorReporte;
+    private VentanaReporte ventanaReporte;
     
     public JavaBeansCafe(MenuProducto menuProductos) {
         initComponents();
@@ -84,6 +88,12 @@ public class JavaBeansCafe extends javax.swing.JFrame {
         jDesktopPane1.add(servDeshabilitarEmpleado);
         this.controlParaEmpleado = controlParaEmpleado;
     }
+
+    public void setControladorReporte(ControladorReportes controladorReporte, VentanaReporte ventanaReporte) {
+        this.controladorReporte = controladorReporte;
+        this.ventanaReporte = ventanaReporte;
+        jDesktopPane1.add(ventanaReporte);
+    }
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -100,6 +110,7 @@ public class JavaBeansCafe extends javax.swing.JFrame {
         botonServicioMesero = new javax.swing.JButton();
         botonInventario = new javax.swing.JButton();
         botonAdministrador = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
         jDesktopPane1 = new javax.swing.JDesktopPane();
         subMenuMesero = new javax.swing.JPanel();
         botonSubMenuMeseros = new javax.swing.JButton();
@@ -129,6 +140,10 @@ public class JavaBeansCafe extends javax.swing.JFrame {
         botonAdministrador.setText("Servicio de Adminstrador");
         botonAdministrador.addActionListener(this::botonAdministradorActionPerformed);
 
+        jButton3.setFont(new java.awt.Font("Liberation Sans", 0, 24)); // NOI18N
+        jButton3.setText("Reportes");
+        jButton3.addActionListener(this::jButton3ActionPerformed);
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -146,8 +161,10 @@ public class JavaBeansCafe extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(botonInventario)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(botonAdministrador)))
-                .addContainerGap(328, Short.MAX_VALUE))
+                        .addComponent(botonAdministrador)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jButton3)))
+                .addContainerGap(189, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -158,7 +175,8 @@ public class JavaBeansCafe extends javax.swing.JFrame {
                     .addComponent(botonMenu)
                     .addComponent(botonServicioMesero)
                     .addComponent(botonInventario)
-                    .addComponent(botonAdministrador))
+                    .addComponent(botonAdministrador)
+                    .addComponent(jButton3))
                 .addContainerGap())
         );
 
@@ -364,6 +382,22 @@ public class JavaBeansCafe extends javax.swing.JFrame {
             mostrarError(e.getMessage());
         }
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        boolean visible = !ventanaReporte.isVisible();
+        ventanaReporte.setVisible(visible);
+        ocultarSubMenus();
+        menu.setVisible(false);
+        servicioMesero.setVisible(false);
+        servicioInventario.setVisible(false);
+        servAdministarInsumos.setVisible(false);
+        controladorMesero.bloquearMesas();
+        try {
+            controladorReporte.agregarReportes();
+        } catch (AccesoALaDataException e) {
+            mostrarError(e.getMessage());
+        }
+    }//GEN-LAST:event_jButton3ActionPerformed
     
     private void ocultarInventario() {
         servicioInventario.setVisible(false);
@@ -383,6 +417,7 @@ public class JavaBeansCafe extends javax.swing.JFrame {
     private javax.swing.JButton botonSubMenuMeseros;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton7;
     private javax.swing.JDesktopPane jDesktopPane1;
     private javax.swing.JLabel jLabel1;

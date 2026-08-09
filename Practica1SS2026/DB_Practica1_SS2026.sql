@@ -114,14 +114,33 @@ CREATE TABLE insumo (
 );
 
 INSERT INTO insumo (nombre,cantidad_stock,stock_minimo,costo, unidad) VALUES
-('Café',30.00,10.00,25.50,2),
-('Leche',20.00,5.00,12.00,3),
-('Azúcar',50.00,10.00,6.50,2),
-('Chocolate',15.00,5.00,18.75,2),
-('Harina',40.00,10.00,8.25,1),
-('Huevos',100.00,20.00,1.25,5),
-('Crema Batida',12.00,4.00,22.50,2),
-('Jarabe Vainilla',8.00,3.00,35.00,4);
+('Café',     30.00,10.00,0.15,2),
+('Leche',    20.00,5.00, 12.00,3),
+('Azúcar',   50.00,10.00,0.01,2),
+('Chocolate',15.00,5.00, 0.08,2),
+('Harina',   40.00,10.00,7.00,1),
+('Huevos',   100.00,20.00,1.50,5),
+('Crema Batida',12.00,4.00,0.12,2),
+('Jarabe Vainilla',8.00,3.00,0.15,4);
+
+CREATE TABLE gasto_insumo(
+    codigo INT AUTO_INCREMENT,
+    fecha_compra DATETIME DEFAULT CURRENT_TIMESTAMP,
+    cantidad DECIMAL(8,2) NOT NULL,
+    insumo INT NOT NULL,
+    CONSTRAINT pk_gasto_insumo PRIMARY KEY (codigo),
+    CONSTRAINT fk_gi_insumo FOREIGN KEY (insumo) REFERENCES insumo(codigo)
+);
+
+INSERT INTO gasto_insumo (cantidad, insumo) VALUES 
+(30, 1),
+(20, 2),
+(50, 3),
+(15, 4),
+(40, 5),
+(100, 6),
+(12, 7), 
+(8, 8);
 
 CREATE TABLE categoria_producto (
     id INT AUTO_INCREMENT,
