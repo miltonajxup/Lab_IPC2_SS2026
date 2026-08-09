@@ -17,6 +17,7 @@ import Modelos.Mesa;
 import Modelos.Pedido;
 import Modelos.Personal;
 import Modelos.ProductoMenu;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -114,17 +115,30 @@ public class ControladorPago {
     
     private void generarDetallesCuenta(Pedido pedido) throws AccesoALaDataException {
         List<ProductoMenu> productosPedido = controladorOrden.getProductoPedido();
+        List<Integer> codigoRevisados = new ArrayList<>();
         for (int i = 0; i < productosPedido.size(); i++) {
             ProductoMenu actual = productosPedido.get(i);
-            int productoRepetido = 0;
-            for (int j = 0; j < productosPedido.size(); j++) {
-                if (actual.getCodigo() == productosPedido.get(j).getCodigo()) {
-                    productoRepetido++;
+            if (!codigoRevisado(codigoRevisados, actual.getCodigo())) {
+                int productoRepetido = 0;
+                for (int j = 0; j < productosPedido.size(); j++) {
+                    if (actual.getCodigo() == productosPedido.get(j).getCodigo()) {
+                        productoRepetido++;
+                    }
                 }
+                double subTotal = productoRepetido * actual.getPrecio();
+                detalledao.agregarDetalles(actual.getCodigo(), actual.getPrecio(), productoRepetido, subTotal, pedido.getNumeroPedido());
             }
-            double subTotal = productoRepetido * actual.getPrecio();
-            detalledao.agregarDetalles(actual.getCodigo(), actual.getPrecio(), productoRepetido, subTotal, pedido.getNumeroPedido());
+            codigoRevisados.add(actual.getCodigo());
         }
+    }
+    
+    private boolean codigoRevisado(List<Integer> indices, int nuevoCodigo) {
+        for (int i = 0; i < indices.size(); i++) {
+            if (indices.get(i) == nuevoCodigo) {
+                return true;
+            }
+        }
+        return false;
     }
     
     private double calcularPagoTotal() {

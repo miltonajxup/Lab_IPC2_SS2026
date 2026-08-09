@@ -32,6 +32,7 @@ Frontent/Administrador/ServDeshabilitarEmpleado.class
 DAOs/PagoDAO.class
 Frontent/ServicioInventario.class
 Frontent/Administrador/ServicioAdminstrarInsumos.class
+Backend/Reporte/ControladorReportes.class
 Backend/Administrador/ControladorPagoEmpleado.class
 Backend/Administrador/ControlParaEmpleado.class
 Frontent/Administrador/PlantillaInsumo.class
@@ -43,5 +44,6 @@ Frontent/Mesero/ServicioDeOrden.class
 Exceptions/ErrorIngresarDatosException.class
 Modelos/Mesa.class
 Modelos/Rol.class
+DAOs/ReporteDAO.class
 Exceptions/AccesoALaDataException.class
 Modelos/DetalleCuenta.class

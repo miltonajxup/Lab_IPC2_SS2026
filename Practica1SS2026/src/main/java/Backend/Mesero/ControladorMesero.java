@@ -98,15 +98,14 @@ public class ControladorMesero {
         return null;
     }
     
-    public void colocarMeseros(boolean mostrar) throws AccesoALaDataException {
-        if (mostrar) {
-            subMenuMeseros.mostrar(mostrar);
-            meseros = personaldao.getMeseros();
-            subMenuMeseros.setCuadricula(meseros.size());
-            for (int i = 0; i < meseros.size(); i++) {
-                OpcionSMMesero opcion = new OpcionSMMesero(this, subMenuMeseros, meseros.get(i));
-                subMenuMeseros.agregarMesero(opcion);
-            }
+    public void colocarMeseros() throws AccesoALaDataException {
+        subMenuMeseros.limpiar();
+        subMenuMeseros.setVisible(true);
+        meseros = personaldao.getMeseros();
+        subMenuMeseros.setCuadricula(meseros.size());
+        for (int i = 0; i < meseros.size(); i++) {
+            OpcionSMMesero opcion = new OpcionSMMesero(this, subMenuMeseros, meseros.get(i));
+            subMenuMeseros.agregarMesero(opcion);
         }
     }
     

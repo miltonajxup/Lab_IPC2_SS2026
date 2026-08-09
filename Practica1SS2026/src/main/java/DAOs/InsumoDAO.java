@@ -22,6 +22,7 @@ public class InsumoDAO {
     
     private final String TODOS_INSUMOS = "SELECT ins.*, uni.unidad AS nombre_unidad FROM insumo AS ins JOIN unidad_medida AS uni ON ins.unidad = uni.id;";
     private final String ACTUALIZAR_CANTIDAD_INSUMO = "UPDATE insumo SET cantidad_stock = ? WHERE codigo = ?";
+    private final String AGREGAR_GASTO_INSUMO = "INSERT INTO gasto_insumo (cantidad, insumo) VALUES (?,?)";
     
     public List<Insumo> getTodosInsumos() throws AccesoALaDataException {
         List<Insumo> insumos = new ArrayList<>();
@@ -39,16 +40,28 @@ public class InsumoDAO {
     }
     
     public void actualizarInsumo(double cantidadStock, int codigo) throws AccesoALaDataException {
-        Connection connection = DBConnection.getConnection();
-        actualizarInsumo(connection, cantidadStock, codigo);
-    }
-    
-    public void actualizarInsumo(Connection connection, double cantidadStock, int codigo) throws AccesoALaDataException {
         try {
+            Connection connection = DBConnection.getConnection();
             PreparedStatement update = connection.prepareStatement(ACTUALIZAR_CANTIDAD_INSUMO);
             update.setDouble(1, cantidadStock);
             update.setInt(2, codigo);
             update.executeUpdate();
+        } catch (SQLException e) {
+            throw new AccesoALaDataException("Error al actualizar insumo " + e.getMessage());
+        }
+    }
+    
+    public void actualizarInsumo(double cantidadStock, int codigo, double insumosComprados) throws AccesoALaDataException {
+        try {
+            Connection connection = DBConnection.getConnection();
+            PreparedStatement update = connection.prepareStatement(ACTUALIZAR_CANTIDAD_INSUMO);
+            update.setDouble(1, cantidadStock);
+            update.setInt(2, codigo);
+            update.executeUpdate();
+            PreparedStatement insert = connection.prepareStatement(AGREGAR_GASTO_INSUMO);
+            insert.setDouble(1, insumosComprados);
+            insert.setInt(2, codigo);
+            insert.executeUpdate();
         } catch (SQLException e) {
             throw new AccesoALaDataException("Error al actualizar insumo " + e.getMessage());
         }

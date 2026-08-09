@@ -163,6 +163,7 @@ public class ServicioPagoCuenta extends javax.swing.JInternalFrame {
     private void botonRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonRegresarActionPerformed
         jbcafe.cambiarAPago();
         controlador.eliminarPedidoMesero();
+        limpiar();
     }//GEN-LAST:event_botonRegresarActionPerformed
 
 

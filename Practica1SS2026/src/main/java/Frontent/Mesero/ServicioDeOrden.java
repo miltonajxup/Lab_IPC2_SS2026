@@ -232,6 +232,7 @@ public class ServicioDeOrden extends javax.swing.JInternalFrame {
         controladorOrden.reiniciarInsumos();
         setNumeroOrdenes(0);
         controladorPago.eliminarPedidoMesero();
+        limpiarPedido();
     }
     
 }

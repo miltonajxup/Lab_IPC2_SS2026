@@ -4,7 +4,6 @@
  */
 package Frontent.Mesero;
 
-import Frontent.Mesero.OpcionSMMesero;
 import java.awt.GridLayout;
 
 /**
@@ -90,8 +89,5 @@ public class SubMenuMeseros extends javax.swing.JInternalFrame {
     
     public void mostrar(boolean mostrar) {
         this.setVisible(mostrar);
-        if (!mostrar) {
-            limpiar();
-        }
     }
 }

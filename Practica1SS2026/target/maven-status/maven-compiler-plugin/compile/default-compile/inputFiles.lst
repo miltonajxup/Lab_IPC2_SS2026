@@ -7,6 +7,7 @@
 /home/milton/Lab_IPC2_SS2026/Practica1SS2026/src/main/java/Backend/Mesero/ControladorMesero.java
 /home/milton/Lab_IPC2_SS2026/Practica1SS2026/src/main/java/Backend/Mesero/ControladorOrden.java
 /home/milton/Lab_IPC2_SS2026/Practica1SS2026/src/main/java/Backend/Mesero/ControladorPago.java
+/home/milton/Lab_IPC2_SS2026/Practica1SS2026/src/main/java/Backend/Reporte/ControladorReportes.java
 /home/milton/Lab_IPC2_SS2026/Practica1SS2026/src/main/java/DAOs/DetalleCuentaDAO.java
 /home/milton/Lab_IPC2_SS2026/Practica1SS2026/src/main/java/DAOs/InsumoDAO.java
 /home/milton/Lab_IPC2_SS2026/Practica1SS2026/src/main/java/DAOs/MesaDAO.java
@@ -14,6 +15,7 @@
 /home/milton/Lab_IPC2_SS2026/Practica1SS2026/src/main/java/DAOs/PedidoDAO.java
 /home/milton/Lab_IPC2_SS2026/Practica1SS2026/src/main/java/DAOs/PersonalDAO.java
 /home/milton/Lab_IPC2_SS2026/Practica1SS2026/src/main/java/DAOs/ProductoDAO.java
+/home/milton/Lab_IPC2_SS2026/Practica1SS2026/src/main/java/DAOs/ReporteDAO.java
 /home/milton/Lab_IPC2_SS2026/Practica1SS2026/src/main/java/DAOs/RolDAO.java
 /home/milton/Lab_IPC2_SS2026/Practica1SS2026/src/main/java/Exceptions/AccesoALaDataException.java
 /home/milton/Lab_IPC2_SS2026/Practica1SS2026/src/main/java/Exceptions/ErrorIngresarDatosException.java

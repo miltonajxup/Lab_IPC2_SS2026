@@ -143,7 +143,6 @@ public class ControladorOrden {
         for (int i = 0; i < insumosPedido.size(); i++) {
             insumosPedido.get(i).setCantidad(0);
         }
-        servicioOrden.limpiarPedido();
         productosPedido = new ArrayList<>();
         plantillasOrden = new ArrayList<>();
     }

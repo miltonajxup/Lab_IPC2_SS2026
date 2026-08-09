@@ -22,7 +22,7 @@ public class PlantillaEmpleadoHabilitado extends javax.swing.JPanel {
         initComponents();
         this.ctroldehabilitar = ctroldehabilitar;
         this.personal = personal;
-        jLabel1.setText(personal.getNombre() + " Jor: " + personal.getJornada());
+        jLabel1.setText(personal.getNombre() + " | Jor: " + personal.getJornada() + " | Rol: " + personal.getRol());
         jButton1.setText(estado);
     }
 
