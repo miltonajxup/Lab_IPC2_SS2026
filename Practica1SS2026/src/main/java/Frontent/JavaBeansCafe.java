@@ -278,6 +278,7 @@ public class JavaBeansCafe extends javax.swing.JFrame {
         servicioMesero.setVisible(false);
         ocultarInventario();
         servAdministarInsumos.setVisible(false);
+        ventanaReporte.setVisible(false);
     }//GEN-LAST:event_botonMenuActionPerformed
 
     private void botonServicioMeseroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonServicioMeseroActionPerformed
@@ -302,6 +303,7 @@ public class JavaBeansCafe extends javax.swing.JFrame {
         servAdministarInsumos.setVisible(false);
         servicioCuenta.setVisible(false);
         servicioOrden.setVisible(false);
+        ventanaReporte.setVisible(false);
     }//GEN-LAST:event_botonServicioMeseroActionPerformed
 
     private void botonSubMenuMeserosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonSubMenuMeserosActionPerformed
@@ -324,6 +326,7 @@ public class JavaBeansCafe extends javax.swing.JFrame {
             menu.setVisible(false);
             servicioMesero.setVisible(false);
             servAdministarInsumos.setVisible(false);
+            ventanaReporte.setVisible(false);
             controladorMesero.bloquearMesas();
             if (!servicioInventario.isVisible()) {
                 servicioInventario.limpiar();
@@ -339,6 +342,7 @@ public class JavaBeansCafe extends javax.swing.JFrame {
         servAdministarInsumos.setVisible(false);
         servicioPagoEmpleado.setVisible(false);
         servDeshabilitarEmpleado.setVisible(false);
+        ventanaReporte.setVisible(false);
         menu.setVisible(false);
         subMenuMesero.setVisible(false);
         servicioMesero.setVisible(false);
