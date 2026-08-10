@@ -4,6 +4,8 @@
 /home/milton/Lab_IPC2_SS2026/Practica1SS2026/src/main/java/Backend/Inicializador.java
 /home/milton/Lab_IPC2_SS2026/Practica1SS2026/src/main/java/Backend/Inventario/ControladorInventario.java
 /home/milton/Lab_IPC2_SS2026/Practica1SS2026/src/main/java/Backend/Menu/ControladorMenu.java
+/home/milton/Lab_IPC2_SS2026/Practica1SS2026/src/main/java/Backend/Menu/ExportarMenu.java
+/home/milton/Lab_IPC2_SS2026/Practica1SS2026/src/main/java/Backend/Menu/FormatoMenu.java
 /home/milton/Lab_IPC2_SS2026/Practica1SS2026/src/main/java/Backend/Mesero/ControladorMesero.java
 /home/milton/Lab_IPC2_SS2026/Practica1SS2026/src/main/java/Backend/Mesero/ControladorOrden.java
 /home/milton/Lab_IPC2_SS2026/Practica1SS2026/src/main/java/Backend/Mesero/ControladorPago.java

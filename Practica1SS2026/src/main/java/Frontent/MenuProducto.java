@@ -4,7 +4,10 @@
  */
 package Frontent;
 
+import Backend.Menu.ExportarMenu;
+import Exceptions.CreacionArchivoException;
 import java.awt.GridLayout;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -12,8 +15,11 @@ import java.awt.GridLayout;
  */
 public class MenuProducto extends javax.swing.JInternalFrame {
     
+    private final ExportarMenu exportarMenu;
+    
     public MenuProducto() {
         initComponents();
+        exportarMenu = new ExportarMenu();
     }
 
     /**
@@ -28,6 +34,7 @@ public class MenuProducto extends javax.swing.JInternalFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -45,6 +52,10 @@ public class MenuProducto extends javax.swing.JInternalFrame {
         jLabel1.setFont(new java.awt.Font("Liberation Sans", 0, 25)); // NOI18N
         jLabel1.setText("Opciones de Pedidos");
 
+        jButton1.setFont(new java.awt.Font("Liberation Sans", 0, 25)); // NOI18N
+        jButton1.setText("Exportar Menu");
+        jButton1.addActionListener(this::jButton1ActionPerformed);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -52,7 +63,9 @@ public class MenuProducto extends javax.swing.JInternalFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(407, 407, 407)
                 .addComponent(jLabel1)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton1)
+                .addGap(150, 150, 150))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(134, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 850, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -62,21 +75,37 @@ public class MenuProducto extends javax.swing.JInternalFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(34, 34, 34)
-                .addComponent(jLabel1)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1)
+                    .addComponent(jButton1))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(32, Short.MAX_VALUE))
+                .addContainerGap(26, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        try {
+            exportarMenu.exportarMenu();
+            mostrarMensaje("El menu ha sido Exportado con exito");
+        } catch (CreacionArchivoException e) {
+            mostrarMensaje(e.getMessage());
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
+    
+    private void mostrarMensaje(String mensaje) {
+        JOptionPane.showMessageDialog(this, mensaje);
+    }
     
     public void setCuadricula(int filas) {
         jPanel1.setLayout(new GridLayout(filas, 2, 5, 5));

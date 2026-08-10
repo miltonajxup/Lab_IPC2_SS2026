@@ -27,6 +27,7 @@ Frontent/Administrador/PlantillaEmpleado.class
 Frontent/Mesero/PlantillaMesa.class
 DAOs/MesaDAO.class
 Frontent/OpcionMenu.class
+Backend/Menu/FormatoMenu.class
 Frontent/Administrador/ServicioPagoEmpleado.class
 Frontent/Mesero/ServicioPagoCuenta.class
 Frontent/MenuProducto.class
@@ -35,6 +36,7 @@ Exceptions/CreacionArchivoException.class
 Frontent/Administrador/ServDeshabilitarEmpleado.class
 DAOs/PagoDAO.class
 Frontent/ServicioInventario.class
+Backend/Menu/ExportarMenu.class
 Backend/Reporte/ExportarReporte.class
 Backend/Reporte/FormatoReporteInsumos.class
 Frontent/Administrador/ServicioAdminstrarInsumos.class
