@@ -58,14 +58,32 @@ public class ControladorOrden {
         colocarProductos();
     }
     
-    public void colocarProductos() {
+    public void colocarProductos() throws AccesoALaDataException {
+        servicioOrden.limpiarMenu();
+        insumos = insumodao.getTodosInsumos();
         servicioOrden.setCuadricula(productosdb.size());
         for (int i = 0; i < productosdb.size(); i++) {
             ProductoMenu producto = productosdb.get(i);
-            OpcionMenu opcionMenu = new OpcionMenu(this, producto, "/imagenes/cafe1.jpg");
+            boolean insumoBajo = insumoBajo(producto);
+            OpcionMenu opcionMenu = new OpcionMenu(this, producto, insumoBajo);
             servicioOrden.agregarProducto(opcionMenu);
             opcionMenu.setCuadricula(producto.getInsumos().size());
         }
+    }
+    
+    private boolean insumoBajo(ProductoMenu producto) {
+        for (int i = 0; i < producto.getInsumos().size(); i++) {
+            for (int j = 0; j < insumos.size(); j++) {
+                Insumo insumo = insumos.get(j);
+                if (producto.getInsumos().get(i).getCodigo() == insumo.getCodigo()) {
+                    if (insumo.getCantidadStock() <= insumo.getStockMinimo()) {
+                        return true;
+                    }
+                    break;
+                }
+            }
+        }
+        return false;
     }
     
     public void agregarAPedido(ProductoMenu producto) throws AccesoALaDataException {
@@ -73,7 +91,7 @@ public class ControladorOrden {
         for (int i = 0; i < producto.getInsumos().size(); i++) {
             Insumo insumoProducto = producto.getInsumos().get(i);
             Insumo insumoLista = buscarInsumo(insumoProducto.getCodigo());
-            boolean existenUnidadesInsumo = existenUnidades(insumoProducto.getCodigo(), insumoProducto.getCantUtilizadaProducto(), insumoLista.getCantidadStock(), insumoLista.getStockMinimo());
+            boolean existenUnidadesInsumo = existenUnidades(insumoProducto.getCodigo(), insumoProducto.getCantUtilizadaProducto(), insumoLista.getCantidadStock());
             if (!existenUnidadesInsumo) {
                 servicioOrden.mostrarMensaje("No hay " +insumoLista.getNombre()+" suficiente para añadir este elemento a la orden");
                 return;
@@ -95,14 +113,14 @@ public class ControladorOrden {
         }
     }
     
-    private boolean existenUnidades(int codigo, double cantidadUtilizada, double cantidadRestante, double limite) {
+    private boolean existenUnidades(int codigo, double cantidadUtilizada, double cantidadRestante) {
         double suma;
         for (int i = 0; i < insumosPedido.size(); i++) {
             InsumoPedido actual = insumosPedido.get(i);
             if (actual.getCodigo() == codigo) {
                 suma = actual.getCantidad() + cantidadUtilizada;
                 cantidadRestante = cantidadRestante - suma;
-                return cantidadRestante >= limite;
+                return cantidadRestante >= 0;
             }
         }
         return false;

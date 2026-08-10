@@ -67,7 +67,7 @@ public class ProductoDAO {
     }
     
     public ProductoMenu armarProducto(ResultSet rs) throws SQLException {
-        ProductoMenu producto = new ProductoMenu(rs.getInt("codigo"), rs.getString("nombre"), rs.getDouble("precio"), rs.getString("nombre_categoria"), rs.getString("url_imagen"));
+        ProductoMenu producto = new ProductoMenu(rs.getInt("codigo"), rs.getString("nombre"), rs.getDouble("precio"), rs.getString("nombre_categoria"), rs.getString("url_imagen"), rs.getString("path_imagen"));
         return producto;
     }
     

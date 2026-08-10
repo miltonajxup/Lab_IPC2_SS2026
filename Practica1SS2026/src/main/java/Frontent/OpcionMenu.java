@@ -22,24 +22,31 @@ public class OpcionMenu extends javax.swing.JPanel {
     private ControladorOrden controladorOrden;
     private ProductoMenu producto;
     private final boolean efectoHabilitado;
-
+    
     public OpcionMenu(String nombre, double precio, String pahtImagen) {
         initComponents();
         terminarCreacion(nombre, precio, pahtImagen);
         jButton1.setBorderPainted(false);
         espacioIngredientes.setVisible(true);
         efectoHabilitado = false;
+        verMensaje(false);
     }
 
-    public OpcionMenu(ControladorOrden controladorOrden, ProductoMenu producto, String pahtImagen) {
+    public OpcionMenu(ControladorOrden controladorOrden, ProductoMenu producto, boolean insumoBajo) {
         initComponents();
         this.controladorOrden = controladorOrden;
         this.producto = producto;
-        terminarCreacion(producto.getNombre(), producto.getPrecio(), pahtImagen);
+        terminarCreacion(producto.getNombre(), producto.getPrecio(), producto.getPathImagen());
         espacioIngredientes.setVisible(false);
         efectoHabilitado = true;
+        verMensaje(insumoBajo);
     }
-
+    
+    private void verMensaje(boolean mostrar) {
+        jLabel1.setVisible(mostrar);
+        jLabel2.setVisible(mostrar);
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -53,9 +60,11 @@ public class OpcionMenu extends javax.swing.JPanel {
         jButton1 = new javax.swing.JButton();
         espacioPrecio = new javax.swing.JLabel();
         espacioIngredientes = new javax.swing.JPanel();
-        espacioPrecio1 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jPanel3 = new javax.swing.JPanel();
+        espacioPrecio1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
 
         espacioNombre.setFont(new java.awt.Font("Liberation Sans", 0, 20)); // NOI18N
         espacioNombre.setText("Nombre");
@@ -66,14 +75,11 @@ public class OpcionMenu extends javax.swing.JPanel {
         espacioPrecio.setFont(new java.awt.Font("Liberation Sans", 0, 20)); // NOI18N
         espacioPrecio.setText("Precio");
 
-        espacioPrecio1.setFont(new java.awt.Font("Liberation Sans", 0, 20)); // NOI18N
-        espacioPrecio1.setText("Ingredientes:");
-
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 210, Short.MAX_VALUE)
+            .addGap(0, 214, Short.MAX_VALUE)
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -82,23 +88,35 @@ public class OpcionMenu extends javax.swing.JPanel {
 
         jScrollPane2.setViewportView(jPanel3);
 
+        espacioPrecio1.setFont(new java.awt.Font("Liberation Sans", 0, 20)); // NOI18N
+        espacioPrecio1.setText("Ingredientes:");
+
         javax.swing.GroupLayout espacioIngredientesLayout = new javax.swing.GroupLayout(espacioIngredientes);
         espacioIngredientes.setLayout(espacioIngredientesLayout);
         espacioIngredientesLayout.setHorizontalGroup(
             espacioIngredientesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(espacioIngredientesLayout.createSequentialGroup()
-                .addComponent(espacioPrecio1)
-                .addGap(0, 0, Short.MAX_VALUE))
-            .addComponent(jScrollPane2)
+                .addContainerGap()
+                .addGroup(espacioIngredientesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE)
+                    .addGroup(espacioIngredientesLayout.createSequentialGroup()
+                        .addComponent(espacioPrecio1)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         espacioIngredientesLayout.setVerticalGroup(
             espacioIngredientesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(espacioIngredientesLayout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, espacioIngredientesLayout.createSequentialGroup()
                 .addComponent(espacioPrecio1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
+
+        jLabel2.setFont(new java.awt.Font("Liberation Sans", 0, 25)); // NOI18N
+        jLabel2.setText("Para este Producto");
+
+        jLabel1.setFont(new java.awt.Font("Liberation Sans", 0, 25)); // NOI18N
+        jLabel1.setText("Insumos bajos");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -109,26 +127,37 @@ public class OpcionMenu extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(espacioNombre)
-                            .addComponent(espacioPrecio))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(espacioIngredientes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(espacioIngredientes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(espacioNombre)
+                                    .addComponent(espacioPrecio))
+                                .addGap(0, 0, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel1))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(espacioNombre)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(espacioPrecio)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(espacioPrecio)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(espacioIngredientes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel2)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -136,8 +165,12 @@ public class OpcionMenu extends javax.swing.JPanel {
     private void terminarCreacion(String nombre, double precio, String pathImagen) {
         espacioNombre.setText(nombre);
         espacioPrecio.setText("Precio: Q"  + precio);
-        ImageIcon imagen = new ImageIcon(getClass().getResource(pathImagen));
-        jButton1.setIcon(new ImageIcon(imagen.getImage().getScaledInstance(170, 170, Image.SCALE_SMOOTH)));
+        try {
+            ImageIcon imagen = new ImageIcon(getClass().getResource("/imagenes/"+pathImagen));
+            jButton1.setIcon(new ImageIcon(imagen.getImage().getScaledInstance(170, 170, Image.SCALE_SMOOTH)));
+        } catch (NullPointerException e) {
+            //No se pudieron cargar las imagenes
+        }
     }
     
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -157,6 +190,8 @@ public class OpcionMenu extends javax.swing.JPanel {
     private javax.swing.JLabel espacioPrecio;
     private javax.swing.JLabel espacioPrecio1;
     private javax.swing.JButton jButton1;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane2;
     // End of variables declaration//GEN-END:variables

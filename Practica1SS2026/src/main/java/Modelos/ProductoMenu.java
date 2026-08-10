@@ -17,14 +17,16 @@ public class ProductoMenu {
     private final double precio;
     private final String categoria;
     private final String urlImagen;
+    private final String pathImagen;
     private List<Insumo> insumos;
 
-    public ProductoMenu(int codigo, String nombre, double precio, String categoria, String urlImagen) {
+    public ProductoMenu(int codigo, String nombre, double precio, String categoria, String urlImagen, String pathImagen) {
         this.codigo = codigo;
         this.nombre = nombre;
         this.precio = precio;
         this.categoria = categoria;
         this.urlImagen = urlImagen;
+        this.pathImagen = pathImagen;
     }
 
     public int getCodigo() {
@@ -49,6 +51,10 @@ public class ProductoMenu {
 
     public String getUrlImagen() {
         return urlImagen;
+    }
+
+    public String getPathImagen() {
+        return pathImagen;
     }
     
     public void setInsumos(List<Insumo> insumos) {

@@ -159,19 +159,21 @@ CREATE TABLE producto_menu (
     nombre VARCHAR(30) NOT NULL,
     precio DECIMAL(6,2) NOT NULL,
     categoria INT NOT NULL,
+    url_imagen VARCHAR(255), 
+    path_imagen VARCHAR(150),
     CONSTRAINT pk_producto PRIMARY KEY (codigo), 
     CONSTRAINT fk_pm_categoria FOREIGN KEY (categoria) REFERENCES categoria_producto(id)
 );
-
-INSERT INTO producto_menu (nombre,precio,categoria) VALUES
-('Café Americano',18.00,1),
-('Capuccino',28.00,1),
-('Latte',30.00,1),
-('Frappé',35.00,2),
-('Cheesecake',26.00,3),
-('Brownie',20.00,3),
-('Sandwich Club',42.00,4),
-('Panini',38.00,4);
+UPDATE producto_menu SET path_imagen = '' WHERE codigo = ;
+INSERT INTO producto_menu (nombre,precio,categoria,url_imagen,path_imagen) VALUES
+('Café Americano',18.00,1,'https://www.somoselcafe.com.ar/img/novedades/47.jpg', 'cafe_americano.jpg'),
+('Capuccino',28.00,1,'https://static.bainet.es/clip/8eff3335-bc0b-49d7-b15d-c2da05ddaf9d_source-aspect-ratio_1600w_0.jpg','capuchino.jpg'),
+('Latte',30.00,1, 'https://www.cabucoffee.com/newimages/Guia-Latte.jpg', 'latte.jpg'),
+('Frappé',35.00,2, 'https://storage.googleapis.com/fitia_recipe_images/GR-R-V-00002009%2Fv3%2Frect.jpeg', 'frappe.jpg'),
+('Cheesecake',26.00,3, 'https://i.ytimg.com/vi/kcVMt1gtXds/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLCmXH7pauOiPzjuAEkPyvGkltODvg', 'cheese.jpg'),
+('Brownie',20.00,3, 'https://www.cocinista.es/download/bancorecursos/recetas/receta-brownies.jpg', 'browney.jpg'),
+('Sandwich Club',42.00,4, 'https://imag.bonviveur.com/sandwich-club.jpg', 'sandwich_club.jpg'),
+('Panini',38.00,4, 'https://newmansown.com/wp-content/uploads/2022/11/Roasted-Eggplant-Panninis-052_1x1@2x.jpg', 'panini.jpg');
 
 CREATE TABLE receta (
     producto_id INT NOT NULL,

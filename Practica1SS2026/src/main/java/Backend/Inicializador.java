@@ -112,11 +112,11 @@ public class Inicializador {
         controladorMenu.colocarProductos();
         
         ControladorOrden controladorOrden = new ControladorOrden(servicioOrden, insumosPedido, insumodao, productodao, productos);
-        controladorOrden.colocarProductos();
         servicioOrden.setControladorOrden(controladorOrden);
+        controladorMesero.setControladorOrden(controladorOrden);
         
         ControladorPago controladorPago = new ControladorPago(servicioCuenta, controladorOrden, mesasdao, insumodao);
-        controladorMesero.setControladroOrden(controladorPago);
+        controladorMesero.setControladroPago(controladorPago);
         servicioCuenta.setControladorPago(controladorPago);
         servicioOrden.setControladorPago(controladorPago);
         

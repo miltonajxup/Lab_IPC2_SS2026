@@ -37,7 +37,7 @@ public class ControladorMenu {
         menuProductos.setCuadricula(productos.size() / 2 + 1);
         for (int i = 0; i < productos.size(); i++) {
             ProductoMenu producto = productos.get(i);
-            OpcionMenu opcionMenu = new OpcionMenu(producto.getNombre(), producto.getPrecio(), "/imagenes/cafe1.jpg");
+            OpcionMenu opcionMenu = new OpcionMenu(producto.getNombre(), producto.getPrecio(), producto.getPathImagen());
             menuProductos.agregarProducto(opcionMenu);
             opcionMenu.setCuadricula(producto.getInsumos().size());
             for (int j = 0; j < producto.getInsumos().size(); j++) {

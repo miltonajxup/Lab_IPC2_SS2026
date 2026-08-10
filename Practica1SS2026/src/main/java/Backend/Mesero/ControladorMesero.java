@@ -41,6 +41,7 @@ public class ControladorMesero {
     private final ServicioPagoCuenta servicioCuenta;
     private final DetalleCuentaDAO detalleCuentadao;
     private ControladorPago controladorPago;
+    private ControladorOrden controladorOrden;
     
     public ControladorMesero(ServicioMesero servicioMesero, SubMenuMeseros subMenuMeseros, JavaBeansCafe jbcafe, ServicioPagoCuenta servicioCuenta, List<Mesa> mesas) {
         this.personaldao = new PersonalDAO();
@@ -54,8 +55,12 @@ public class ControladorMesero {
         this.detalleCuentadao = new DetalleCuentaDAO();
     }
     
-    public void setControladroOrden(ControladorPago controldorOrden) {
-        this.controladorPago = controldorOrden;
+    public void setControladroPago(ControladorPago controldorPago) {
+        this.controladorPago = controldorPago;
+    }
+    
+    public void setControladorOrden(ControladorOrden controladorOrden) {
+        this.controladorOrden = controladorOrden;
     }
     
     public void traerCambiosMesa() throws AccesoALaDataException {
@@ -166,6 +171,7 @@ public class ControladorMesero {
             servicioCuenta.setTotal(pagoTotal);
         } else {
             jbcafe.cambiarAOrden();
+            controladorOrden.colocarProductos();
         }
     }
     

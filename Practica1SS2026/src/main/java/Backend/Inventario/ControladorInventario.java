@@ -43,7 +43,7 @@ public class ControladorInventario {
         servicioInventario.setNumeroFilasInsumo(insumos.size());
         for (int i = 0; i < productos.size(); i++) {
             ProductoMenu actual = productos.get(i);
-            OpcionMenu opcionMenu = new OpcionMenu(actual.getNombre(), actual.getPrecio(), "/imagenes/cafe1.jpg");
+            OpcionMenu opcionMenu = new OpcionMenu(actual.getNombre(), actual.getPrecio(), actual.getPathImagen());
             opcionMenu.setCuadricula(actual.getInsumos().size());
             for (int j = 0; j < actual.getInsumos().size(); j++) {
                 Insumo insumoProducto = actual.getInsumos().get(j);
