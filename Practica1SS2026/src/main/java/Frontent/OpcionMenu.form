@@ -24,8 +24,9 @@
                           <Component id="espacioIngredientes" max="32767" attributes="0"/>
                           <Group type="102" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="espacioNombre" min="-2" max="-2" attributes="0"/>
-                                  <Component id="espacioPrecio" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="espacioPrecio" min="-2" max="-2" attributes="0"/>
+                                  <Component id="espacioNombre" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="espacioCategoria" alignment="0" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                           </Group>
@@ -52,6 +53,8 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="jButton1" min="-2" pref="170" max="-2" attributes="0"/>
                   <Group type="102" attributes="0">
+                      <Component id="espacioCategoria" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Component id="espacioNombre" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="espacioPrecio" min="-2" max="-2" attributes="0"/>
@@ -160,6 +163,9 @@
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Liberation Sans" size="25" style="0"/>
         </Property>
+        <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+          <Color blue="33" green="99" red="ff" type="rgb"/>
+        </Property>
         <Property name="text" type="java.lang.String" value="Para este Producto"/>
       </Properties>
     </Component>
@@ -168,7 +174,18 @@
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Liberation Sans" size="25" style="0"/>
         </Property>
+        <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+          <Color blue="33" green="99" red="ff" type="rgb"/>
+        </Property>
         <Property name="text" type="java.lang.String" value="Insumos bajos"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="espacioCategoria">
+      <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Liberation Sans" size="20" style="0"/>
+        </Property>
+        <Property name="text" type="java.lang.String" value="Categoria"/>
       </Properties>
     </Component>
   </SubComponents>

@@ -41,7 +41,7 @@ public class ServicioInventario extends javax.swing.JInternalFrame {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 419, Short.MAX_VALUE)
+            .addGap(0, 448, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -77,10 +77,10 @@ public class ServicioInventario extends javax.swing.JInternalFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(75, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 431, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 460, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(94, 94, 94)
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 389, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(90, 90, 90))
@@ -133,13 +133,22 @@ public class ServicioInventario extends javax.swing.JInternalFrame {
     }
     
     public void setNumeroFilasInsumo(int filas) {
-        jPanel2.setLayout(new GridLayout(filas, 1, 5, 5));
+        jPanel2.setLayout(new GridLayout(filas * 4, 1, 5, 5));
     }
     
-    public void agregarInsumo(String insumo) {
-        JLabel ingrediente = new JLabel(insumo);
-        ingrediente.setFont(new java.awt.Font("Liberation Sans", 0, 20)); // NOI18N
-        jPanel2.add(ingrediente);
+    public void agregarInsumo(String nombre, String cantidadDisponible, String cantidadMinima) {
+        JLabel espacioNombre = new JLabel(nombre);
+        espacioNombre.setFont(new java.awt.Font("Liberation Sans", 0, 20)); // NOI18N
+        jPanel2.add(espacioNombre);
+        JLabel disponible = new JLabel("Cantidad Disponible: " + cantidadDisponible);
+        disponible.setFont(new java.awt.Font("Liberation Sans", 0, 20)); // NOI18N
+        jPanel2.add(disponible);
+        JLabel minima = new JLabel("Cantidad Minima: " + cantidadMinima);
+        minima.setFont(new java.awt.Font("Liberation Sans", 0, 20)); // NOI18N
+        jPanel2.add(minima);
+        JLabel espacio = new JLabel();
+        espacio.setFont(new java.awt.Font("Liberation Sans", 0, 20)); // NOI18N
+        jPanel2.add(espacio);
     }
     
     public void limpiar() {

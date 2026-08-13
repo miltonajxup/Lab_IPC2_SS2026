@@ -1,6 +1,11 @@
+DROP DATABASE IF EXISTS Practica1_SS2026;
 CREATE DATABASE IF NOT EXISTS Practica1_SS2026;
 
 USE Practica1_SS2026;
+
+-- Usuario en la aplicacion con permisos a la base de datos
+-- CREATE USER IF NOT EXISTS 'Milton'@'localhost' IDENTIFIED BY '1234';
+-- GRANT ALL PRIVILEGES ON Practica1_SS2026.* TO 'Milton'@'localhost';
 
 CREATE TABLE rol (
     id INT AUTO_INCREMENT,
@@ -118,7 +123,7 @@ INSERT INTO insumo (nombre,cantidad_stock,stock_minimo,costo, unidad) VALUES
 ('Leche',    20.00,5.00, 12.00,3),
 ('Azúcar',   50.00,10.00,0.01,2),
 ('Chocolate',15.00,5.00, 0.08,2),
-('Harina',   40.00,10.00,7.00,1),
+('Harina',   250.00,150.00,0.10,2),
 ('Huevos',   100.00,20.00,1.50,5),
 ('Crema Batida',12.00,4.00,0.12,2),
 ('Jarabe Vainilla',8.00,3.00,0.15,4);

@@ -230,9 +230,9 @@ public class JavaBeansCafe extends javax.swing.JFrame {
             .addGroup(subMenuAdministradorLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jButton7)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton2)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -272,16 +272,14 @@ public class JavaBeansCafe extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void botonMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonMenuActionPerformed
+        ocultarTodo();
         menu.setVisible(!menu.isVisible());
         controladorMesero.bloquearMesas();
         ocultarSubMenus();
-        servicioMesero.setVisible(false);
-        ocultarInventario();
-        servAdministarInsumos.setVisible(false);
-        ventanaReporte.setVisible(false);
     }//GEN-LAST:event_botonMenuActionPerformed
 
     private void botonServicioMeseroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonServicioMeseroActionPerformed
+        ocultarTodo();
         boolean visible = !servicioMesero.isVisible();
         servicioMesero.setVisible(visible);
         subMenuMesero.setVisible(visible);
@@ -297,13 +295,6 @@ public class JavaBeansCafe extends javax.swing.JFrame {
             controladorMesero.bloquearMesas();
             subMenu.setVisible(visible);
         }
-        menu.setVisible(false);
-        subMenuAdministrador.setVisible(false);
-        ocultarInventario();
-        servAdministarInsumos.setVisible(false);
-        servicioCuenta.setVisible(false);
-        servicioOrden.setVisible(false);
-        ventanaReporte.setVisible(false);
     }//GEN-LAST:event_botonServicioMeseroActionPerformed
 
     private void botonSubMenuMeserosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonSubMenuMeserosActionPerformed
@@ -319,14 +310,10 @@ public class JavaBeansCafe extends javax.swing.JFrame {
     }//GEN-LAST:event_botonSubMenuMeserosActionPerformed
 
     private void botonInventarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonInventarioActionPerformed
+        ocultarTodo();
         try {
             controladorInventario.colocarInventario();
             servicioInventario.setVisible(!servicioInventario.isVisible());
-            ocultarSubMenus();
-            menu.setVisible(false);
-            servicioMesero.setVisible(false);
-            servAdministarInsumos.setVisible(false);
-            ventanaReporte.setVisible(false);
             controladorMesero.bloquearMesas();
             if (!servicioInventario.isVisible()) {
                 servicioInventario.limpiar();
@@ -337,16 +324,9 @@ public class JavaBeansCafe extends javax.swing.JFrame {
     }//GEN-LAST:event_botonInventarioActionPerformed
 
     private void botonAdministradorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonAdministradorActionPerformed
+        ocultarTodo();
         boolean visible = !subMenuAdministrador.isVisible();
         subMenuAdministrador.setVisible(visible);
-        servAdministarInsumos.setVisible(false);
-        servicioPagoEmpleado.setVisible(false);
-        servDeshabilitarEmpleado.setVisible(false);
-        ventanaReporte.setVisible(false);
-        menu.setVisible(false);
-        subMenuMesero.setVisible(false);
-        servicioMesero.setVisible(false);
-        ocultarInventario();
         controladorMesero.bloquearMesas();
         controladorInventario.limpiarAgregarInsumos();
         limpiarServPagos();
@@ -388,13 +368,10 @@ public class JavaBeansCafe extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        ocultarTodo();
         boolean visible = !ventanaReporte.isVisible();
         ventanaReporte.setVisible(visible);
         ocultarSubMenus();
-        menu.setVisible(false);
-        servicioMesero.setVisible(false);
-        servicioInventario.setVisible(false);
-        servAdministarInsumos.setVisible(false);
         controladorMesero.bloquearMesas();
         try {
             controladorReporte.agregarReportes();
@@ -402,11 +379,6 @@ public class JavaBeansCafe extends javax.swing.JFrame {
             mostrarError(e.getMessage());
         }
     }//GEN-LAST:event_jButton3ActionPerformed
-    
-    private void ocultarInventario() {
-        servicioInventario.setVisible(false);
-        servicioInventario.limpiar();
-    }
     
     private void limpiarServPagos() {
         servicioPagoEmpleado.limpiar();
@@ -462,6 +434,23 @@ public class JavaBeansCafe extends javax.swing.JFrame {
     
     public void mostrarError(String mensaje) {
         JOptionPane.showMessageDialog(this, mensaje);
+    }
+    
+    public void ocultarTodo() {
+        menu.setVisible(false);
+        servicioMesero.setVisible(false);
+        subMenu.setVisible(false);
+        subMenuMesero.setVisible(false);
+        subMenuAdministrador.setVisible(false);
+        servicioOrden.setVisible(false);
+        servicioCuenta.setVisible(false);
+        servicioInventario.setVisible(false);
+        servAdministarInsumos.setVisible(false);
+        servicioPagoEmpleado.setVisible(false);
+        servDeshabilitarEmpleado.setVisible(false);
+        ventanaReporte.setVisible(false);
+        
+        servicioInventario.limpiar();
     }
     
 }

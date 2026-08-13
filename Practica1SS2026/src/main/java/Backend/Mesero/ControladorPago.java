@@ -65,6 +65,14 @@ public class ControladorPago {
         return pedido.getNumeroPedido();
     }
     
+    public int getNumeroMesa() {
+        return mesa.getNumeroMesa();
+    }
+    
+    public String getHoraPedido() {
+        return pedido.getHoraOcupacion();
+    }
+    
     public void eliminarPedidoMesero() {
         mesa = null;
         mesero = null;

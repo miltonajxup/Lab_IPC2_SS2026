@@ -169,6 +169,7 @@ public class ControladorMesero {
                 pagoTotal += detalle.getSubTotal();
             }
             servicioCuenta.setTotal(pagoTotal);
+            servicioCuenta.setDetallesMesa(controladorPago.getNumeroMesa(), controladorPago.getHoraPedido());
         } else {
             jbcafe.cambiarAOrden();
             controladorOrden.colocarProductos();

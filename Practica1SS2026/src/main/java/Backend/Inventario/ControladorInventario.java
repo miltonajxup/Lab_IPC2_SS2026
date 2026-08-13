@@ -43,7 +43,7 @@ public class ControladorInventario {
         servicioInventario.setNumeroFilasInsumo(insumos.size());
         for (int i = 0; i < productos.size(); i++) {
             ProductoMenu actual = productos.get(i);
-            OpcionMenu opcionMenu = new OpcionMenu(actual.getNombre(), actual.getPrecio(), actual.getPathImagen());
+            OpcionMenu opcionMenu = new OpcionMenu(actual);
             opcionMenu.setCuadricula(actual.getInsumos().size());
             for (int j = 0; j < actual.getInsumos().size(); j++) {
                 Insumo insumoProducto = actual.getInsumos().get(j);
@@ -53,9 +53,9 @@ public class ControladorInventario {
         }
         for (int i = 0; i < insumos.size(); i++) {
             Insumo insumo = insumos.get(i);
-            String informacionInsumo = insumo.getNombre() + ": " + insumo.getCantidadStock() 
-                    + " |  Cant Disp: " + insumo.getStockMinimo() + insumo.getUndadMedida();
-            servicioInventario.agregarInsumo(informacionInsumo);
+            String cantidadDisponible = String.valueOf(insumo.getCantidadStock());
+            String cantidadMinima = String.valueOf(insumo.getStockMinimo());
+            servicioInventario.agregarInsumo(insumo.getNombre(), cantidadDisponible, cantidadMinima);
         }
     }
     

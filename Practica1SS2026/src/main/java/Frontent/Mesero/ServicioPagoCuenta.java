@@ -33,6 +33,10 @@ public class ServicioPagoCuenta extends javax.swing.JInternalFrame {
         espacioTotal.setText("Total: " + total);
     }
     
+    public void setDetallesMesa(int numeroMesa, String horaOcupacion) {
+        detallesMesa.setText("Mesa No. " + numeroMesa + " | Hora de Ocupacion: " + horaOcupacion);
+    }
+    
     public String getPropina() {
         return espacioPropina.getText();
     }
@@ -55,6 +59,7 @@ public class ServicioPagoCuenta extends javax.swing.JInternalFrame {
         jButton1 = new javax.swing.JButton();
         espacioTotal = new javax.swing.JLabel();
         botonRegresar = new javax.swing.JButton();
+        detallesMesa = new javax.swing.JLabel();
 
         jLabel1.setFont(new java.awt.Font("Liberation Sans", 0, 25)); // NOI18N
         jLabel1.setText("Pago de Cuenta");
@@ -66,7 +71,7 @@ public class ServicioPagoCuenta extends javax.swing.JInternalFrame {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 450, Short.MAX_VALUE)
+            .addGap(0, 523, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -91,61 +96,73 @@ public class ServicioPagoCuenta extends javax.swing.JInternalFrame {
         botonRegresar.setText("Regresar");
         botonRegresar.addActionListener(this::botonRegresarActionPerformed);
 
+        detallesMesa.setFont(new java.awt.Font("Liberation Sans", 0, 25)); // NOI18N
+        detallesMesa.setText("Mesa x Ocupada a las");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(427, 427, 427)
+                .addGap(224, 224, 224)
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(botonRegresar)
+                .addGap(83, 83, 83))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel1)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(446, 446, 446))
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(188, 188, 188)
-                        .addComponent(jLabel2))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(84, 84, 84)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(195, 195, 195)
+                        .addGap(62, 62, 62)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 535, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel3)
-                            .addComponent(espacioPropina, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(134, 134, 134)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel3)
+                                    .addComponent(espacioPropina, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(156, 156, 156)
+                                .addComponent(espacioTotal))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(143, 143, 143)
+                                .addComponent(jButton1))))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(217, 217, 217)
-                        .addComponent(espacioTotal))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(204, 204, 204)
-                        .addComponent(jButton1))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 377, Short.MAX_VALUE)
-                        .addComponent(botonRegresar)
-                        .addGap(83, 83, 83))))
+                        .addGap(70, 70, 70)
+                        .addComponent(detallesMesa)))
+                .addContainerGap(194, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(43, 43, 43)
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(botonRegresar))
-                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 447, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(84, 84, 84)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(botonRegresar)
+                            .addComponent(jLabel2)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(36, 36, 36)
+                        .addComponent(jLabel1)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(detallesMesa)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(10, 10, 10)
                         .addComponent(jLabel3)
                         .addGap(18, 18, 18)
                         .addComponent(espacioPropina, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(153, 153, 153)
                         .addComponent(espacioTotal)
                         .addGap(18, 18, 18)
-                        .addComponent(jButton1)
-                        .addGap(104, 104, 104)))
-                .addContainerGap(33, Short.MAX_VALUE))
+                        .addComponent(jButton1))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(19, 19, 19)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 345, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(99, Short.MAX_VALUE))
         );
 
         pack();
@@ -169,6 +186,7 @@ public class ServicioPagoCuenta extends javax.swing.JInternalFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botonRegresar;
+    private javax.swing.JLabel detallesMesa;
     private javax.swing.JTextField espacioPropina;
     private javax.swing.JLabel espacioTotal;
     private javax.swing.JButton jButton1;
@@ -180,7 +198,7 @@ public class ServicioPagoCuenta extends javax.swing.JInternalFrame {
     // End of variables declaration//GEN-END:variables
     
     public void setNumeroDetalles(int numeroDetalles) {
-        jPanel1.setLayout(new GridLayout(numeroDetalles*2, 1, 5, 5));
+        jPanel1.setLayout(new GridLayout(numeroDetalles * 3, 1, 5, 5));
     }
     
     public void agregarDetalle(String producto, double precio, int cantidad, double subTotal) {
@@ -190,6 +208,9 @@ public class ServicioPagoCuenta extends javax.swing.JInternalFrame {
         JLabel detalle2 = new JLabel("Cantidad: " + cantidad + ", Sub Total: Q" + subTotal);
         detalle2.setFont(new java.awt.Font("Liberation Sans", 0, 20));
         jPanel1.add(detalle2);
+        JLabel espacio = new JLabel();
+        espacio.setFont(new java.awt.Font("Liberation Sans", 0, 20));
+        jPanel1.add(espacio);
     }
     
     public void limpiar() {

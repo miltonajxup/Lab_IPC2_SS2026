@@ -23,9 +23,9 @@ public class OpcionMenu extends javax.swing.JPanel {
     private ProductoMenu producto;
     private final boolean efectoHabilitado;
     
-    public OpcionMenu(String nombre, double precio, String pahtImagen) {
+    public OpcionMenu(ProductoMenu producto) {
         initComponents();
-        terminarCreacion(nombre, precio, pahtImagen);
+        terminarCreacion(producto.getCategoria(), producto.getNombre(), producto.getPrecio(), producto.getPathImagen());
         jButton1.setBorderPainted(false);
         espacioIngredientes.setVisible(true);
         efectoHabilitado = false;
@@ -36,7 +36,7 @@ public class OpcionMenu extends javax.swing.JPanel {
         initComponents();
         this.controladorOrden = controladorOrden;
         this.producto = producto;
-        terminarCreacion(producto.getNombre(), producto.getPrecio(), producto.getPathImagen());
+        terminarCreacion(producto.getCategoria(), producto.getNombre(), producto.getPrecio(), producto.getPathImagen());
         espacioIngredientes.setVisible(false);
         efectoHabilitado = true;
         verMensaje(insumoBajo);
@@ -65,6 +65,7 @@ public class OpcionMenu extends javax.swing.JPanel {
         espacioPrecio1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
+        espacioCategoria = new javax.swing.JLabel();
 
         espacioNombre.setFont(new java.awt.Font("Liberation Sans", 0, 20)); // NOI18N
         espacioNombre.setText("Nombre");
@@ -113,10 +114,15 @@ public class OpcionMenu extends javax.swing.JPanel {
         );
 
         jLabel2.setFont(new java.awt.Font("Liberation Sans", 0, 25)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(255, 153, 51));
         jLabel2.setText("Para este Producto");
 
         jLabel1.setFont(new java.awt.Font("Liberation Sans", 0, 25)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 153, 51));
         jLabel1.setText("Insumos bajos");
+
+        espacioCategoria.setFont(new java.awt.Font("Liberation Sans", 0, 20)); // NOI18N
+        espacioCategoria.setText("Categoria");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -130,8 +136,9 @@ public class OpcionMenu extends javax.swing.JPanel {
                             .addComponent(espacioIngredientes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(espacioPrecio)
                                     .addComponent(espacioNombre)
-                                    .addComponent(espacioPrecio))
+                                    .addComponent(espacioCategoria))
                                 .addGap(0, 0, Short.MAX_VALUE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -149,6 +156,8 @@ public class OpcionMenu extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
+                        .addComponent(espacioCategoria)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(espacioNombre)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(espacioPrecio)
@@ -162,7 +171,8 @@ public class OpcionMenu extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void terminarCreacion(String nombre, double precio, String pathImagen) {
+    private void terminarCreacion(String categoria, String nombre, double precio, String pathImagen) {
+        espacioCategoria.setText(categoria);
         espacioNombre.setText(nombre);
         espacioPrecio.setText("Precio: Q"  + precio);
         try {
@@ -185,6 +195,7 @@ public class OpcionMenu extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel espacioCategoria;
     private javax.swing.JPanel espacioIngredientes;
     private javax.swing.JLabel espacioNombre;
     private javax.swing.JLabel espacioPrecio;

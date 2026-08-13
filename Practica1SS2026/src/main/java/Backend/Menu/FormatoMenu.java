@@ -78,7 +78,11 @@ public class FormatoMenu {
         writer.print(inicio);
         for (int i = 0; i < productos.size(); i++) {
             ProductoMenu actual = productos.get(i);
-            String abrirOpcionMenu = "   <div class=\"opcion\"> \n <img class=\"imagen\" src=\"" + actual.getUrlImagen()+ "\" alt=\" imagen "+ actual.getNombre() +" \">" + "<div>" + actual.getNombre() + "<div>Ingredientes: </div> \n <ul>";
+            String abrirOpcionMenu = "   <div class=\"opcion\"> \n <img class=\"imagen\" src=\"" 
+                    + actual.getUrlImagen()+ "\" alt=\" imagen " + actual.getNombre() +" \">" 
+                    + "<div>" + actual.getCategoria() + 
+                      "<div>" + actual.getNombre() + "</div>"
+                    + "<div>Ingredientes: </div> \n <ul>";
             writer.println(abrirOpcionMenu);
             for (int j = 0; j < actual.getInsumos().size(); j++) {
                 Insumo insumo = actual.getInsumos().get(j);
