@@ -4,6 +4,9 @@
  */
 package com.mycompany.proyecto1ss2026.Modelos.Request;
 
+import com.mycompany.proyecto1ss2026.Constantes.TipoLicencia;
+import java.time.LocalDate;
+
 /**
  *
  * @author milton
@@ -14,13 +17,24 @@ public class ChoferRequest {
     private String nombre;
     private byte[] foto;
     private String numeroLicencia;
-    private String tipoLicencia;
-    private String fechaVencimiento;
+    private TipoLicencia tipoLicencia;
+    private LocalDate fechaVencimiento;
     private String numeroTelefono;
     private double salarioPorViaje;
     private boolean estadoOperativo;
     private String sucursalBase;
     private String sucursalActual;
+
+    public ChoferRequest(String dpi, String nombre, String numeroLicencia, TipoLicencia tipoLicencia, LocalDate fechaVencimiento, String numeroTelefono, double salarioPorViaje, String sucursalBase) {
+        this.dpi = dpi;
+        this.nombre = nombre;
+        this.numeroLicencia = numeroLicencia;
+        this.tipoLicencia = tipoLicencia;
+        this.fechaVencimiento = fechaVencimiento;
+        this.numeroTelefono = numeroTelefono;
+        this.salarioPorViaje = salarioPorViaje;
+        this.sucursalBase = sucursalBase;
+    }
 
     public String getDpi() {
         return dpi;
@@ -54,19 +68,19 @@ public class ChoferRequest {
         this.numeroLicencia = numeroLicencia;
     }
 
-    public String getTipoLicencia() {
+    public TipoLicencia getTipoLicencia() {
         return tipoLicencia;
     }
 
-    public void setTipoLicencia(String tipoLicencia) {
+    public void setTipoLicencia(TipoLicencia tipoLicencia) {
         this.tipoLicencia = tipoLicencia;
     }
 
-    public String getFechaVencimiento() {
+    public LocalDate getFechaVencimiento() {
         return fechaVencimiento;
     }
 
-    public void setFechaVencimiento(String fechaVencimiento) {
+    public void setFechaVencimiento(LocalDate fechaVencimiento) {
         this.fechaVencimiento = fechaVencimiento;
     }
 

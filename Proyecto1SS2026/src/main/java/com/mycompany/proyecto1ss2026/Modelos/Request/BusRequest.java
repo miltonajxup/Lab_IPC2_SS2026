@@ -4,6 +4,8 @@
  */
 package com.mycompany.proyecto1ss2026.Modelos.Request;
 
+import java.time.LocalDate;
+
 /**
  *
  * @author milton
@@ -14,12 +16,22 @@ public class BusRequest {
     private byte[] foto;
     private String marca;
     private String modelo;
-    private String fechaFabricacion;
+    private LocalDate fechaFabricacion;
     private int capacidadPasajeros;
     private int kilometraje;
     private boolean estadoOperativo;
     private String sucursalBase;
     private String sucursalActual;
+
+    public BusRequest(String numeroPlaca, String marca, String modelo, LocalDate fechaFabricacion, int capacidadPasajeros, int kilometraje, String sucursalBase) {
+        this.numeroPlaca = numeroPlaca;
+        this.marca = marca;
+        this.modelo = modelo;
+        this.fechaFabricacion = fechaFabricacion;
+        this.capacidadPasajeros = capacidadPasajeros;
+        this.kilometraje = kilometraje;
+        this.sucursalBase = sucursalBase;
+    }
 
     public String getNumeroPlaca() {
         return numeroPlaca;
@@ -53,11 +65,11 @@ public class BusRequest {
         this.modelo = modelo;
     }
 
-    public String getFechaFabricacion() {
+    public LocalDate getFechaFabricacion() {
         return fechaFabricacion;
     }
 
-    public void setFechaFabricacion(String fechaFabricacion) {
+    public void setFechaFabricacion(LocalDate fechaFabricacion) {
         this.fechaFabricacion = fechaFabricacion;
     }
 

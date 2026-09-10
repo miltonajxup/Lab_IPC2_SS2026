@@ -12,86 +12,71 @@ import com.mycompany.proyecto1ss2026.Constantes.RolUsuario;
  */
 public class UsuarioRequest {
     
-    private String dpi;
-    private String nombre;
-    private String nit;
-    private String telefono;
-    private String direccion;
+    private final String dpi;
+    private final String nombre;
+    private final String nit;
+    private final String telefono;
+    private final String direccion;
     private double creditoDisponible;
     private boolean estado;
-    private RolUsuario rol;
+    private final RolUsuario rol;
     private String sucursal;
+
+    public UsuarioRequest(String dpi, String nombre, String nit, String telefono, String direccion, RolUsuario rol) {
+        this.dpi = dpi;
+        this.nombre = nombre;
+        this.nit = nit;
+        this.telefono = telefono;
+        this.direccion = direccion;
+        this.rol = rol;
+    }
 
     public String getDpi() {
         return dpi;
-    }
-
-    public void setDpi(String dpi) {
-        this.dpi = dpi;
     }
 
     public String getNombre() {
         return nombre;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
     public String getNit() {
         return nit;
-    }
-
-    public void setNit(String nit) {
-        this.nit = nit;
     }
 
     public String getTelefono() {
         return telefono;
     }
 
-    public void setTelefono(String telefono) {
-        this.telefono = telefono;
-    }
-
     public String getDireccion() {
         return direccion;
-    }
-
-    public void setDireccion(String direccion) {
-        this.direccion = direccion;
     }
 
     public double getCreditoDisponible() {
         return creditoDisponible;
     }
 
-    public void setCreditoDisponible(double creditoDisponible) {
-        this.creditoDisponible = creditoDisponible;
-    }
-
     public boolean isEstado() {
         return estado;
-    }
-
-    public void setEstado(boolean estado) {
-        this.estado = estado;
     }
 
     public RolUsuario getRol() {
         return rol;
     }
 
-    public void setRol(String rol) {
-        this.rol = RolUsuario.valueOf(rol);
-    }
-
     public String getSucursal() {
         return sucursal;
+    }
+
+    public void setCreditoDisponible(double creditoDisponible) {
+        this.creditoDisponible = creditoDisponible;
+    }
+
+    public void setEstado(boolean estado) {
+        this.estado = estado;
     }
 
     public void setSucursal(String sucursal) {
         this.sucursal = sucursal;
     }
-    
+
 }
