@@ -4,6 +4,8 @@
  */
 package com.mycompany.proyecto1ss2026.Modelos.DataBase;
 
+import com.mycompany.proyecto1ss2026.Constantes.RolUsuario;
+
 /**
  *
  * @author milton
@@ -17,9 +19,10 @@ public class UsuarioDB {
     private final String direccion;
     private final double creditoDisponible;
     private final boolean estado;
+    private final RolUsuario rol;
     private String sucursal;
 
-    public UsuarioDB(String dpi, String nombre, String nit, String telefono, String direccion, double creditoDisponible, boolean estado) {
+    public UsuarioDB(String dpi, String nombre, String nit, String telefono, String direccion, double creditoDisponible, boolean estado, RolUsuario rol) {
         this.dpi = dpi;
         this.nombre = nombre;
         this.nit = nit;
@@ -27,6 +30,7 @@ public class UsuarioDB {
         this.direccion = direccion;
         this.creditoDisponible = creditoDisponible;
         this.estado = estado;
+        this.rol = rol;
     }
 
     public String getDpi() {
@@ -63,6 +67,10 @@ public class UsuarioDB {
 
     public void setSucursal(String sucursal) {
         this.sucursal = sucursal;
+    }
+
+    public RolUsuario getRol() {
+        return rol;
     }
 
 }

@@ -23,14 +23,15 @@ import java.util.List;
  */
 public class ChoferDAO {
     
-    private final String AGREGAR_CHOFER = "INSERT INTO chofer(dpi, nombre, numero_de_licencia, tipo_de_licencia, "
+    private final String AGREGAR_CHOFER = "INSERT INTO chofer(numero_de_licencia, nombre, tipo_de_licencia, "
             + "fecha_vencimiento, numero_telefono, salario_por_viaje, sucursal_base, sucursal_actual) "
-            + "VALUES (?,?,?,?,?,?,?,?,?)";
-    private final String EDITAR_INFO_CHOFER = "UPDATE chofer SET nombre = ?, numero_de_licencia = ?, tipo_de_licencia = ? "
-            + "fecha_vencimiento = ?, numero_telefono = ?, salario_por_viaje = ?, sucursal_base = ? WHERE dpi = ?";
-    private final String CAMBIAR_ESTADO_CHOFER = "UPDATE chofer SET estado_operativo = ? WHERE dpi = ?";
-    private final String ACTUALIZAR_SUCURSAL_ACTUAL = "UPDATE chofer SET sucursal_actual = ? WHERE dpi = ?";
-    private final String GET_CHOFER_ID = "SELECT * FROM chofer WHERE dpi = ?";
+            + "VALUES (?,?,?,?,?,?,?,?)";
+    private final String EDITAR_INFO_CHOFER = "UPDATE chofer SET nombre = ?, tipo_de_licencia = ? "
+            + "fecha_vencimiento = ?, numero_telefono = ?, salario_por_viaje = ?, sucursal_base = ? WHERE numero_de_licencia = ?";
+    private final String CAMBIAR_ESTADO_CHOFER = "UPDATE chofer SET estado_operativo = ? WHERE numero_de_licencia = ?";
+    private final String ACTUALIZAR_SUCURSAL_ACTUAL = "UPDATE chofer SET sucursal_actual = ? WHERE numero_de_licencia = ?";
+    private final String GET_CHOFER_ID = "SELECT * FROM chofer WHERE numero_de_licencia = ?";
+    private final String GET_CHOFERES_SUCURSAL_BASE = "SELECT * FROM chofer WHERE sucursal_base = ?";
     private final String GET_CHOFERES_SUCURSAL_ACTUAL = "SELECT * FROM chofer WHERE sucursal_actual = ?";
     private final String TODOS_CHOFERES = "SELECT * FROM chofer";
     //SELECT dpi, nombre, LENGTH(foto) AS tamaño_foto, numero_licencia, fecha_vencimiento, numero_telefono, salario_por_viaje, estado_operativo, sucursal_base FROM chofer;
@@ -39,17 +40,16 @@ public class ChoferDAO {
         Connection connection = DBConnection.getConnection();
         try {
             PreparedStatement insert = connection.prepareStatement(AGREGAR_CHOFER);
-            insert.setString(1, request.getDpi());
+            insert.setString(1, request.getNumeroLicencia());
             insert.setString(2, request.getNombre());
             
-            insert.setString(3, request.getNumeroLicencia());
-            insert.setString(4, request.getTipoLicencia().name());
+            insert.setString(3, request.getTipoLicencia().name());
             Date fecha = Date.valueOf(request.getFechaVencimiento());
-            insert.setDate(5, fecha);
-            insert.setString(6, request.getNumeroTelefono());
-            insert.setDouble(7, request.getSalarioPorViaje());
+            insert.setDate(4, fecha);
+            insert.setString(5, request.getNumeroTelefono());
+            insert.setDouble(6, request.getSalarioPorViaje());
+            insert.setString(7, request.getSucursalBase());
             insert.setString(8, request.getSucursalBase());
-            insert.setString(9, request.getSucursalBase());
             insert.executeUpdate();
         } catch (SQLException e) {
             throw new AccesoALaDataException("Error al agregar un chofer " + e.getMessage());
@@ -60,16 +60,15 @@ public class ChoferDAO {
         Connection connection = DBConnection.getConnection();
         try {
             PreparedStatement update = connection.prepareStatement(EDITAR_INFO_CHOFER);
-            update.setString(1, request.getNombre());
             
-            update.setString(2, request.getNumeroLicencia());
-            update.setString(3, request.getTipoLicencia().name());
+            update.setString(1, request.getNombre());
+            update.setString(2, request.getTipoLicencia().name());
             Date fecha = Date.valueOf(request.getFechaVencimiento());
-            update.setDate(4, fecha);
-            update.setString(5, request.getNumeroTelefono());
-            update.setDouble(6, request.getSalarioPorViaje());
-            update.setString(7, request.getSucursalBase());
-            update.setString(8, request.getDpi());
+            update.setDate(3, fecha);
+            update.setString(4, request.getNumeroTelefono());
+            update.setDouble(5, request.getSalarioPorViaje());
+            update.setString(6, request.getSucursalBase());
+            update.setString(7, request.getNumeroLicencia());
             update.executeUpdate();
         } catch (SQLException e) {
             throw new AccesoALaDataException("Error al editar a un chofer " + e.getMessage());
@@ -127,6 +126,22 @@ public class ChoferDAO {
         return null;
     }
     
+    public List<ChoferDB> choferesSucursalBase(String sucursalBase) throws AccesoALaDataException {
+        List<ChoferDB> choferes = new ArrayList<>();
+        Connection connection = DBConnection.getConnection();
+        try {
+            PreparedStatement select = connection.prepareStatement(GET_CHOFERES_SUCURSAL_BASE);
+            select.setString(1, sucursalBase);
+            ResultSet rs = select.executeQuery();
+            while (rs.next()) {
+                choferes.add(armarChofer(rs));
+            }
+        } catch (SQLException e) {
+            throw new AccesoALaDataException("Error al buscar todos los choferes de la sucursal " + sucursalBase + ": " + e.getMessage());
+        }
+        return choferes;
+    }
+    
     public List<ChoferDB> choferesSucursalActual(String sucursalActual) throws AccesoALaDataException {
         List<ChoferDB> choferes = new ArrayList<>();
         Connection connection = DBConnection.getConnection();
@@ -138,7 +153,7 @@ public class ChoferDAO {
                 choferes.add(armarChofer(rs));
             }
         } catch (SQLException e) {
-            throw new AccesoALaDataException("Error al buscar todos los choferes " + e.getMessage());
+            throw new AccesoALaDataException("Error al buscar todos los choferes que se encuentran en la sucursal " + sucursalActual + ": " + e.getMessage());
         }
         return choferes;
     }
@@ -160,10 +175,9 @@ public class ChoferDAO {
     
     private ChoferDB armarChofer(ResultSet rs) throws SQLException {
         return new ChoferDB(
-                rs.getString("dpi"), 
+                rs.getString("numero_de_licencia"), 
                 rs.getString("nombre"), 
                 rs.getBytes("foto"), 
-                rs.getString("numero_de_licencia"), 
                 TipoLicencia.valueOf(rs.getString("tipo_de_licencia")),
                 rs.getString("fecha_vencimiento"), 
                 rs.getString("numero_telefono"), 

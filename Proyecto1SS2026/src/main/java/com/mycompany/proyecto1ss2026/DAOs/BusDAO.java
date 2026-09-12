@@ -22,8 +22,8 @@ import java.util.List;
  */
 public class BusDAO {
     
-    private final String AGREGAR_BUS = "INSERT INTO bus (numero_placa, foto, marca, modelo, fecha_fabricacion, capacidad_pasajeros, kilometraje, sucursal_base, sucursal_actual) VALUES (?,?,?,?,?,?,?,?,?)";
-    private final String MODIFICAR_BUS = "UPDATE bus SET foto = ?, marca = ?, modelo = ?, fecha_fabricacion = ?, capacidad_pasajeros = ?, sucursal_base = ? WHERE numero_placa = ?";
+    private final String AGREGAR_BUS = "INSERT INTO bus (numero_placa, marca, modelo, fecha_fabricacion, capacidad_pasajeros, kilometraje, sucursal_base, sucursal_actual) VALUES (?,?,?,?,?,?,?,?)";
+    private final String MODIFICAR_BUS = "UPDATE bus SET marca = ?, modelo = ?, fecha_fabricacion = ?, capacidad_pasajeros = ?, sucursal_base = ? WHERE numero_placa = ?";
     private final String MODIFICAR_KILOMETRAJE_BUS = "UPDATE bus SET kilometraje = ? WHERE numero_placa = ?";
     private final String MODIFICAR_ESTADO_BUS = "UPDATE bus SET estado_operativo = ? WHERE numero_placa = ?";
     private final String ACTUALIZAR_SUCURSAL_BUS = "UPDATE bus SET sucursal_actual = ? WHERE numero_placa = ?";
@@ -38,14 +38,14 @@ public class BusDAO {
             PreparedStatement insert = connection.prepareStatement(AGREGAR_BUS);
             insert.setString(1, request.getNumeroPlaca());
             
-            insert.setString(3, request.getMarca());
-            insert.setString(4, request.getModelo());
+            insert.setString(2, request.getMarca());
+            insert.setString(3, request.getModelo());
             Date fecha = Date.valueOf(request.getFechaFabricacion());
-            insert.setDate(5, fecha);
-            insert.setInt(6, request.getCapacidadPasajeros());
-            insert.setInt(7, request.getKilometraje());
+            insert.setDate(4, fecha);
+            insert.setInt(5, request.getCapacidadPasajeros());
+            insert.setInt(6, request.getKilometraje());
+            insert.setString(7, request.getSucursalBase());
             insert.setString(8, request.getSucursalBase());
-            insert.setString(9, request.getSucursalBase());
             insert.executeUpdate();
         } catch (SQLException e) {
             throw new AccesoALaDataException("Error al agregar un bus " + e.getMessage());
@@ -57,13 +57,13 @@ public class BusDAO {
         try {
             PreparedStatement update = connection.prepareStatement(MODIFICAR_BUS);
             
-            update.setString(2, request.getMarca());
-            update.setString(3, request.getModelo());
+            update.setString(1, request.getMarca());
+            update.setString(2, request.getModelo());
             Date fecha = Date.valueOf(request.getFechaFabricacion());
-            update.setDate(4, fecha);
-            update.setInt(5, request.getCapacidadPasajeros());
-            update.setString(6, request.getSucursalBase());
-            update.setString(7, request.getNumeroPlaca());
+            update.setDate(3, fecha);
+            update.setInt(4, request.getCapacidadPasajeros());
+            update.setString(5, request.getSucursalBase());
+            update.setString(6, request.getNumeroPlaca());
             update.executeUpdate();
         } catch (SQLException e) {
             throw new AccesoALaDataException("Error al modificar un bus " + e.getMessage());
@@ -187,7 +187,7 @@ public class BusDAO {
                 rs.getString("marca"), 
                 rs.getString("modelo"), 
                 rs.getString("fecha_fabricacion"), 
-                rs.getInt("cantidad_pasajeros"), 
+                rs.getInt("capacidad_pasajeros"), 
                 rs.getInt("kilometraje"), 
                 rs.getBoolean("estado_operativo"), 
                 rs.getString("sucursal_base"), 

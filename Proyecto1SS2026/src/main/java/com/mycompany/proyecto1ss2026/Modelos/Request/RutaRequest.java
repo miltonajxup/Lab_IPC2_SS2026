@@ -10,19 +10,29 @@ package com.mycompany.proyecto1ss2026.Modelos.Request;
  */
 public class RutaRequest {
     
-    private int id;
+    private String id;
     private int distanciaAproximada;
     private double precioBoleto;
     private String sucursalRegistro;
     private String sucursalOrigen;
     private String sucursalDestino;
 
-    public int getId() {
-        return id;
+    public RutaRequest(String id, int distanciaAproximada, double precioBoleto) {
+        this.id = id;
+        this.distanciaAproximada = distanciaAproximada;
+        this.precioBoleto = precioBoleto;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public RutaRequest(int distanciaAproximada, double precioBoleto, String sucursalRegistro, String sucursalOrigen, String sucursalDestino) {
+        this.distanciaAproximada = distanciaAproximada;
+        this.precioBoleto = precioBoleto;
+        this.sucursalRegistro = sucursalRegistro;
+        this.sucursalOrigen = sucursalOrigen;
+        this.sucursalDestino = sucursalDestino;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public int getDistanciaAproximada() {

@@ -30,8 +30,9 @@ public class UsuarioDAO {
     private final String MODIFICAR_ESTADO = "UPDATE usuario SET estado = ? WHERE dpi = ?";
     private final String EXISTE_USUARIO = "SELECT * FROM usuario WHERE dpi = ?";
     private final String GET_USUARIOS = "SELECT * FROM usuario WHERE rol = ?";
-    private final String GET_ADMINS_SUCURSALES = "SELECT usu.*, adm.sucursal FROM usuario AS usu JOIN admin_sucursal AS adm ON usu.dpi = adm.dpi WHERE adm.sucursal = ?";
-    private final String GET_USUARIO_POR_ID = "SELECT * FROM usuario WHERE id = ?";
+    private final String GET_SUCURSAL_ADMIN = "SELECT * FROM admin_sucursal WHERE dpi = ?";
+    private final String GET_ADMINS_SUCURSAL = "SELECT usu.*, adm.sucursal FROM usuario AS usu JOIN admin_sucursal AS adm ON usu.dpi = adm.dpi WHERE adm.sucursal = ?";
+    private final String GET_USUARIO_POR_ID = "SELECT * FROM usuario WHERE dpi = ?";
     
     public void agregarUsuario(UsuarioRequest request) throws AccesoALaDataException {
         Connection connection = DBConnection.getConnection();
@@ -166,16 +167,30 @@ public class UsuarioDAO {
         List<UsuarioDB> usuarios = new ArrayList<>();
         Connection connection = DBConnection.getConnection();
         try {
-            PreparedStatement select = connection.prepareStatement(GET_ADMINS_SUCURSALES);
+            PreparedStatement select = connection.prepareStatement(GET_ADMINS_SUCURSAL);
             select.setString(1, codigoSucursal);
             ResultSet rs = select.executeQuery();
             while (rs.next()) {
-                UsuarioDB usuario = armarUsuario(rs);
-                usuario.setSucursal(codigoSucursal);
-                usuarios.add(usuario);
+                usuarios.add(armarUsuario(rs, connection));
             }
         } catch (SQLException e) {
             throw new AccesoALaDataException("Error al traer todos los administradores de la sucursal " + codigoSucursal + " " + e.getMessage());
+        }
+        return usuarios;
+    }
+    
+    public List<UsuarioDB> getAdministradoresSucursales() throws AccesoALaDataException {
+        List<UsuarioDB> usuarios = new ArrayList<>();
+        Connection connection = DBConnection.getConnection();
+        try {
+            PreparedStatement select = connection.prepareStatement(GET_USUARIOS);
+            select.setString(1, RolUsuario.ADMINISTRADOR_SUCURSAL.name());
+            ResultSet rs = select.executeQuery();
+            while (rs.next()) {
+                usuarios.add(armarUsuario(rs, connection));
+            }
+        } catch (SQLException e) {
+            throw new AccesoALaDataException("Error al traer todos los administradores de sucursales " + e.getMessage());
         }
         return usuarios;
     }
@@ -203,7 +218,7 @@ public class UsuarioDAO {
             select.setString(1, dpi);
             ResultSet rs = select.executeQuery();
             if (rs.next()) {
-                return armarUsuario(rs);
+                return armarUsuario(rs, connection);
             }
         } catch (SQLException e) {
             throw new AccesoALaDataException("Error al traer usuario por dpi " + e.getMessage());
@@ -211,14 +226,29 @@ public class UsuarioDAO {
         return null;
     }
     
-    private UsuarioDB armarUsuario(ResultSet rs) throws SQLException {
-        return new UsuarioDB(rs.getString("dpi"), 
+    public UsuarioDB armarUsuario(ResultSet rs) throws SQLException {
+        return new UsuarioDB(
+                rs.getString("dpi"), 
                 rs.getString("nombre"), 
                 rs.getString("nit"), 
                 rs.getString("telefono"), 
                 rs.getString("direccion"), 
                 rs.getDouble("credito_disponible"), 
-                rs.getBoolean("estado"));
+                rs.getBoolean("estado"), 
+                RolUsuario.valueOf(rs.getString("rol")));
+    }
+    
+    public UsuarioDB armarUsuario(ResultSet rs, Connection conneciton) throws SQLException {
+        UsuarioDB usuario = armarUsuario(rs);
+        if (usuario.getRol() == RolUsuario.ADMINISTRADOR_SUCURSAL) {
+            PreparedStatement selectSucursal = conneciton.prepareStatement(GET_SUCURSAL_ADMIN);
+            selectSucursal.setString(1, usuario.getDpi());
+            ResultSet sucursal = selectSucursal.executeQuery();
+            if (sucursal.next()) {
+                usuario.setSucursal(sucursal.getString("sucursal"));
+            }
+        }
+        return usuario;
     }
     
 }

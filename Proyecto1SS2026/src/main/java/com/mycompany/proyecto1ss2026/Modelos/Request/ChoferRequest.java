@@ -13,7 +13,6 @@ import java.time.LocalDate;
  */
 public class ChoferRequest {
     
-    private String dpi;
     private String nombre;
     private byte[] foto;
     private String numeroLicencia;
@@ -25,8 +24,7 @@ public class ChoferRequest {
     private String sucursalBase;
     private String sucursalActual;
 
-    public ChoferRequest(String dpi, String nombre, String numeroLicencia, TipoLicencia tipoLicencia, LocalDate fechaVencimiento, String numeroTelefono, double salarioPorViaje, String sucursalBase) {
-        this.dpi = dpi;
+    public ChoferRequest(String nombre, String numeroLicencia, TipoLicencia tipoLicencia, LocalDate fechaVencimiento, String numeroTelefono, double salarioPorViaje, String sucursalBase) {
         this.nombre = nombre;
         this.numeroLicencia = numeroLicencia;
         this.tipoLicencia = tipoLicencia;
@@ -34,14 +32,6 @@ public class ChoferRequest {
         this.numeroTelefono = numeroTelefono;
         this.salarioPorViaje = salarioPorViaje;
         this.sucursalBase = sucursalBase;
-    }
-
-    public String getDpi() {
-        return dpi;
-    }
-
-    public void setDpi(String dpi) {
-        this.dpi = dpi;
     }
 
     public String getNombre() {

@@ -12,7 +12,6 @@ import com.mycompany.proyecto1ss2026.Constantes.TipoLicencia;
  */
 public class ChoferDB {
     
-    private final String dpi;
     private final String nombre;
     private final byte[] foto;
     private final String numeroLicencia;
@@ -24,11 +23,10 @@ public class ChoferDB {
     private final String sucursalBase;
     private final String sucursalActual;
 
-    public ChoferDB(String dpi, String nombre, byte[] foto, String numeroLicencia, TipoLicencia tipoLicencia, String fechaVencimiento, String numeroTelefono, double salarioPorViaje, boolean estadoOperativo, String sucursalBase, String sucursalActual) {
-        this.dpi = dpi;
+    public ChoferDB(String numeroLicencia, String nombre, byte[] foto, TipoLicencia tipoLicencia, String fechaVencimiento, String numeroTelefono, double salarioPorViaje, boolean estadoOperativo, String sucursalBase, String sucursalActual) {
+        this.numeroLicencia = numeroLicencia;
         this.nombre = nombre;
         this.foto = foto;
-        this.numeroLicencia = numeroLicencia;
         this.tipoLicencia = tipoLicencia;
         this.fechaVencimiento = fechaVencimiento;
         this.numeroTelefono = numeroTelefono;
@@ -36,10 +34,6 @@ public class ChoferDB {
         this.estadoOperativo = estadoOperativo;
         this.sucursalBase = sucursalBase;
         this.sucursalActual = sucursalActual;
-    }
-
-    public String getDpi() {
-        return dpi;
     }
 
     public String getNombre() {

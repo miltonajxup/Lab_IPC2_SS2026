@@ -14,6 +14,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -29,6 +31,7 @@ public class ViajeDAO {
     private final String MODIFCAR_ESTADO_VIAJE_PRIVADO = "UPDATE viaje_privado SET estado_viaje = ? WHERE id_viaje = ?";
     private final String ELIMINAR_VIAJE = "DELETE FROM viaje WHERE id = ?";
     private final String BUSCAR_VIAJE_POR_CHOFER = "SELECT * FROM viaje WHERE chofer = ?";
+    private final String GET_VIAJES_SIN_TERMINIAR = "SELECT * FROM viaje_ejecucion AS viaej RIGHT JOIN viaje AS via ON viaej.viaje_id = via.id WHERE hora_salida IS NULL";
     
     public void agregarViajePublico(ViajePublicoRequest request) throws AccesoALaDataException {
         Connection connection = DBConnection.getConnection();
@@ -140,6 +143,21 @@ public class ViajeDAO {
             throw new AccesoALaDataException("Error al buscar viaje por chofer " + e.getMessage());
         }
         return null;
+    }
+    
+    public List<ViajeDB> getViajesSinTerminra() throws AccesoALaDataException {
+        List<ViajeDB> viajes = new ArrayList<>();
+        try {
+            Connection connection = DBConnection.getConnection();
+            PreparedStatement select = connection.prepareStatement(GET_VIAJES_SIN_TERMINIAR);
+            ResultSet rs = select.executeQuery();
+            if (rs.next()) {
+                viajes.add(armarViaje(rs));
+            }
+        } catch (SQLException e) {
+            throw new AccesoALaDataException("Error al buscar los viajes sin terminar " + e.getMessage());
+        }
+        return viajes;
     }
     
     public ViajeDB armarViaje(ResultSet rs) throws SQLException {
