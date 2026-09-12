@@ -8,9 +8,9 @@ package com.mycompany.proyecto1ss2026.Exeptions;
  *
  * @author milton
  */
-public class ValoresInvalidosException extends Exception {
+public class LoginException extends Exception {
 
-    public ValoresInvalidosException(String mensaje) {
+    public LoginException(String mensaje) {
         super(mensaje);
     }
     
