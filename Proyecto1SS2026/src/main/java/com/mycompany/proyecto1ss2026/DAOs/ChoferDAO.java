@@ -26,7 +26,7 @@ public class ChoferDAO {
     private final String AGREGAR_CHOFER = "INSERT INTO chofer(numero_de_licencia, nombre, tipo_de_licencia, "
             + "fecha_vencimiento, numero_telefono, salario_por_viaje, sucursal_base, sucursal_actual) "
             + "VALUES (?,?,?,?,?,?,?,?)";
-    private final String EDITAR_INFO_CHOFER = "UPDATE chofer SET nombre = ?, tipo_de_licencia = ? "
+    private final String EDITAR_INFO_CHOFER = "UPDATE chofer SET nombre = ?, tipo_de_licencia = ? , "
             + "fecha_vencimiento = ?, numero_telefono = ?, salario_por_viaje = ?, sucursal_base = ? WHERE numero_de_licencia = ?";
     private final String CAMBIAR_ESTADO_CHOFER = "UPDATE chofer SET estado_operativo = ? WHERE numero_de_licencia = ?";
     private final String ACTUALIZAR_SUCURSAL_ACTUAL = "UPDATE chofer SET sucursal_actual = ? WHERE numero_de_licencia = ?";

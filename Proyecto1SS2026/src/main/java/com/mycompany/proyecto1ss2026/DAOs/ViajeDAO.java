@@ -11,6 +11,7 @@ import com.mycompany.proyecto1ss2026.Modelos.DataBase.ViajeDB;
 import com.mycompany.proyecto1ss2026.Modelos.Request.ViajePrivadoRequest;
 import com.mycompany.proyecto1ss2026.Modelos.Request.ViajePublicoRequest;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -31,7 +32,7 @@ public class ViajeDAO {
     private final String MODIFCAR_ESTADO_VIAJE_PRIVADO = "UPDATE viaje_privado SET estado_viaje = ? WHERE id_viaje = ?";
     private final String ELIMINAR_VIAJE = "DELETE FROM viaje WHERE id = ?";
     private final String BUSCAR_VIAJE_POR_CHOFER = "SELECT * FROM viaje WHERE chofer = ?";
-    private final String GET_VIAJES_SIN_TERMINIAR = "SELECT * FROM viaje_ejecucion AS viaej RIGHT JOIN viaje AS via ON viaej.viaje_id = via.id WHERE hora_salida IS NULL";
+    private final String GET_VIAJES_SIN_TERMINIAR = "SELECT via.* FROM viaje_ejecucion AS viaej RIGHT JOIN viaje AS via ON viaej.viaje_id = via.id WHERE hora_salida IS NULL";
     
     public void agregarViajePublico(ViajePublicoRequest request) throws AccesoALaDataException {
         Connection connection = DBConnection.getConnection();
@@ -40,8 +41,9 @@ public class ViajeDAO {
             int idViaje = crearViaje(connection, request.getChofer(), request.getBus());
             PreparedStatement insert = connection.prepareStatement(AGREGAR_VIAJE_PUBLICO);
             insert.setInt(1, idViaje);
-            insert.setString(2, request.getFechaSalida());
-            insert.setInt(3, request.getHorario());
+            Date date = Date.valueOf(request.getFechaSalida());
+            insert.setDate(2, date);
+            insert.setString(3, request.getHorario());
             insert.executeUpdate();
             
             connection.commit();
@@ -97,14 +99,17 @@ public class ViajeDAO {
         }
     }
     
-    private int crearViaje(Connection connection, String chofer, String bus) throws SQLException {
+    private int crearViaje(Connection connection, String chofer, String bus) throws SQLException, AccesoALaDataException {
         PreparedStatement crearViaje = connection.prepareStatement(GENERAR_VIAJE);
         crearViaje.setString(1, chofer);
         crearViaje.setString(2, bus);
         crearViaje.executeUpdate();
         PreparedStatement idViaje = connection.prepareStatement(GET_ULTIMO_VIAJE);
         ResultSet rs = idViaje.executeQuery();
-        return rs.getInt("id");
+        if (rs.next()) {
+            return rs.getInt("id");
+        }
+        throw new AccesoALaDataException("Error al acceder al intentar acceder al ultimo id de viaje generado");
     }
     
     public void modificarEstadoViaje(EstadoViajePrivado estado, int idViaje) throws AccesoALaDataException {
@@ -145,7 +150,7 @@ public class ViajeDAO {
         return null;
     }
     
-    public List<ViajeDB> getViajesSinTerminra() throws AccesoALaDataException {
+    public List<ViajeDB> getViajesSinTerminar() throws AccesoALaDataException {
         List<ViajeDB> viajes = new ArrayList<>();
         try {
             Connection connection = DBConnection.getConnection();

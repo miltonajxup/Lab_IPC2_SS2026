@@ -4,6 +4,8 @@
  */
 package com.mycompany.proyecto1ss2026.Modelos.Request;
 
+import java.time.LocalDate;
+
 /**
  *
  * @author milton
@@ -12,9 +14,16 @@ public class ViajePublicoRequest {
     
     private String chofer;
     private String bus;
-    private String fechaSalida;
-    private int horario;
+    private LocalDate fechaSalida;
+    private String horario;
     private int asiento;
+
+    public ViajePublicoRequest(String chofer, String bus, LocalDate fechaSalida, String horario) {
+        this.chofer = chofer;
+        this.bus = bus;
+        this.fechaSalida = fechaSalida;
+        this.horario = horario;
+    }
 
     public String getChofer() {
         return chofer;
@@ -32,24 +41,28 @@ public class ViajePublicoRequest {
         this.bus = bus;
     }
 
-    public String getFechaSalida() {
+    public LocalDate getFechaSalida() {
         return fechaSalida;
     }
 
-    public void setFechaSalida(String fechaSalida) {
+    public void setFechaSalida(LocalDate fechaSalida) {
         this.fechaSalida = fechaSalida;
     }
 
-    public int getHorario() {
+    public String getHorario() {
         return horario;
     }
 
-    public void setHorario(int horario) {
+    public void setHorario(String horario) {
         this.horario = horario;
     }
 
     public int getAsiento() {
         return asiento;
+    }
+
+    public void setAsiento(int asiento) {
+        this.asiento = asiento;
     }
     
 }

@@ -4,37 +4,45 @@
  */
 package com.mycompany.proyecto1ss2026.Modelos.Request;
 
+import java.time.LocalTime;
+
 /**
  *
  * @author milton
  */
 public class HorarioRequest {
     
-    private String horaSalida;
-    private String horaLlegada;
-    private int ruta;
+    private LocalTime horaSalida;
+    private LocalTime horaLlegada;
+    private String ruta;
 
-    public String getHoraSalida() {
+    public HorarioRequest(LocalTime horaSalida, LocalTime horaLlegada, String ruta) {
+        this.horaSalida = horaSalida;
+        this.horaLlegada = horaLlegada;
+        this.ruta = ruta;
+    }
+
+    public LocalTime getHoraSalida() {
         return horaSalida;
     }
 
-    public void setHoraSalida(String horaSalida) {
+    public void setHoraSalida(LocalTime horaSalida) {
         this.horaSalida = horaSalida;
     }
 
-    public String getHoraLlegada() {
+    public LocalTime getHoraLlegada() {
         return horaLlegada;
     }
 
-    public void setHoraLlegada(String horaLlegada) {
+    public void setHoraLlegada(LocalTime horaLlegada) {
         this.horaLlegada = horaLlegada;
     }
 
-    public int getRuta() {
+    public String getRuta() {
         return ruta;
     }
 
-    public void setRuta(int ruta) {
+    public void setRuta(String ruta) {
         this.ruta = ruta;
     }
     

@@ -40,9 +40,6 @@ public class ViajePublicoDAO {
                                     JOIN ruta AS rut ON hora.ruta = rut.id 
                                     JOIN viaje_ejecucion AS viaej ON viapub.viaje_id = viaej.viaje_id 
                                     WHERE viaej.hora_salida IS NULL AND viaej.hora_llegada IS NULL""";
-    private final String VIAJES_SIN_COMPLETAR = 
-            """
-            SELECT * FROM viaje_ejecucion AS viaej JOIN LEFT """;
     
     public List<ViajePublicoDB> getViajesPublicosRuta(int ruta, String fecha) throws AccesoALaDataException {
         List<ViajePublicoDB> viajes = new ArrayList<>();

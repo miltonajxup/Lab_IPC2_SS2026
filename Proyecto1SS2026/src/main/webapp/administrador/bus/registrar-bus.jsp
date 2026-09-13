@@ -43,31 +43,22 @@
             }
             ServicioBus servicio = new ServicioBus();
             String mensajeCreacion = null;
-            if (numeroPlaca != null && marca != null && modelo != null && fechaFabricacion != null && textoCantidadPasajeros != null 
-                    && textoKilometraje != null && sucursalBase != null && !numeroPlaca.isEmpty() && !marca.isEmpty() && !modelo.isEmpty() 
-                    && !fechaFabricacion.isEmpty() && !textoCantidadPasajeros.isEmpty() && !textoKilometraje.isEmpty() && !sucursalBase.isEmpty()) {
-                try {
-                    mensajeCreacion = servicio.agregarBus(numeroPlaca, marca, modelo, fechaFabricacion, textoCantidadPasajeros, textoKilometraje, sucursalBase);
-                } catch (AccesoALaDataException | ValorExistenteException | ValorInvalidoException e) {
-        %>    
-        <p class="error"><%=e.getMessage()%></p>
-        <%
-                }
+            
+            try {
+                mensajeCreacion = servicio.agregarBus(numeroPlaca, marca, modelo, fechaFabricacion, textoCantidadPasajeros, textoKilometraje, sucursalBase);
+            } catch (AccesoALaDataException | ValorExistenteException | ValorInvalidoException e) {
+                %> <p class="error"><%=e.getMessage()%></p> <%
             }
             SucursalDAO sucursaldao = new SucursalDAO();
             List<SucursalDB> sucursales = null;
             try {
                 sucursales = sucursaldao.todasLasSucursales();
             } catch (AccesoALaDataException e) {
-        %>
-        <p class="error">e.getMessage()</p>
-        <%
+                %> <p class="error">e.getMessage()</p> <%
             }
             if (mensajeCreacion != null) {
-        %>
-        <p class="correcto"><%=mensajeCreacion%></p>
-        
-        <% } %>
+                %> <p class="correcto"><%=mensajeCreacion%></p> <% 
+            } %>
         
         <div class="contenedor-principal">
             <form method="POST" action="registrar-bus.jsp">

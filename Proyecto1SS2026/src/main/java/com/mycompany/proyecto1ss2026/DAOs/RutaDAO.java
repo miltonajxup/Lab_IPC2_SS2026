@@ -26,9 +26,20 @@ public class RutaDAO {
     private final String DESHABILITAR_RUTA = "UPDATE ruta SET ruta_habilitada = FALSE WHERE id = ?";
     private final String EXISTE_RUTA_ID = "SELECT * FROM ruta WHERE id = ? AND ruta_habilitada = TRUE";
     private final String EXISTE_RUTA = "SELECT * FROM ruta WHERE sucursal_origen = ? AND sucursal_destino = ? AND ruta_habilitada = TRUE";
+    private final String GET_RUTAS = "SELECT * FROM ruta";
     private final String GET_RUTAS_SUCURSAL_ORIGEN = "SELECT * FROM ruta WHERE ruta_habilitada = TRUE AND sucursal_origen = ?";
     private final String GET_RUTAS_SUCURSAL_DESTINO = "SELECT * FROM ruta WHERE ruta_habilitada = TRUE AND sucursal_destino = ?";
     private final String GET_RUTA_POR_ID = "SELECT * FROM ruta WHERE ruta_habilitada = TRUE AND id = ?"; //ver si se puede mostrar
+    private final String GET_RUTA_POR_SUCURSALES = "SELECT * FROM ruta WHERE sucursal_origen = ? AND sucursal_destino = ?";
+    private final String GET_RUTAS_OCUPADAS = 
+            """
+            SELECT via.chofer, via.bus, rut.* 
+            FROM viaje AS via 
+            LEFT JOIN viaje_ejecucion AS viaej ON via.id = viaej.viaje_id 
+            JOIN viaje_publico AS viap ON via.id = viap.id_viaje 
+            JOIN horario_ruta AS hor ON viap.horario = hor.id 
+            JOIN ruta AS rut ON hor.ruta = rut.id 
+            WHERE viaej.hora_salida IS NULL OR viaej.hora_llegada IS NULL""";
     
     public void agregarRuta(RutaRequest request) throws AccesoALaDataException {
         Connection connection = DBConnection.getConnection();
@@ -94,6 +105,21 @@ public class RutaDAO {
         }
     } 
     
+    public List<RutaDB> getTodasLasRutas() throws AccesoALaDataException {
+        List<RutaDB> rutas = new ArrayList<>();
+        Connection connection = DBConnection.getConnection();
+        try {
+            PreparedStatement select = connection.prepareStatement(GET_RUTAS);
+            ResultSet rs = select.executeQuery();
+            while (rs.next()) {
+                rutas.add(armarRuta(rs));
+            }
+        } catch (SQLException e) {
+            throw new AccesoALaDataException("Error al obtener todas las rutas " + e.getMessage());
+        }
+        return rutas;
+    }
+    
     public List<RutaDB> getRutasSucursalOrigen(String sucursalOrigen) throws AccesoALaDataException {
         List<RutaDB> rutas = new ArrayList<>();
         Connection connection = DBConnection.getConnection();
@@ -139,6 +165,37 @@ public class RutaDAO {
             throw new AccesoALaDataException("Error al obtener una ruta por su id " + e.getMessage());
         }
         return null;
+    }
+    
+    public RutaDB getRutasPorSucursales(String sucursalOrigen, String sucursalDestino) throws AccesoALaDataException {
+        Connection connection = DBConnection.getConnection();
+        try {
+            PreparedStatement select = connection.prepareStatement(GET_RUTA_POR_SUCURSALES);
+            select.setString(1, sucursalOrigen);
+            select.setString(2, sucursalDestino);
+            ResultSet rs = select.executeQuery();
+            if (rs.next()) {
+                return armarRuta(rs);
+            }
+        } catch (SQLException e) {
+            throw new AccesoALaDataException("Error al obtener una ruta por las sucursales " + e.getMessage());
+        }
+        return null;
+    }
+    
+    public List<RutaDB> getRutasOcupadas() throws AccesoALaDataException {
+        List<RutaDB> rutas = new ArrayList<>();
+        Connection connection = DBConnection.getConnection();
+        try {
+            PreparedStatement select = connection.prepareStatement(GET_RUTAS_OCUPADAS);
+            ResultSet rs = select.executeQuery();
+            if (rs.next()) {
+                rutas.add(armarRuta(rs));
+            }
+        } catch (SQLException e) {
+            throw new AccesoALaDataException("Error al obtener las rutas ocupadas " + e.getMessage());
+        }
+        return rutas;
     }
     
     private RutaDB armarRuta(ResultSet rs) throws SQLException {

@@ -4,6 +4,7 @@
     Author     : milton
 --%>
 
+<%@page import="com.mycompany.proyecto1ss2026.Respuesta.Respuesta"%>
 <%@page import="com.mycompany.proyecto1ss2026.Constantes.RolUsuario"%>
 <%@page import="com.mycompany.proyecto1ss2026.Modelos.DataBase.UsuarioDB"%>
 <%@page import="com.mycompany.proyecto1ss2026.DAOs.BusDAO"%>
@@ -48,16 +49,11 @@
             }
             ServicioBus servicio = new ServicioBus();
             String mensajeCreacion = null;
-            if (numeroPlaca != null && marca != null && modelo != null && fechaFabricacion != null && textoCantidadPasajeros != null 
-                    && textoKilometraje != null && sucursalBase != null && !numeroPlaca.isEmpty() && !marca.isEmpty() && !modelo.isEmpty() 
-                    && !fechaFabricacion.isEmpty() && !textoCantidadPasajeros.isEmpty() && !textoKilometraje.isEmpty() && !sucursalBase.isEmpty()) {
-                try {
-                    mensajeCreacion = servicio.modificarBus(numeroPlaca, marca, modelo, fechaFabricacion, textoCantidadPasajeros, textoKilometraje, sucursalBase);
-                } catch (AccesoALaDataException | ValorInvalidoException | ValorInexistenteException e) {
-        %>    
-        <p class="error"><%=e.getMessage()%></p>
-        <%
-                }
+            
+            try {
+                mensajeCreacion = servicio.modificarBus(numeroPlaca, marca, modelo, fechaFabricacion, textoCantidadPasajeros, textoKilometraje, sucursalBase);
+            } catch (AccesoALaDataException | ValorInvalidoException | ValorInexistenteException e) {
+                %> <p class="error"><%=e.getMessage()%></p> <%
             }
             SucursalDAO sucursaldao = new SucursalDAO();
             BusDAO busdao = new BusDAO();
@@ -71,56 +67,43 @@
                     buses = servicio.getBusesSucursalBase(usuario.getSucursal());
                 }
             } catch (AccesoALaDataException | ValorInexistenteException e) {
-        %>
-        <p class="error"><%=e.getMessage()%></p>
-        <%
+                %> <p class="error"><%=e.getMessage()%></p> <%
             }
             String estadoBus = request.getParameter("estado-bus");
-            if (numeroPlaca != null && estadoBus != null && !numeroPlaca.isEmpty() && !estadoBus.isEmpty()) {
-                try {
-                    servicio.modificarEstado(numeroPlaca, estadoBus);
-                } catch (AccesoALaDataException | ValorInexistenteException | ValorInvalidoException e) {
-        %>
-        <p class="error"><%=e.getMessage()%></p>
-        <%
-                }
+            Respuesta respuestaEstado = null;
+            try {
+                respuestaEstado = servicio.modificarEstado(numeroPlaca, estadoBus);
+            } catch (AccesoALaDataException | ValorInexistenteException | ValorInvalidoException e) {
+                %> <p class="error"><%=e.getMessage()%></p> <%
+            }
+            if (respuestaEstado != null && !respuestaEstado.isCorrecto()) {
+                %> <p class="cuadro-texto"> <%=respuestaEstado.getMensaje()%> </p> <%
             }
             BusDB busActual = null;
             if (numeroPlaca != null && !numeroPlaca.isEmpty()) {
                 try {
                     busActual = servicio.getBus(numeroPlaca);
                 } catch (AccesoALaDataException | ValorInexistenteException e) {
-        %>
-        <p class="error"><%=e.getMessage()%></p>
-        <%
+                    %> <p class="error"><%=e.getMessage()%></p> <%
                 }
             }
             if (mensajeCreacion != null) {
-        %>
-        <p class="correcto"><%=mensajeCreacion%></p>
-        <%
+                %> <p class="correcto"><%=mensajeCreacion%></p> <%
             }
         %>
         <div class="contenedor-principal">
             <div class="contenedor-opciones">
-            <%
-                if (buses != null) {
-            %>
-            <%
-                    for (BusDB bus : buses) {
-            %>
+            <% if (buses != null) {
+                    for (BusDB bus : buses) { %>
                 <a class="opcion" href="modificar-bus.jsp?numero-placa=<%=bus.getNumeroPlaca()%>">
                     <%=bus.getNumeroPlaca()%>
                 </a>
-            <%
-                    }
-                }
-            %>
+                
+            <% }  } %>
+                
             </div>
-            <%
-                if (busActual != null) {
-            %>
-            <form method="POST" action="modificar-bus.jsp">
+            <% if (busActual != null) { %>
+            <form method="POST" action="modificar-bus.jsp?numero-placa=<%=busActual.getNumeroPlaca()%>">
                 <div class="correcto">
                     Este bus se encuentra en la sucursal <%=busActual.getSucursalActual()%> 
                 </div>
@@ -164,10 +147,8 @@
                             for (SucursalDB sucursalLista : sucursales) {
                     %>
                     <option value="<%=sucursalLista.getCodigo()%>"><%=sucursalLista.getNombre()%></option>
-                    <%
-                            }
-                        }
-                    %>
+                    <%      }
+                        } %>
                 </select>
                 
                 <% } %>
@@ -176,25 +157,25 @@
             </form>
             <div >
                 Cambiar el estado del Bus <br> <br>
-                <%
-                    if (busActual.isEstadoOperativo()) {
-                %>
+                
+                <% if (busActual.isEstadoOperativo()) { %>
+                
                 <a class="boton activo" href="modificar-bus.jsp?numero-placa=<%=busActual.getNumeroPlaca()%>&estado-bus=<%=!busActual.isEstadoOperativo()%>">
                     ACTIVO
                 </a>
-                <%
-                    } else {
-                %>
+                    
+                <% } else { %>
+                
                 <a class="boton inactivo" href="modificar-bus.jsp?numero-placa=<%=busActual.getNumeroPlaca()%>&estado-bus=<%=!busActual.isEstadoOperativo()%>">
                     DESHABILITADO
                 </a>
-                <%
-                    }
-                %>
+                    
+                <% } %>
+                
             </div>
-            <%
-                }
-            %>
+                
+            <% } %>
+            
         </div>
         
         <% } else { %>
