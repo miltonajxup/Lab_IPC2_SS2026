@@ -23,7 +23,7 @@
     </head>
     <body>
         <%
-            UsuarioDB usuario = (UsuarioDB) session.getAttribute("usuario-logeado");
+            UsuarioDB usuario = (UsuarioDB) session.getAttribute("usuarioLogeado");
             if (usuario != null) {
         %>
         <h1>Agregar una Ruta</h1>
@@ -39,29 +39,20 @@
             
             String mensaje = null;
             ServicioRuta servicio = new ServicioRuta();
-            if (textoDistancia != null && textoPrecio != null && sucursalRegistro != null && sucursalOrigen != null && sucursalDestino != null 
-                    && !textoDistancia.isEmpty() && !textoPrecio.isEmpty() && !sucursalRegistro.isEmpty() && !sucursalOrigen.isEmpty() && !sucursalDestino.isEmpty()) {
-                try {
-                    mensaje = servicio.agregarRuta(textoDistancia, textoPrecio, sucursalRegistro, sucursalOrigen, sucursalDestino);
-                } catch (AccesoALaDataException | ValorExistenteException | ValorInexistenteException | ValorInvalidoException e) {
-        %>
-        <p class="error"><%=e.getMessage()%></p>
-        <%
-                }
+            try {
+                mensaje = servicio.agregarRuta(textoDistancia, textoPrecio, sucursalRegistro, sucursalOrigen, sucursalDestino);
+            } catch (AccesoALaDataException | ValorExistenteException | ValorInexistenteException | ValorInvalidoException e) {
+                %> <p class="error"><%=e.getMessage()%></p> <%
             }
             if (mensaje != null) {
-        %>
-        <p class="correcto"><%=mensaje%></p>
-        <%
+                %> <p class="correcto"><%=mensaje%></p> <%
             }
             SucursalDAO sucursaldao = new SucursalDAO();
             List<SucursalDB> sucursales = null;
             try {
                 sucursales = sucursaldao.todasLasSucursales();
             } catch (AccesoALaDataException e) {
-        %>
-        <p class="error"><%=e.getMessage()%></p>
-        <%
+                %> <p class="error"><%=e.getMessage()%></p> <%
             }
         %>
         <div class="contenedor-principal">  
@@ -75,7 +66,7 @@
                     <input name="precio" type="number"/>
                 </label>
                 Selecciona la Sucursal Origen de la Ruta
-                <select name    ="sucursal-origen">
+                <select name="sucursal-origen">
                     <option></option>
                     <%
                         if (sucursales != null) {
@@ -85,7 +76,7 @@
                     <%  
                             }
                         }
-                    %>SucrsalDB
+                    %>
                 </select>
                 Selecciona la Sucursal Destino de la Ruta
                 <select name="sucursal-destino">

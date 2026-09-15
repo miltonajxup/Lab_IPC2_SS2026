@@ -4,6 +4,7 @@
     Author     : milton
 --%>
 
+<%@page import="com.mycompany.proyecto1ss2026.Modelos.DataBase.UsuarioDB"%>
 <%@page import="com.mycompany.proyecto1ss2026.DAOs.SucursalDAO"%>
 <%@page import="com.mycompany.proyecto1ss2026.Exeptions.ValorInvalidoException"%>
 <%@page import="com.mycompany.proyecto1ss2026.Exeptions.ValorExistenteException"%>
@@ -20,6 +21,10 @@
         <jsp:include page="/includes/resources.jsp"/>
     </head>
     <body>
+        <%
+            UsuarioDB usuario = (UsuarioDB) session.getAttribute("usuarioLogeado");
+            if (usuario != null) {
+        %>
         <h1>Modificar Sucursal</h1>
         <div class="menuBotones">
             <a class="boton" href="../menu-administrador.jsp">Regresar</a>
@@ -35,9 +40,7 @@
                 try {
                     servicio.modificarSucursal(codigo, nombre, ciudad);
                 } catch (AccesoALaDataException | ValorExistenteException | ValorInvalidoException e) {
-        %>
-        <p class="error"><%=e.getMessage()%></p>
-        <%
+                %> <p class="error"><%=e.getMessage()%></p> <%
                 }
             }
             SucursalDAO sucursaldao = new SucursalDAO();
@@ -48,11 +51,8 @@
                 sucursales = sucursaldao.todasLasSucursales();
                 sucursalCodigo = sucursaldao.buscarSucursal(codigoSucursal);
             } catch (AccesoALaDataException e) {
-        %>
-        <p class="error"><%=e.getMessage()%></p>
-        <%
-            }
-        %>
+                %> <p class="error"><%=e.getMessage()%></p> <%
+            } %>
         <div class="contenedor-principal">
             <div class="contenedor-opciones">
             <%
@@ -63,30 +63,30 @@
                     <%=sucursal.getCodigo()%> <br>
                     <%=sucursal.getNombre()%>
                 </a>
-            <% 
-                    }
-                }
-            %>
+                
+            <% }  } %>
+            
             </div>
-            <%
-                if (sucursalCodigo != null) {
-            %>
+            <% if (sucursalCodigo != null) { %>
             <form method="POST" action="modificar-sucursal.jsp?codigo=<%=sucursalCodigo.getCodigo()%>">
                 <label>
-                    Nombre: 
+                    Nombre de la Sucursal: 
                     <input name="nombre" value="<%=sucursalCodigo.getNombre()%>"/>
                 </label>
                 <label>
-                    Ciudad:
+                    Ciudad de la Sede (O referencia): 
                     <input name="ciudad" value="<%=sucursalCodigo.getCiudad()%>"/>
                 </label>
                 <button type="submit" class="boton">
                     Guardar Cambios
                 </button>
             </form>
-            <%
-                }
-            %>
+            
+            <% } %>
+            
         </div>
+        <% } else { %>
+        <jsp:include page="/includes/resources.jsp" />
+        <% } %>
     </body>
 </html>

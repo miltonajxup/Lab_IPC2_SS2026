@@ -20,31 +20,14 @@
     <body>
         <h1>Proyecto 1 IPC2</h1>
         <div class="menuBotones">
-            <a class="boton" href="usuario/crear-usuario.jsp">Registrarse como Usuario</a>
+            <a class="boton" href="${pageContext.servletContext.contextPath}/mvc/usuario/perfil/crear-usuario.jsp">Registrarse como Usuario</a>
         </div>
-        <%  
-            session.setAttribute("usuario-logeado", null);
-            ServicioLogin servicio = new ServicioLogin();
-            String idUsuario = request.getParameter("id-usuario");
-            String nombre = request.getParameter("nombre");
-            if (idUsuario != null && nombre != null && !idUsuario.isEmpty() && !nombre.isEmpty()) {
-                try {
-                    UsuarioDB usuario = servicio.loogearUsuario(idUsuario, nombre);
-                    session.setAttribute("usuario-logeado", usuario);
-                    if (usuario.getRol() == RolUsuario.CLIENTE) {
-                        
-                    } else if (usuario.getRol() == RolUsuario.ADMINISTRADOR || usuario.getRol() == RolUsuario.ADMINISTRADOR_SUCURSAL) {
-                        response.sendRedirect("administrador/menu-administrador.jsp");
-                    }
-                } catch (AccesoALaDataException | LoginException e) {
-        %>
-        <p class="error"><%=e.getMessage()%></p>
-        <%
-                }
-            }
-        %>
+        
+        <% session.setAttribute("usuarioLogeado", null); %>
+        
+        <p class="error" >${error}</p>
         <div class="contenedor-principal">
-            <form method="POST" action="index.jsp">
+            <form method="GET" action="${pageContext.servletContext.contextPath}/login/log-servlet">
                 <label>
                     Nombre
                     <input name="nombre"/>

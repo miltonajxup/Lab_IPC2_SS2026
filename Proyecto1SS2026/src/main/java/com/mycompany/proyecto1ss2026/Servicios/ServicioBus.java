@@ -15,7 +15,7 @@ import com.mycompany.proyecto1ss2026.Exeptions.ValorInexistenteException;
 import com.mycompany.proyecto1ss2026.Exeptions.ValorInvalidoException;
 import com.mycompany.proyecto1ss2026.Modelos.DataBase.BusDB;
 import com.mycompany.proyecto1ss2026.Modelos.DataBase.ViajeDB;
-import com.mycompany.proyecto1ss2026.Modelos.Request.BusRequest;
+import com.mycompany.proyecto1ss2026.Modelos.Request.Bus;
 import com.mycompany.proyecto1ss2026.Respuesta.Respuesta;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
@@ -46,7 +46,7 @@ public class ServicioBus {
                 || textoFechaFabricacion.isEmpty() || textoCantidadPasajeros.isEmpty() || textoKilometraje.isEmpty() || sucursalBase.isEmpty()) {
             return null;
         }
-        BusRequest bus = filtrarBus(numeroPlaca, marca, modelo, textoFechaFabricacion, textoCantidadPasajeros, textoKilometraje, sucursalBase);
+        Bus bus = filtrarBus(numeroPlaca, marca, modelo, textoFechaFabricacion, textoCantidadPasajeros, textoKilometraje, sucursalBase);
         if (busdao.existeBus(numeroPlaca)) {
             throw new ValorExistenteException("Ya existe registrado un bus con el numero de placa " + numeroPlaca);
         }
@@ -61,7 +61,7 @@ public class ServicioBus {
                 || textoFechaFabricacion.isEmpty() || textoCantidadPasajeros.isEmpty() || textoKilometraje.isEmpty() || sucursalBase.isEmpty()) {
             return null;
         }
-        BusRequest bus = filtrarBus(numeroPlaca, marca, modelo, textoFechaFabricacion, textoCantidadPasajeros, textoKilometraje, sucursalBase);
+        Bus bus = filtrarBus(numeroPlaca, marca, modelo, textoFechaFabricacion, textoCantidadPasajeros, textoKilometraje, sucursalBase);
         existeBus(numeroPlaca);
         busdao.modificarBus(bus);
         return "El Bus " + numeroPlaca + " ha sigo modificado correctamente";
@@ -118,7 +118,7 @@ public class ServicioBus {
         }
     }
     
-    private BusRequest filtrarBus(String numeroPlaca, String marca, String modelo, String textoFechaFabricacion, String textoCantidadPasajeros, 
+    private Bus filtrarBus(String numeroPlaca, String marca, String modelo, String textoFechaFabricacion, String textoCantidadPasajeros, 
             String textoKilometraje, String sucursalBase) throws AccesoALaDataException, ValorInexistenteException, ValorInvalidoException {
         revisarTamaños(numeroPlaca, marca, modelo);
         LocalDate fechaFabricacion;
@@ -145,7 +145,7 @@ public class ServicioBus {
         
         existeSucursal(sucursalBase);
         
-        return new BusRequest(numeroPlaca, marca, modelo, fechaFabricacion, cantidadPasajeros, kilometraje, sucursalBase);
+        return new Bus(numeroPlaca, marca, modelo, fechaFabricacion, cantidadPasajeros, kilometraje, sucursalBase);
     }
     
     private void revisarTamaños(String numeroPlaca, String marca, String modelo) throws ValorInvalidoException {

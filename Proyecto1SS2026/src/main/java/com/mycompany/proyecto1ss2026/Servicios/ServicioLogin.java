@@ -4,10 +4,10 @@
  */
 package com.mycompany.proyecto1ss2026.Servicios;
 
-import com.mycompany.proyecto1ss2026.Constantes.Limite;
 import com.mycompany.proyecto1ss2026.DAOs.LoginDAO;
 import com.mycompany.proyecto1ss2026.Exeptions.AccesoALaDataException;
 import com.mycompany.proyecto1ss2026.Exeptions.LoginException;
+import com.mycompany.proyecto1ss2026.Modelos.DataBase.ChoferDB;
 import com.mycompany.proyecto1ss2026.Modelos.DataBase.UsuarioDB;
 
 /**
@@ -17,26 +17,31 @@ import com.mycompany.proyecto1ss2026.Modelos.DataBase.UsuarioDB;
 public class ServicioLogin {
     
     private final LoginDAO logindao;
+    private ChoferDB chofer;
     
     public ServicioLogin() {
         logindao = new LoginDAO();
     }
-    
-    public UsuarioDB loogearUsuario(String idUsuario, String nombre) throws AccesoALaDataException, LoginException {
-        if (idUsuario.length() > Limite.DPI.getTamañoLimite()) {
-            terminarLogin();
-        }
-        if (nombre.length() > Limite.NOMBRE.getTamañoLimite()) {
-            terminarLogin();
-        }
-        UsuarioDB usuario = logindao.existeCredencial(idUsuario, nombre);
-        if (usuario == null) {
-            terminarLogin();
-        }
-        return usuario;
+
+    public ChoferDB getChofer() {
+        return chofer;
     }
     
-    private void terminarLogin() throws LoginException {
+    public UsuarioDB loogearUsuario(String idUsuario, String nombre) throws AccesoALaDataException, LoginException {
+        UsuarioDB usuario = logindao.existeCredencial(idUsuario, nombre);
+        if (usuario != null) {
+            if (!usuario.isEstado()) {
+                throw new LoginException("No es posible acceder porque se ha bloquado al usuario");
+            }
+            return usuario;
+        }
+        chofer = logindao.existeCredencialChofer(idUsuario, nombre);
+        if (chofer != null) {
+            if (!chofer.isEstadoOperativo()) {
+                throw new LoginException("No es posible acceder porque se ha bloquado al usuario");
+            }
+            return null;
+        }
         throw new LoginException("No se pudo completar el Login");
     }
     

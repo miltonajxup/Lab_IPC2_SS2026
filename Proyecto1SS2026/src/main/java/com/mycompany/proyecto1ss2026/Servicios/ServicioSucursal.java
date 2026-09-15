@@ -8,7 +8,7 @@ import com.mycompany.proyecto1ss2026.DAOs.SucursalDAO;
 import com.mycompany.proyecto1ss2026.Exeptions.AccesoALaDataException;
 import com.mycompany.proyecto1ss2026.Exeptions.ValorExistenteException;
 import com.mycompany.proyecto1ss2026.Exeptions.ValorInvalidoException;
-import com.mycompany.proyecto1ss2026.Modelos.Request.SucursalRequest;
+import com.mycompany.proyecto1ss2026.Modelos.Request.Sucursal;
 import com.mycompany.proyecto1ss2026.Respuesta.Respuesta;
 
 /**
@@ -24,7 +24,7 @@ public class ServicioSucursal {
     }
     
     public Respuesta agregarSucursal(String codigo, String nombre, String ciudad) throws AccesoALaDataException, ValorExistenteException, ValorInvalidoException {
-        SucursalRequest sucursal = new SucursalRequest(codigo, nombre, ciudad);
+        Sucursal sucursal = new Sucursal(codigo, nombre, ciudad);
         
         if (sucursaldao.existeSucursal(codigo)) {
             throw new ValorExistenteException("Ya existe una sucursal con el codigo " + codigo);
@@ -37,7 +37,7 @@ public class ServicioSucursal {
     }
     
     public String modificarSucursal(String codigo, String nombre, String ciudad) throws AccesoALaDataException, ValorExistenteException, ValorInvalidoException {
-        SucursalRequest sucursal = new SucursalRequest(codigo, nombre, ciudad);
+        Sucursal sucursal = new Sucursal(codigo, nombre, ciudad);
         if (!sucursaldao.existeSucursal(sucursal.getCodigo())) {
             throw new ValorExistenteException("No existe una sucursal con el codigo " + sucursal.getCodigo());
         }
@@ -48,7 +48,7 @@ public class ServicioSucursal {
         return "La Sucursal " + sucursal.getCodigo() + " ha sido modificada con exito";
     }
     
-    private void existenciaSucursal(SucursalRequest sucursal) throws AccesoALaDataException, ValorExistenteException {
+    private void existenciaSucursal(Sucursal sucursal) throws AccesoALaDataException, ValorExistenteException {
         if (sucursaldao.existeSucursalAtributos(sucursal)) {
             throw new ValorExistenteException("Ya existe una sucursal con codigo " + sucursal.getCodigo() + " llamada " + sucursal.getNombre() + " en " + sucursal.getCiudad());
         }

@@ -16,7 +16,7 @@ import com.mycompany.proyecto1ss2026.Exeptions.ValorInexistenteException;
 import com.mycompany.proyecto1ss2026.Exeptions.ValorInvalidoException;
 import com.mycompany.proyecto1ss2026.Modelos.DataBase.ChoferDB;
 import com.mycompany.proyecto1ss2026.Modelos.DataBase.ViajeDB;
-import com.mycompany.proyecto1ss2026.Modelos.Request.ChoferRequest;
+import com.mycompany.proyecto1ss2026.Modelos.Request.Chofer;
 import com.mycompany.proyecto1ss2026.Respuesta.Respuesta;
 import java.io.InputStream;
 import java.time.LocalDate;
@@ -48,7 +48,7 @@ public class ServicioChofer {
                     || numeroTelefono.isEmpty() || textoSalario.isEmpty() || sucursal.isEmpty()) {
             return null;
         }
-        ChoferRequest chofer = armarChofer(nombre, numeroLicencia, textoTipoLicencia, fechaVencimiento, numeroTelefono, textoSalario, sucursal);
+        Chofer chofer = armarChofer(nombre, numeroLicencia, textoTipoLicencia, fechaVencimiento, numeroTelefono, textoSalario, sucursal);
         if (choferdao.existeChofer(chofer.getNumeroLicencia())) {
             throw new ValorExistenteException("Ya existe registrado un chofer con el numero de licencia: " + chofer.getNumeroLicencia());
         }
@@ -65,7 +65,7 @@ public class ServicioChofer {
                     || numeroTelefono.isEmpty() || textoSalario.isEmpty() || sucursal.isEmpty()) {
             return null;
         }
-        ChoferRequest chofer = choferParaModificar(nombre, numeroLicencia, textoTipoLicencia, fechaVencimiento, numeroTelefono, textoSalario, sucursal);
+        Chofer chofer = choferParaModificar(nombre, numeroLicencia, textoTipoLicencia, fechaVencimiento, numeroTelefono, textoSalario, sucursal);
         existeChofer(dpi);
         choferdao.editarInfoChofer(chofer);
         return "Se ha actualizado el chofer de forma correcta";
@@ -112,7 +112,7 @@ public class ServicioChofer {
         return new Respuesta(true, "Se ha cambiado el estado del chofer");
     }
     
-    public ChoferRequest choferParaModificar(String nombre, /*InputStream imagen, */String numeroLicencia, String textoTipoLicencia, String fechaVencimiento, String numeroTelefono, String textoSalario, String sucursal) throws AccesoALaDataException, ValorInexistenteException, ValorInvalidoException {
+    public Chofer choferParaModificar(String nombre, /*InputStream imagen, */String numeroLicencia, String textoTipoLicencia, String fechaVencimiento, String numeroTelefono, String textoSalario, String sucursal) throws AccesoALaDataException, ValorInexistenteException, ValorInvalidoException {
         existeChofer(numeroLicencia);
         return armarChofer(nombre, numeroLicencia, textoTipoLicencia, fechaVencimiento, numeroTelefono, textoSalario, sucursal);
     }
@@ -137,7 +137,7 @@ public class ServicioChofer {
         return choferdao.choferesSucursalActual(sucursal);
     }
     
-    private ChoferRequest armarChofer(String nombre, /*InputStream imagen, */String numeroLicencia, 
+    private Chofer armarChofer(String nombre, /*InputStream imagen, */String numeroLicencia, 
             String textoTipoLicencia, String textofechaVencimiento, String numeroTelefono, 
             String textoSalario, String sucursal) throws ValorInvalidoException {
         validarTamaños(nombre, numeroLicencia, numeroTelefono);
@@ -156,7 +156,7 @@ public class ServicioChofer {
             throw new ValorInvalidoException("El valor del salario debe ser de al menos Q1");
         }
         
-        return new ChoferRequest(nombre, numeroLicencia, tipoLicencia, fechaVencimiento, numeroTelefono, salario, sucursal);
+        return new Chofer(nombre, numeroLicencia, tipoLicencia, fechaVencimiento, numeroTelefono, salario, sucursal);
     }
     
     private void validarTamaños(String nombre, String numeroLicencia, String numeroTelefono) throws ValorInvalidoException {

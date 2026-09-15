@@ -28,7 +28,7 @@
     </head>
     <body>
         <%
-            UsuarioDB usuario = (UsuarioDB) session.getAttribute("usuario-logeado");
+            UsuarioDB usuario = (UsuarioDB) session.getAttribute("usuarioLogeado");
             if (usuario != null) {
         %>
         <h1>Modificar Chofer</h1>
@@ -159,11 +159,11 @@
                     Cambiar el Estado del Chofer <br> <br>
                     <% if (choferdb.isEstadoOperativo()) { %>
                     <a class="boton activo" 
-                       href="${pageContext.servletContext.contextPath}/administrador/chofer/modificar-chofer.jsp?dpi-chofer=<%=choferdb.getNumeroLicencia()%>&estado-chofer=<%=!choferdb.isEstadoOperativo()%>">
+                       href="${pageContext.servletContext.contextPath}/mvc/administrador/chofer/modificar-chofer.jsp?dpi-chofer=<%=choferdb.getNumeroLicencia()%>&estado-chofer=<%=!choferdb.isEstadoOperativo()%>">
                         Activo</a>
                     <% } else { %>
                     <a class="boton inactivo" 
-                       href="${pageContext.servletContext.contextPath}/administrador/chofer/modificar-chofer.jsp?dpi-chofer=<%=choferdb.getNumeroLicencia()%>&estado-chofer=<%=!choferdb.isEstadoOperativo()%>">
+                       href="${pageContext.servletContext.contextPath}/mvc/administrador/chofer/modificar-chofer.jsp?dpi-chofer=<%=choferdb.getNumeroLicencia()%>&estado-chofer=<%=!choferdb.isEstadoOperativo()%>">
                         Desactivado</a>
                     <% } %>
                 </div>

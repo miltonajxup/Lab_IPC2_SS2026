@@ -26,7 +26,7 @@
     </head>
     <body>
         <%
-            UsuarioDB usuario = (UsuarioDB) session.getAttribute("usuario-logeado");
+            UsuarioDB usuario = (UsuarioDB) session.getAttribute("usuarioLogeado");
             if (usuario != null) {
         %>
         <h1>Modificar Ruta</h1>
@@ -40,12 +40,10 @@
             
             String mensaje = null;
             ServicioRuta servicio = new ServicioRuta();
-            if (textoDistancia != null && textoPrecio != null && !textoDistancia.isEmpty() && !textoPrecio.isEmpty()) {
-                try {
-                    mensaje = servicio.modificarRuta(idRuta, textoDistancia, textoPrecio);
-                } catch (AccesoALaDataException | ValorInexistenteException | ValorInvalidoException e) {
-                    %> <p class="error"><%=e.getMessage()%></p> <%
-                }
+            try {
+                mensaje = servicio.modificarRuta(idRuta, textoDistancia, textoPrecio);
+            } catch (AccesoALaDataException | ValorInexistenteException | ValorInvalidoException e) {
+                %> <p class="error"><%=e.getMessage()%></p> <%
             }
             String textoHoraSalida = request.getParameter("hora-salida");
             String textoHoraLlegada = request.getParameter("hora-llegada");
@@ -81,7 +79,7 @@
             <% if (rutas != null) { %>
             <div class="contenedor-opciones">
                 <% for (RutaDB rutaLista : rutas) { %>
-                <a class="opcion" href="${pageContext.servletContext.contextPath}/administrador/ruta/modificar-ruta.jsp?id-ruta=<%=rutaLista.getId()%>">
+                <a class="opcion" href="${pageContext.servletContext.contextPath}/mvc/administrador/ruta/modificar-ruta.jsp?id-ruta=<%=rutaLista.getId()%>">
                     Ruta: <%=rutaLista.getId()%> <br>
                     De Sucursal: <%=rutaLista.getSucursalOrigen()%> <br>
                     hacia la Sucursal: <%=rutaLista.getSucursalDestino()%>
@@ -89,7 +87,7 @@
                 <% } %>
             </div>
             <% } if (ruta != null) { %>
-            <form method="POST" action="modificar-ruta.jsp">
+            <form method="POST" action="modificar-ruta.jsp?id-ruta=<%=ruta.getId()%>">
                 <label>
                     Distancia Aproximada (En kilometros)
                     <input name="distancia" type="number" value="<%=ruta.getDistanciaAproximada()%>"/>

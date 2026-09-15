@@ -23,13 +23,11 @@
     </head>
     <body>
         <%
-            UsuarioDB usuario = (UsuarioDB) session.getAttribute("usuario-logeado");
+            UsuarioDB usuario = (UsuarioDB) session.getAttribute("usuarioLogeado");
             if (usuario != null) {
         %>
         <h1>Registrar Bus</h1>
-        <div class="menuBotones" >
-            <a class="boton" href="../menu-administrador.jsp">Regresar</a>
-        </div>
+        <jsp:include page="/mvc/menu-regreso/regreso-menu-administrador.jsp" />
         <%
             String numeroPlaca = request.getParameter("numero-placa");
             String marca = request.getParameter("marca");

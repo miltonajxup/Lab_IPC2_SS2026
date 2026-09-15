@@ -11,7 +11,7 @@ import com.mycompany.proyecto1ss2026.Exeptions.ValorExistenteException;
 import com.mycompany.proyecto1ss2026.Exeptions.ValorInexistenteException;
 import com.mycompany.proyecto1ss2026.Exeptions.ValorInvalidoException;
 import com.mycompany.proyecto1ss2026.Modelos.DataBase.HorarioDB;
-import com.mycompany.proyecto1ss2026.Modelos.Request.HorarioRequest;
+import com.mycompany.proyecto1ss2026.Modelos.Request.Horario;
 import java.time.LocalTime;
 import java.time.format.DateTimeParseException;
 import java.util.List;
@@ -31,7 +31,7 @@ public class ServicioHorario {
     }
     
     public String agregarHorario(String textoHoraSalida, String textoHoraLlegada, String ruta) throws AccesoALaDataException, ValorExistenteException, ValorInvalidoException {
-        HorarioRequest horario = filtarValoresHorario(textoHoraSalida, textoHoraLlegada, ruta);
+        Horario horario = filtarValoresHorario(textoHoraSalida, textoHoraLlegada, ruta);
         if (horadao.existeHorario(horario)) {
             throw new ValorExistenteException("Ya existe un horario con las horas de " + textoHoraSalida + " a " + textoHoraLlegada + " para la ruta " + ruta);
         }
@@ -60,7 +60,7 @@ public class ServicioHorario {
         }
     }
     
-    public HorarioRequest filtarValoresHorario(String textoHoraSalida, String textoHoraLlegada, String ruta) throws AccesoALaDataException, ValorExistenteException, ValorInvalidoException {
+    public Horario filtarValoresHorario(String textoHoraSalida, String textoHoraLlegada, String ruta) throws AccesoALaDataException, ValorExistenteException, ValorInvalidoException {
         LocalTime horaSalida;
         LocalTime horaLlegada;
         try {
@@ -80,7 +80,7 @@ public class ServicioHorario {
             throw new ValorInvalidoException("La hora de llegada no puede ser antes que la hora de salida");
         }
         revisarExistenciaRuta(ruta);
-        return new HorarioRequest(horaSalida, horaLlegada, ruta);
+        return new Horario(horaSalida, horaLlegada, ruta);
     }
     
 }

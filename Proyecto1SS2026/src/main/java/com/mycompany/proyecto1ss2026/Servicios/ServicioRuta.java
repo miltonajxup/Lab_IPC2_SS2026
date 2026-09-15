@@ -11,9 +11,8 @@ import com.mycompany.proyecto1ss2026.Exeptions.ValorExistenteException;
 import com.mycompany.proyecto1ss2026.Exeptions.ValorInexistenteException;
 import com.mycompany.proyecto1ss2026.Exeptions.ValorInvalidoException;
 import com.mycompany.proyecto1ss2026.Modelos.DataBase.RutaDB;
-import com.mycompany.proyecto1ss2026.Modelos.Request.RutaRequest;
+import com.mycompany.proyecto1ss2026.Modelos.Request.Ruta;
 import com.mycompany.proyecto1ss2026.Respuesta.Respuesta;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -36,7 +35,13 @@ public class ServicioRuta {
     
     public String agregarRuta(String textoDistanciaAproximada, String textoPrecioBoleto, String sucursalRegistro, String sucursalOrigen, String sucursalDestino) 
             throws AccesoALaDataException, ValorInvalidoException, ValorExistenteException, ValorInexistenteException{
-        RutaRequest ruta = filtarRuta(textoDistanciaAproximada, textoPrecioBoleto, sucursalRegistro, sucursalOrigen, sucursalDestino);
+        
+        if (textoDistanciaAproximada == null || textoPrecioBoleto == null || sucursalRegistro == null 
+                || sucursalOrigen == null || sucursalDestino == null || textoDistanciaAproximada.isEmpty() 
+                || textoPrecioBoleto.isEmpty() || sucursalRegistro.isEmpty() || sucursalOrigen.isEmpty() || sucursalDestino.isEmpty()) {
+            return null;
+        }
+        Ruta ruta = filtarRuta(textoDistanciaAproximada, textoPrecioBoleto, sucursalRegistro, sucursalOrigen, sucursalDestino);
         existeRutaSucursales(sucursalOrigen, sucursalDestino);
         if (sucursalOrigen.equals(sucursalDestino)) {
             throw new ValorInvalidoException("No se puede agregar un ruta con el el mismo destino que el origen");
@@ -47,7 +52,11 @@ public class ServicioRuta {
     
     public String modificarRuta(String idRuta, String textoDistanciaAproximada, String textoPrecioBoleto) 
             throws AccesoALaDataException, ValorInvalidoException, ValorInexistenteException{
-        RutaRequest ruta = filtarRuta(idRuta, textoDistanciaAproximada, textoPrecioBoleto);
+        if (idRuta == null || textoDistanciaAproximada == null || textoPrecioBoleto == null 
+                || idRuta.isEmpty() || textoDistanciaAproximada.isEmpty() || textoPrecioBoleto.isEmpty()) {
+            return null;
+        }
+        Ruta ruta = filtarRuta(idRuta, textoDistanciaAproximada, textoPrecioBoleto);
         existeRuta(idRuta);
         rutadao.modificarRuta(ruta);
         return "Se ha modificado la ruta ";
@@ -81,15 +90,15 @@ public class ServicioRuta {
         return new Respuesta(true, "Se ha eliminado la ruta correctamente");
     }
     
-    private RutaRequest filtarRuta(String idRuta, String textoDistanciaAproximada, String textoPrecioBoleto) throws AccesoALaDataException, ValorInvalidoException, ValorInexistenteException {
+    private Ruta filtarRuta(String idRuta, String textoDistanciaAproximada, String textoPrecioBoleto) throws AccesoALaDataException, ValorInvalidoException, ValorInexistenteException {
         distanciaAproximada = 0;
         precioBoleto = 0;
         filtrarValoresNumericos(textoDistanciaAproximada, textoPrecioBoleto);
-        return new RutaRequest(idRuta, distanciaAproximada, precioBoleto);
+        return new Ruta(idRuta, distanciaAproximada, precioBoleto);
     }
     
     
-    private RutaRequest filtarRuta(String textoDistanciaAproximada, String textoPrecioBoleto, String sucursalRegistro, String sucursalOrigen, String sucursalDestino) 
+    private Ruta filtarRuta(String textoDistanciaAproximada, String textoPrecioBoleto, String sucursalRegistro, String sucursalOrigen, String sucursalDestino) 
             throws AccesoALaDataException, ValorInvalidoException, ValorInexistenteException {
         distanciaAproximada = 0;
         precioBoleto = 0;
@@ -97,7 +106,7 @@ public class ServicioRuta {
         existeSucursal(sucursalRegistro);
         existeSucursal(sucursalOrigen);
         existeSucursal(sucursalDestino);
-        return new RutaRequest(distanciaAproximada, precioBoleto, sucursalRegistro, sucursalOrigen, sucursalDestino);
+        return new Ruta(distanciaAproximada, precioBoleto, sucursalRegistro, sucursalOrigen, sucursalDestino);
     }
     
     private void filtrarValoresNumericos(String textoDistanciaAproximada, String textoPrecioBoleto) throws ValorInvalidoException {
