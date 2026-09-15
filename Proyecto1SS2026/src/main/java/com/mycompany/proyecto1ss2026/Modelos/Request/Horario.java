@@ -10,13 +10,13 @@ import java.time.LocalTime;
  *
  * @author milton
  */
-public class HorarioRequest {
+public class Horario {
     
     private LocalTime horaSalida;
     private LocalTime horaLlegada;
     private String ruta;
 
-    public HorarioRequest(LocalTime horaSalida, LocalTime horaLlegada, String ruta) {
+    public Horario(LocalTime horaSalida, LocalTime horaLlegada, String ruta) {
         this.horaSalida = horaSalida;
         this.horaLlegada = horaLlegada;
         this.ruta = ruta;

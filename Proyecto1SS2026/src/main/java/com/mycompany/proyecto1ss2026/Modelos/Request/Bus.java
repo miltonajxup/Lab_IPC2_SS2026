@@ -10,7 +10,7 @@ import java.time.LocalDate;
  *
  * @author milton
  */
-public class BusRequest {
+public class Bus {
     
     private String numeroPlaca;
     private byte[] foto;
@@ -23,7 +23,7 @@ public class BusRequest {
     private String sucursalBase;
     private String sucursalActual;
 
-    public BusRequest(String numeroPlaca, String marca, String modelo, LocalDate fechaFabricacion, int capacidadPasajeros, int kilometraje, String sucursalBase) {
+    public Bus(String numeroPlaca, String marca, String modelo, LocalDate fechaFabricacion, int capacidadPasajeros, int kilometraje, String sucursalBase) {
         this.numeroPlaca = numeroPlaca;
         this.marca = marca;
         this.modelo = modelo;

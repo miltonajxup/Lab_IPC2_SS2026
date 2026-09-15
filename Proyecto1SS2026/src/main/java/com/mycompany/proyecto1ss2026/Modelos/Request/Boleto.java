@@ -8,43 +8,34 @@ package com.mycompany.proyecto1ss2026.Modelos.Request;
  *
  * @author milton
  */
-public class BoletoRequest {
+public class Boleto {
     
     private String usuario;
     private int viaje;
     private int asiento;
     private String fecha;
 
-    public String getUsuario() {
-        return usuario;
+    public Boleto(String usuario, int viaje, int asiento, String fecha) {
+        this.usuario = usuario;
+        this.viaje = viaje;
+        this.asiento = asiento;
+        this.fecha = fecha;
     }
 
-    public void setUsuario(String usuario) {
-        this.usuario = usuario;
+    public String getUsuario() {
+        return usuario;
     }
 
     public int getViaje() {
         return viaje;
     }
 
-    public void setViaje(int viaje) {
-        this.viaje = viaje;
-    }
-
     public int getAsiento() {
         return asiento;
     }
 
-    public void setAsiento(int asiento) {
-        this.asiento = asiento;
-    }
-
     public String getFecha() {
         return fecha;
-    }
-
-    public void setFecha(String fecha) {
-        this.fecha = fecha;
     }
     
 }

@@ -10,7 +10,7 @@ import com.mycompany.proyecto1ss2026.Constantes.RolUsuario;
  *
  * @author milton
  */
-public class UsuarioRequest {
+public class Usuario {
     
     private final String dpi;
     private final String nombre;
@@ -22,7 +22,7 @@ public class UsuarioRequest {
     private final RolUsuario rol;
     private String sucursal;
 
-    public UsuarioRequest(String dpi, String nombre, String nit, String telefono, String direccion, RolUsuario rol) {
+    public Usuario(String dpi, String nombre, String nit, String telefono, String direccion, RolUsuario rol) {
         this.dpi = dpi;
         this.nombre = nombre;
         this.nit = nit;

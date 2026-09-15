@@ -4,23 +4,33 @@
  */
 package com.mycompany.proyecto1ss2026.Modelos.Request;
 
+import java.time.LocalDate;
+
 /**
  *
  * @author milton
  */
-public class DepreciacionBusRequest {
+public class DepreciacionBus {
     
-    private String fechaRegistro;
+    private LocalDate fechaRegistro;
     private int kilometrosRecorridos;
     private int depreciacionId;
     private double montoDepreciado;
     private String bus;
 
-    public String getFechaRegistro() {
+    public DepreciacionBus(LocalDate fechaRegistro, int kilometrosRecorridos, int depreciacionId, double montoDepreciado, String bus) {
+        this.fechaRegistro = fechaRegistro;
+        this.kilometrosRecorridos = kilometrosRecorridos;
+        this.depreciacionId = depreciacionId;
+        this.montoDepreciado = montoDepreciado;
+        this.bus = bus;
+    }
+
+    public LocalDate getFechaRegistro() {
         return fechaRegistro;
     }
 
-    public void setFechaRegistro(String fechaRegistro) {
+    public void setFechaRegistro(LocalDate fechaRegistro) {
         this.fechaRegistro = fechaRegistro;
     }
 

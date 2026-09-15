@@ -31,8 +31,48 @@ public class ViajeDAO {
             + "hora_salida, hora_aprox_llegada, fecha_salida, fecha_llegada, costo, usuario_solicitante) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
     private final String MODIFCAR_ESTADO_VIAJE_PRIVADO = "UPDATE viaje_privado SET estado_viaje = ? WHERE id_viaje = ?";
     private final String ELIMINAR_VIAJE = "DELETE FROM viaje WHERE id = ?";
+    private final String BUSCAR_VIAJE_POR_ID = "SELECT * FROM viaje WHERE id = ?";
     private final String BUSCAR_VIAJE_POR_CHOFER = "SELECT * FROM viaje WHERE chofer = ?";
-    private final String GET_VIAJES_SIN_TERMINIAR = "SELECT via.* FROM viaje_ejecucion AS viaej RIGHT JOIN viaje AS via ON viaej.viaje_id = via.id WHERE hora_salida IS NULL";
+    private final String GET_VIAJES_SIN_TERMINIAR = 
+            """
+            SELECT via.*, viaej.hora_salida, rut.sucursal_destino 
+            FROM viaje_ejecucion AS viaej RIGHT JOIN viaje AS via ON viaej.viaje_id = via.id 
+            JOIN viaje_publico AS viap ON via.id = viap.id_viaje 
+            JOIN horario_ruta AS hor ON viap.horario = hor.id 
+            JOIN ruta AS rut ON hor.ruta = rut.id 
+            WHERE viaej.hora_salida IS NULL OR viaej.hora_llegada IS NULL""";
+    private final String GET_VIAJES_SIN_TERMINIAR_SUCURSAL_ORIGEN = 
+            """
+            SELECT via.*, viaej.hora_salida, rut.sucursal_destino 
+            FROM viaje AS via LEFT JOIN viaje_ejecucion AS viaej ON via.id = viaej.viaje_id 
+            JOIN viaje_publico AS viap ON via.id = viap.id_viaje 
+            JOIN horario_ruta AS hor ON viap.horario = hor.id 
+            JOIN ruta AS rut ON hor.ruta = rut.id 
+            WHERE (viaej.hora_salida IS NULL OR viaej.hora_llegada IS NULL) AND rut.sucursal_origen = ?""";
+    private final String GET_VIAJES_SIN_TERMINIAR_CHOFER = 
+            """
+            SELECT via.*, viaej.hora_salida, rut.sucursal_destino 
+            FROM viaje AS via LEFT JOIN viaje_ejecucion AS viaej ON via.id = viaej.viaje_id 
+            JOIN viaje_publico AS viap ON via.id = viap.id_viaje 
+            JOIN horario_ruta AS hor ON viap.horario = hor.id 
+            JOIN ruta AS rut ON hor.ruta = rut.id 
+            WHERE (viaej.hora_salida IS NULL OR viaej.hora_llegada IS NULL) AND via.chofer = ?""";
+    private final String GET_VIAJES_SIN_TERMINIAR_ID = 
+            """
+            SELECT via.*, viaej.hora_salida, rut.sucursal_destino 
+            FROM viaje_ejecucion AS viaej 
+            RIGHT JOIN viaje AS via ON viaej.viaje_id = via.id 
+            JOIN viaje_publico AS viap ON via.id = viap.id_viaje 
+            JOIN horario_ruta AS hor ON viap.horario = hor.id 
+            JOIN ruta AS rut ON hor.ruta = rut.id 
+            WHERE (viaej.hora_salida IS NULL OR viaej.hora_llegada IS NULL) AND via.id = ?""";
+    private final String GET_VIAJE_PUBLICO = "SELECT * FROM viaje_publico WHERE id_viaje = ?";
+    private final String GET_PRECIO_VIAJE = 
+            """
+            SELECT rut.precio_boleto 
+            FROM viaje AS via JOIN viaje_publico AS viap ON via.id = viap.id_viaje 
+            JOIN horario_ruta AS hor ON viap.horario = hor.id 
+            JOIN ruta AS rut ON hor.ruta = rut.id WHERE via.id = ?""";
     
     public void agregarViajePublico(ViajePublicoRequest request) throws AccesoALaDataException {
         Connection connection = DBConnection.getConnection();
@@ -135,6 +175,21 @@ public class ViajeDAO {
         }
     }
     
+    public ViajeDB getViajePorId(String idViaje) throws AccesoALaDataException {
+        Connection connection = DBConnection.getConnection();
+        try {
+            PreparedStatement select = connection.prepareStatement(BUSCAR_VIAJE_POR_ID);
+            select.setString(1, idViaje);
+            ResultSet rs = select.executeQuery();
+            if (rs.next()) {
+                return armarViaje(rs);
+            }
+        } catch (SQLException e) {
+            throw new AccesoALaDataException("Error al buscar viaje por id " + e.getMessage());
+        }
+        return null;
+    }
+    
     public ViajeDB getViajePorChofer(String chofer) throws AccesoALaDataException {
         Connection connection = DBConnection.getConnection();
         try {
@@ -156,8 +211,8 @@ public class ViajeDAO {
             Connection connection = DBConnection.getConnection();
             PreparedStatement select = connection.prepareStatement(GET_VIAJES_SIN_TERMINIAR);
             ResultSet rs = select.executeQuery();
-            if (rs.next()) {
-                viajes.add(armarViaje(rs));
+            while (rs.next()) {
+                viajes.add(armarViajeYEstado(rs));
             }
         } catch (SQLException e) {
             throw new AccesoALaDataException("Error al buscar los viajes sin terminar " + e.getMessage());
@@ -165,8 +220,91 @@ public class ViajeDAO {
         return viajes;
     }
     
+    public List<ViajeDB> getViajesSinTerminarSucursalOrigen(String sucursalOrigen) throws AccesoALaDataException {
+        List<ViajeDB> viajes = new ArrayList<>();
+        try {
+            Connection connection = DBConnection.getConnection();
+            PreparedStatement select = connection.prepareStatement(GET_VIAJES_SIN_TERMINIAR_SUCURSAL_ORIGEN);
+            select.setString(1, sucursalOrigen);
+            ResultSet rs = select.executeQuery();
+            while (rs.next()) {
+                viajes.add(armarViajeYEstado(rs));
+            }
+        } catch (SQLException e) {
+            throw new AccesoALaDataException("Error al buscar los viajes sin terminar de la sucursal " + sucursalOrigen + ": " + e.getMessage());
+        }
+        return viajes;
+    }
+    
+    public List<ViajeDB> getViajesSinTerminarChofer(String numeroLicencia) throws AccesoALaDataException {
+        List<ViajeDB> viajes = new ArrayList<>();
+        try {
+            Connection connection = DBConnection.getConnection();
+            PreparedStatement select = connection.prepareStatement(GET_VIAJES_SIN_TERMINIAR_CHOFER);
+            select.setString(1, numeroLicencia);
+            ResultSet rs = select.executeQuery();
+            while (rs.next()) {
+                viajes.add(armarViajeYEstado(rs));
+            }
+        } catch (SQLException e) {
+            throw new AccesoALaDataException("Error al buscar los viajes sin terminar del chofer " + numeroLicencia + ": " + e.getMessage());
+        }
+        return viajes;
+    }
+    
+    public ViajeDB getViajesSinTerminarId(String idViaje) throws AccesoALaDataException {
+        try {
+            Connection connection = DBConnection.getConnection();
+            PreparedStatement select = connection.prepareStatement(GET_VIAJES_SIN_TERMINIAR_ID);
+            select.setString(1, idViaje);
+            ResultSet rs = select.executeQuery();
+            if (rs.next()) {
+                return armarViajeYEstado(rs);
+            }
+        } catch (SQLException e) {
+            throw new AccesoALaDataException("Error al buscar un viaje sin terminar: " + e.getMessage());
+        }
+        return null;
+    }
+    
+    public boolean esViajePublico(int idViaje) throws AccesoALaDataException {
+        try {
+            Connection connection = DBConnection.getConnection();
+            PreparedStatement select = connection.prepareStatement(GET_VIAJE_PUBLICO);
+            select.setInt(1, idViaje);
+            ResultSet rs = select.executeQuery();
+            return rs.next();
+        } catch (SQLException e) {
+            throw new AccesoALaDataException("Error al buscar un viaje sin terminar: " + e.getMessage());
+        }
+    }
+    
+    public double getPrecioViaje(int idViaje) throws AccesoALaDataException {
+        try {
+            Connection connection = DBConnection.getConnection();
+            PreparedStatement select = connection.prepareStatement(GET_PRECIO_VIAJE);
+            select.setInt(1, idViaje);
+            ResultSet rs = select.executeQuery();
+            if (rs.next()) {
+                return rs.getDouble("precio_boleto");
+            }
+        } catch (SQLException e) {
+            throw new AccesoALaDataException("Error al buscar un viaje sin terminar: " + e.getMessage());
+        }
+        return 0;
+    }
+    
     public ViajeDB armarViaje(ResultSet rs) throws SQLException {
         return new ViajeDB(rs.getInt("id"), rs.getString("chofer"), rs.getString("bus"));
+    }
+    
+    public ViajeDB armarViajeYEstado(ResultSet rs) throws SQLException {
+        boolean estado = false;
+        String horaSalida = rs.getString("hora_salida");
+        if (horaSalida != null) {
+            estado = true;
+        }
+        return new ViajeDB(rs.getInt("id"), rs.getString("chofer"), rs.getString("bus"), estado, rs.getString("sucursal_destino"));
     }
      
 }

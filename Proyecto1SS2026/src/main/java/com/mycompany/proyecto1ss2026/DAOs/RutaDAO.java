@@ -7,7 +7,7 @@ package com.mycompany.proyecto1ss2026.DAOs;
 import com.mycompany.proyecto1ss2026.ConeccionBaseDatos.DBConnection;
 import com.mycompany.proyecto1ss2026.Exeptions.AccesoALaDataException;
 import com.mycompany.proyecto1ss2026.Modelos.DataBase.RutaDB;
-import com.mycompany.proyecto1ss2026.Modelos.Request.RutaRequest;
+import com.mycompany.proyecto1ss2026.Modelos.Request.Ruta;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -22,11 +22,18 @@ import java.util.List;
 public class RutaDAO {
     
     private final String AGREGAR_RUTA = "INSERT INTO ruta (distancia_aproximada, precio_boleto, sucursal_registro, sucursal_origen, sucursal_destino) VALUES (?,?,?,?,?)";
-    private final String MODIFICAR_RUTA = "UPDATE ruta SET distancia_aproximada = ? AND precio_boleto = ? WHERE id = ? ";
+    private final String MODIFICAR_RUTA = "UPDATE ruta SET distancia_aproximada = ?, precio_boleto = ? WHERE id = ? ";
     private final String DESHABILITAR_RUTA = "UPDATE ruta SET ruta_habilitada = FALSE WHERE id = ?";
     private final String EXISTE_RUTA_ID = "SELECT * FROM ruta WHERE id = ? AND ruta_habilitada = TRUE";
     private final String EXISTE_RUTA = "SELECT * FROM ruta WHERE sucursal_origen = ? AND sucursal_destino = ? AND ruta_habilitada = TRUE";
-    private final String GET_RUTAS = "SELECT * FROM ruta";
+    private final String GET_RUTAS = 
+            """
+            SELECT rut.*, 
+            suc_or.nombre AS nombre_suc_origen, suc_or.ciudad AS ciudad_suc_origen, 
+            suc_des.nombre AS nombre_suc_destino , suc_des.ciudad AS ciudad_suc_destino 
+            FROM ruta AS rut JOIN sucursal AS suc_or ON rut.sucursal_origen = suc_or.codigo_sucursal 
+            JOIN sucursal AS suc_des ON rut.sucursal_destino = suc_des.codigo_sucursal""";
+    
     private final String GET_RUTAS_SUCURSAL_ORIGEN = "SELECT * FROM ruta WHERE ruta_habilitada = TRUE AND sucursal_origen = ?";
     private final String GET_RUTAS_SUCURSAL_DESTINO = "SELECT * FROM ruta WHERE ruta_habilitada = TRUE AND sucursal_destino = ?";
     private final String GET_RUTA_POR_ID = "SELECT * FROM ruta WHERE ruta_habilitada = TRUE AND id = ?"; //ver si se puede mostrar
@@ -41,7 +48,7 @@ public class RutaDAO {
             JOIN ruta AS rut ON hor.ruta = rut.id 
             WHERE viaej.hora_salida IS NULL OR viaej.hora_llegada IS NULL""";
     
-    public void agregarRuta(RutaRequest request) throws AccesoALaDataException {
+    public void agregarRuta(Ruta request) throws AccesoALaDataException {
         Connection connection = DBConnection.getConnection();
         try {
             PreparedStatement insert = connection.prepareStatement(AGREGAR_RUTA);
@@ -56,13 +63,13 @@ public class RutaDAO {
         }
     }
     
-    public void modificarRuta(RutaRequest request) throws AccesoALaDataException {
+    public void modificarRuta(Ruta request) throws AccesoALaDataException {
         Connection connection = DBConnection.getConnection();
         try {
             PreparedStatement update = connection.prepareStatement(MODIFICAR_RUTA);
             update.setInt(1, request.getDistanciaAproximada());
-            update.setDouble(1, request.getPrecioBoleto());
-            update.setString(1, request.getId());
+            update.setDouble(2, request.getPrecioBoleto());
+            update.setString(3, request.getId());
             update.executeUpdate();
         } catch (SQLException e) {
             throw new AccesoALaDataException("Error al modificar una ruta " + e.getMessage());
@@ -112,7 +119,7 @@ public class RutaDAO {
             PreparedStatement select = connection.prepareStatement(GET_RUTAS);
             ResultSet rs = select.executeQuery();
             while (rs.next()) {
-                rutas.add(armarRuta(rs));
+                rutas.add(armarRutaCompleta(rs));
             }
         } catch (SQLException e) {
             throw new AccesoALaDataException("Error al obtener todas las rutas " + e.getMessage());
@@ -206,6 +213,20 @@ public class RutaDAO {
                 rs.getString("sucursal_origen"), 
                 rs.getString("sucursal_destino"), 
                 rs.getBoolean("ruta_habilitada"));
+    }
+    
+    private RutaDB armarRutaCompleta(ResultSet rs) throws SQLException {
+        return new RutaDB(
+                rs.getInt("id"), 
+                rs.getInt("distancia_aproximada"), 
+                rs.getDouble("precio_boleto"), 
+                rs.getString("sucursal_origen"), 
+                rs.getString("sucursal_destino"), 
+                rs.getBoolean("ruta_habilitada"), 
+                rs.getString("nombre_suc_origen"), 
+                rs.getString("ciudad_suc_origen"), 
+                rs.getString("nombre_suc_destino"), 
+                rs.getString("ciudad_suc_destino"));
     }
     
 }

@@ -8,7 +8,7 @@ import com.mycompany.proyecto1ss2026.ConeccionBaseDatos.DBConnection;
 import com.mycompany.proyecto1ss2026.Constantes.RolUsuario;
 import com.mycompany.proyecto1ss2026.Exeptions.AccesoALaDataException;
 import com.mycompany.proyecto1ss2026.Modelos.DataBase.UsuarioDB;
-import com.mycompany.proyecto1ss2026.Modelos.Request.UsuarioRequest;
+import com.mycompany.proyecto1ss2026.Modelos.Request.Usuario;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -24,17 +24,16 @@ public class UsuarioDAO {
     
     private final String AGREGAR_USUARIO = "INSERT INTO usuario (dpi, nombre, nit, telefono, direccion, credito_disponible, rol) VALUES (?,?,?,?,?,?,?)";
     private final String CREAR_ADMIN_SUCURSAL = "INSERT INTO admin_sucursal (dpi, sucursal) VALUES (?,?)";
-    private final String EDITAR_DATOS_USUARIO = "UPDATE usuario SET nombre = ?, telefono = ?, direccion = ? WHERE dpi = ?";
-    private final String EDITAR_SUCURSAL = "UPDATE admin_sucursal SET sucursal = ?";
+    private final String EDITAR_DATOS_USUARIO = "UPDATE usuario SET nombre = ?, nit = ?, telefono = ?, direccion = ? WHERE dpi = ?";
+    private final String EDITAR_SUCURSAL = "UPDATE admin_sucursal SET sucursal = ? WHERE dpi = ?";
     private final String AGREGAR_CREDITOS = "UPDATE usuario SET credito_disponible = ? WHERE dpi = ?";
     private final String MODIFICAR_ESTADO = "UPDATE usuario SET estado = ? WHERE dpi = ?";
-    private final String EXISTE_USUARIO = "SELECT * FROM usuario WHERE dpi = ?";
     private final String GET_USUARIOS = "SELECT * FROM usuario WHERE rol = ?";
     private final String GET_SUCURSAL_ADMIN = "SELECT * FROM admin_sucursal WHERE dpi = ?";
     private final String GET_ADMINS_SUCURSAL = "SELECT usu.*, adm.sucursal FROM usuario AS usu JOIN admin_sucursal AS adm ON usu.dpi = adm.dpi WHERE adm.sucursal = ?";
     private final String GET_USUARIO_POR_ID = "SELECT * FROM usuario WHERE dpi = ?";
     
-    public void agregarUsuario(UsuarioRequest request) throws AccesoALaDataException {
+    public void agregarUsuario(Usuario request) throws AccesoALaDataException {
         Connection connection = DBConnection.getConnection();
         try {
             connection.setAutoCommit(false);
@@ -67,21 +66,23 @@ public class UsuarioDAO {
         }
     }
     
-    public void crearAdminSucursal(Connection connection, UsuarioRequest request) throws SQLException {
+    public void crearAdminSucursal(Connection connection, Usuario request) throws SQLException {
         PreparedStatement insert = connection.prepareStatement(CREAR_ADMIN_SUCURSAL);
         insert.setString(1, request.getDpi());
         insert.setString(2, request.getSucursal());
         insert.executeUpdate();
     }
     
-    public void editarUsuario(UsuarioRequest request) throws AccesoALaDataException {
+    public void editarUsuario(Usuario request) throws AccesoALaDataException {
         Connection connection = DBConnection.getConnection();
         try {
             connection.setAutoCommit(false);
             PreparedStatement update = connection.prepareStatement(EDITAR_DATOS_USUARIO);
             update.setString(1, request.getNombre());
-            update.setString(2, request.getTelefono());
-            update.setString(3, request.getDpi());
+            update.setString(2, request.getNit());
+            update.setString(3, request.getTelefono());
+            update.setString(4, request.getDireccion());
+            update.setString(5, request.getDpi());
             update.executeUpdate();
             if (request.getRol() == RolUsuario.ADMINISTRADOR_SUCURSAL) {
                 editarSucursal(connection, request);
@@ -104,7 +105,7 @@ public class UsuarioDAO {
         }
     }
     
-    private void editarSucursal(Connection connection, UsuarioRequest request) throws SQLException {
+    private void editarSucursal(Connection connection, Usuario request) throws SQLException {
         PreparedStatement update = connection.prepareStatement(EDITAR_SUCURSAL);
         update.setString(1, request.getSucursal());
         update.setString(2, request.getDpi());
@@ -138,7 +139,7 @@ public class UsuarioDAO {
     public boolean existeDpiUsuario(String dpiUsuario) throws AccesoALaDataException {
         Connection connection = DBConnection.getConnection();
         try {
-            PreparedStatement select = connection.prepareStatement(EXISTE_USUARIO);
+            PreparedStatement select = connection.prepareStatement(GET_USUARIO_POR_ID);
             select.setString(1, dpiUsuario);
             ResultSet rs = select.executeQuery();
             return rs.next();

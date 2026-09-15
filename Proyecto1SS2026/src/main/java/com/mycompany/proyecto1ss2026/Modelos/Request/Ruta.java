@@ -8,7 +8,7 @@ package com.mycompany.proyecto1ss2026.Modelos.Request;
  *
  * @author milton
  */
-public class RutaRequest {
+public class Ruta {
     
     private String id;
     private int distanciaAproximada;
@@ -17,13 +17,13 @@ public class RutaRequest {
     private String sucursalOrigen;
     private String sucursalDestino;
 
-    public RutaRequest(String id, int distanciaAproximada, double precioBoleto) {
+    public Ruta(String id, int distanciaAproximada, double precioBoleto) {
         this.id = id;
         this.distanciaAproximada = distanciaAproximada;
         this.precioBoleto = precioBoleto;
     }
 
-    public RutaRequest(int distanciaAproximada, double precioBoleto, String sucursalRegistro, String sucursalOrigen, String sucursalDestino) {
+    public Ruta(int distanciaAproximada, double precioBoleto, String sucursalRegistro, String sucursalOrigen, String sucursalDestino) {
         this.distanciaAproximada = distanciaAproximada;
         this.precioBoleto = precioBoleto;
         this.sucursalRegistro = sucursalRegistro;

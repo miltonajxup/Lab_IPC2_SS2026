@@ -11,7 +11,7 @@ import java.time.LocalDate;
  *
  * @author milton
  */
-public class ChoferRequest {
+public class Chofer {
     
     private String nombre;
     private byte[] foto;
@@ -24,7 +24,7 @@ public class ChoferRequest {
     private String sucursalBase;
     private String sucursalActual;
 
-    public ChoferRequest(String nombre, String numeroLicencia, TipoLicencia tipoLicencia, LocalDate fechaVencimiento, String numeroTelefono, double salarioPorViaje, String sucursalBase) {
+    public Chofer(String nombre, String numeroLicencia, TipoLicencia tipoLicencia, LocalDate fechaVencimiento, String numeroTelefono, double salarioPorViaje, String sucursalBase) {
         this.nombre = nombre;
         this.numeroLicencia = numeroLicencia;
         this.tipoLicencia = tipoLicencia;

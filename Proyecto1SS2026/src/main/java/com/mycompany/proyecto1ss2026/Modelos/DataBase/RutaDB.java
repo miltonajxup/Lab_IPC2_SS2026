@@ -16,6 +16,10 @@ public class RutaDB {
     private final String sucursalOrigen;
     private final String sucursalDestino;
     private final boolean rutaHabilitada;
+    private String nombreSucOrigen;
+    private String nombreCiudadOrigen;
+    private String nombreSucDestino;
+    private String nombreCiudadDestino;
 
     public RutaDB(int id, int distanciaAproximada, double precioBoleto, String sucursalOrigen, String sucursalDestino, boolean rutaHabilitada) {
         this.id = id;
@@ -24,6 +28,19 @@ public class RutaDB {
         this.sucursalOrigen = sucursalOrigen;
         this.sucursalDestino = sucursalDestino;
         this.rutaHabilitada = rutaHabilitada;
+    }
+
+    public RutaDB(int id, int distanciaAproximada, double precioBoleto, String sucursalOrigen, String sucursalDestino, boolean rutaHabilitada, String nombreSucOrigen, String nombreCiudadOrigen, String nombreSucDestino, String nombreCiudadDestino) {
+        this.id = id;
+        this.distanciaAproximada = distanciaAproximada;
+        this.precioBoleto = precioBoleto;
+        this.sucursalOrigen = sucursalOrigen;
+        this.sucursalDestino = sucursalDestino;
+        this.rutaHabilitada = rutaHabilitada;
+        this.nombreSucOrigen = nombreSucOrigen;
+        this.nombreCiudadOrigen = nombreCiudadOrigen;
+        this.nombreSucDestino = nombreSucDestino;
+        this.nombreCiudadDestino = nombreCiudadDestino;
     }
 
     public int getId() {
@@ -48,6 +65,22 @@ public class RutaDB {
 
     public boolean isRutaHabilitada() {
         return rutaHabilitada;
+    }
+
+    public String getNombreSucOrigen() {
+        return nombreSucOrigen;
+    }
+
+    public String getNombreCiudadOrigen() {
+        return nombreCiudadOrigen;
+    }
+
+    public String getNombreSucDestino() {
+        return nombreSucDestino;
+    }
+
+    public String getNombreCiudadDestino() {
+        return nombreCiudadDestino;
     }
 
 }

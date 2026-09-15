@@ -6,7 +6,7 @@ package com.mycompany.proyecto1ss2026.DAOs;
 
 import com.mycompany.proyecto1ss2026.ConeccionBaseDatos.DBConnection;
 import com.mycompany.proyecto1ss2026.Exeptions.AccesoALaDataException;
-import com.mycompany.proyecto1ss2026.Modelos.Request.SucursalRequest;
+import com.mycompany.proyecto1ss2026.Modelos.Request.Sucursal;
 import com.mycompany.proyecto1ss2026.Modelos.DataBase.SucursalDB;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -28,7 +28,7 @@ public class SucursalDAO {
     private final String BUSCAR_SUCURSAL_POR_ID = "SELECT * FROM sucursal WHERE codigo_sucursal = ?";
     private final String TODAS_SUCURSALES = "SELECT * FROM sucursal";
     
-    public void agregarSucursal(SucursalRequest request) throws AccesoALaDataException {
+    public void agregarSucursal(Sucursal request) throws AccesoALaDataException {
         Connection connection = DBConnection.getConnection();
         try {
             PreparedStatement insert = connection.prepareStatement(AGREGAR_SUCURSAL);
@@ -42,7 +42,7 @@ public class SucursalDAO {
         }
     } 
     
-    public void editarSucursal(SucursalRequest request) throws AccesoALaDataException {
+    public void editarSucursal(Sucursal request) throws AccesoALaDataException {
         Connection connection = DBConnection.getConnection();
         try {
             PreparedStatement update = connection.prepareStatement(EDITAR_SUCURSAL);
@@ -67,7 +67,7 @@ public class SucursalDAO {
         }
     }
     
-    public boolean existeSucursal(SucursalRequest request) throws AccesoALaDataException {
+    public boolean existeSucursal(Sucursal request) throws AccesoALaDataException {
         Connection connection = DBConnection.getConnection();
         try {
             PreparedStatement select1 = connection.prepareStatement(BUSCAR_SUCURSAL_ID);
@@ -82,7 +82,7 @@ public class SucursalDAO {
         }
     }
     
-    public boolean existeSucursalAtributos(SucursalRequest request) throws AccesoALaDataException {
+    public boolean existeSucursalAtributos(Sucursal request) throws AccesoALaDataException {
         Connection connection = DBConnection.getConnection();
         try {
             PreparedStatement select = connection.prepareStatement(BUSCAR_SUCURSAL_VALORES);

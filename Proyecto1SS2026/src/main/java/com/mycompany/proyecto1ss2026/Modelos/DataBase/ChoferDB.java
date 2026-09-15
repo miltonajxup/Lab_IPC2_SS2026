@@ -22,8 +22,9 @@ public class ChoferDB {
     private final boolean estadoOperativo;
     private final String sucursalBase;
     private final String sucursalActual;
+    private final double saldoDisponible;
 
-    public ChoferDB(String numeroLicencia, String nombre, byte[] foto, TipoLicencia tipoLicencia, String fechaVencimiento, String numeroTelefono, double salarioPorViaje, boolean estadoOperativo, String sucursalBase, String sucursalActual) {
+    public ChoferDB(String numeroLicencia, String nombre, byte[] foto, TipoLicencia tipoLicencia, String fechaVencimiento, String numeroTelefono, double salarioPorViaje, boolean estadoOperativo, String sucursalBase, String sucursalActual, double saldoDisponible) {
         this.numeroLicencia = numeroLicencia;
         this.nombre = nombre;
         this.foto = foto;
@@ -34,6 +35,7 @@ public class ChoferDB {
         this.estadoOperativo = estadoOperativo;
         this.sucursalBase = sucursalBase;
         this.sucursalActual = sucursalActual;
+        this.saldoDisponible = saldoDisponible;
     }
 
     public String getNombre() {
@@ -74,6 +76,10 @@ public class ChoferDB {
 
     public String getSucursalActual() {
         return sucursalActual;
+    }
+
+    public double getSaldoDisponible() {
+        return saldoDisponible;
     }
 
 }

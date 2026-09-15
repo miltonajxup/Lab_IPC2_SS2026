@@ -7,7 +7,7 @@ package com.mycompany.proyecto1ss2026.DAOs;
 import com.mycompany.proyecto1ss2026.ConeccionBaseDatos.DBConnection;
 import com.mycompany.proyecto1ss2026.Exeptions.AccesoALaDataException;
 import com.mycompany.proyecto1ss2026.Modelos.DataBase.BusDB;
-import com.mycompany.proyecto1ss2026.Modelos.Request.BusRequest;
+import com.mycompany.proyecto1ss2026.Modelos.Request.Bus;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -32,7 +32,7 @@ public class BusDAO {
     private final String GET_BUSES_SUCURSAL_ACTUAL = "SELECT * FROM bus WHERE sucursal_actual = ?";
     private final String TODOS_LOS_BUSES = "SELECT * FROM bus";
     
-    public void agregarBus(BusRequest request) throws AccesoALaDataException {
+    public void agregarBus(Bus request) throws AccesoALaDataException {
         Connection connection = DBConnection.getConnection();
         try {
             PreparedStatement insert = connection.prepareStatement(AGREGAR_BUS);
@@ -52,7 +52,7 @@ public class BusDAO {
         }
     }
     
-    public void modificarBus(BusRequest request) throws AccesoALaDataException {
+    public void modificarBus(Bus request) throws AccesoALaDataException {
         Connection connection = DBConnection.getConnection();
         try {
             PreparedStatement update = connection.prepareStatement(MODIFICAR_BUS);
@@ -94,7 +94,7 @@ public class BusDAO {
         }
     }
     
-    public void actualizarSucursalBus(BusRequest request) throws AccesoALaDataException {
+    public void actualizarSucursalBus(Bus request) throws AccesoALaDataException {
         Connection connection = DBConnection.getConnection();
         try {
             PreparedStatement update = connection.prepareStatement(ACTUALIZAR_SUCURSAL_BUS);

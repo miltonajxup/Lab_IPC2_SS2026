@@ -8,7 +8,7 @@ import com.mycompany.proyecto1ss2026.ConeccionBaseDatos.DBConnection;
 import com.mycompany.proyecto1ss2026.Constantes.TipoLicencia;
 import com.mycompany.proyecto1ss2026.Exeptions.AccesoALaDataException;
 import com.mycompany.proyecto1ss2026.Modelos.DataBase.ChoferDB;
-import com.mycompany.proyecto1ss2026.Modelos.Request.ChoferRequest;
+import com.mycompany.proyecto1ss2026.Modelos.Request.Chofer;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -36,7 +36,7 @@ public class ChoferDAO {
     private final String TODOS_CHOFERES = "SELECT * FROM chofer";
     //SELECT dpi, nombre, LENGTH(foto) AS tamaño_foto, numero_licencia, fecha_vencimiento, numero_telefono, salario_por_viaje, estado_operativo, sucursal_base FROM chofer;
     
-    public void agregarChofer(ChoferRequest request) throws AccesoALaDataException {
+    public void agregarChofer(Chofer request) throws AccesoALaDataException {
         Connection connection = DBConnection.getConnection();
         try {
             PreparedStatement insert = connection.prepareStatement(AGREGAR_CHOFER);
@@ -56,7 +56,7 @@ public class ChoferDAO {
         }
     }
     
-    public void editarInfoChofer(ChoferRequest request) throws AccesoALaDataException {
+    public void editarInfoChofer(Chofer request) throws AccesoALaDataException {
         Connection connection = DBConnection.getConnection();
         try {
             PreparedStatement update = connection.prepareStatement(EDITAR_INFO_CHOFER);
@@ -173,7 +173,7 @@ public class ChoferDAO {
         return choferes;
     }
     
-    private ChoferDB armarChofer(ResultSet rs) throws SQLException {
+    public ChoferDB armarChofer(ResultSet rs) throws SQLException {
         return new ChoferDB(
                 rs.getString("numero_de_licencia"), 
                 rs.getString("nombre"), 
@@ -184,7 +184,8 @@ public class ChoferDAO {
                 rs.getDouble("salario_por_viaje"), 
                 rs.getBoolean("estado_operativo"), 
                 rs.getString("sucursal_base"), 
-                rs.getString("sucursal_actual"));
+                rs.getString("sucursal_actual"), 
+                rs.getDouble("saldo_disponible"));
     }
     
 }

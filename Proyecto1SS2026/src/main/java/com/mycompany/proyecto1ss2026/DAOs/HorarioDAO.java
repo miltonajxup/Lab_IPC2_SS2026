@@ -7,7 +7,7 @@ package com.mycompany.proyecto1ss2026.DAOs;
 import com.mycompany.proyecto1ss2026.ConeccionBaseDatos.DBConnection;
 import com.mycompany.proyecto1ss2026.Exeptions.AccesoALaDataException;
 import com.mycompany.proyecto1ss2026.Modelos.DataBase.HorarioDB;
-import com.mycompany.proyecto1ss2026.Modelos.Request.HorarioRequest;
+import com.mycompany.proyecto1ss2026.Modelos.Request.Horario;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -29,7 +29,7 @@ public class HorarioDAO {
     private final String GET_HORARIOS_RUTA = "SELECT * FROM horario_ruta WHERE ruta = ?";
     private final String GET_HORARIOS_SUCURSALES = "SELECT hor.* FROM horario_ruta AS hor JOIN ruta AS rut ON hor.ruta = rut.id WHERE rut.sucursal_origen = ? AND rut.sucursal_destino = ?";
     
-    public void agregarHorario(HorarioRequest request) throws AccesoALaDataException {
+    public void agregarHorario(Horario request) throws AccesoALaDataException {
         Connection connection = DBConnection.getConnection();
         try {
             PreparedStatement insert = connection.prepareStatement(AGREGAR_HORARIO);
@@ -56,7 +56,7 @@ public class HorarioDAO {
         }
     }
     
-    public boolean existeHorario(HorarioRequest request) throws AccesoALaDataException {
+    public boolean existeHorario(Horario request) throws AccesoALaDataException {
         Connection connection = DBConnection.getConnection();
         try {
             PreparedStatement select = connection.prepareStatement(GET_HORARIO_VALORES);
