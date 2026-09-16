@@ -67,7 +67,7 @@ public class ServicioUsuario {
         }
         Usuario usuario = usuarioParaModificar(dpi, nombre, nit, telefono, direccion, RolUsuario.CLIENTE.name());
         usuariodao.editarUsuario(usuario);
-        return "El usuario " + usuario.getNombre() + " con dpi " + usuario.getDpi()+ " ha sido modificado con exito";
+        return "El perfil se ha actualizado";
     }
     
     public String modificacionPorAdmin(String dpi, String nombre, String nit, String telefono, String direccion, String textoRol, String sucursal) throws ValorInvalidoException, AccesoALaDataException, ValorExistenteException, ValorInexistenteException {
@@ -104,7 +104,7 @@ public class ServicioUsuario {
         usuariodao.modificarEstado(estado, dpiUsuario);
     }
     
-    public String recargarCreditos(String dpi, String textoCredito) throws AccesoALaDataException, ValorInexistenteException, ValorInvalidoException {
+    public UsuarioDB recargarCreditos(String dpi, String textoCredito) throws AccesoALaDataException, ValorInexistenteException, ValorInvalidoException {
         if (dpi == null || textoCredito == null || dpi.isEmpty() || textoCredito.isEmpty()) {
             return null;
         }
@@ -121,7 +121,7 @@ public class ServicioUsuario {
         UsuarioDB usuariodb = usuariodao.getUsuarioPorDpi(dpi);
         double creditoActual = usuariodb.getCreditoDisponible() + credito;
         usuariodao.agregarCreditos(creditoActual, dpi);
-        return "Se ha recargado " + credito + " de saldo ahora se cuenta con " + creditoActual + " de saldo";
+        return usuariodao.getUsuarioPorDpi(dpi);
     }
     
     private void existenciaUsuario(String dpiUsuario) throws AccesoALaDataException, ValorInexistenteException {

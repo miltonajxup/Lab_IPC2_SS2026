@@ -4,16 +4,25 @@
  */
 package com.mycompany.proyecto1ss2026.Modelos.Request;
 
+import java.time.LocalDate;
+
 /**
  *
  * @author milton
  */
-public class GastoTallerRequest {
+public class GastoTaller {
     
     private double montoManoObra;
     private double montoRepuestos;
-    private String fechaMantenimiento;
+    private LocalDate fechaMantenimiento;
     private String bus;
+
+    public GastoTaller(double montoManoObra, double montoRepuestos, LocalDate fechaMantenimiento, String bus) {
+        this.montoManoObra = montoManoObra;
+        this.montoRepuestos = montoRepuestos;
+        this.fechaMantenimiento = fechaMantenimiento;
+        this.bus = bus;
+    }
 
     public double getMontoManoObra() {
         return montoManoObra;
@@ -31,11 +40,11 @@ public class GastoTallerRequest {
         this.montoRepuestos = montoRepuestos;
     }
 
-    public String getFechaMantenimiento() {
+    public LocalDate getFechaMantenimiento() {
         return fechaMantenimiento;
     }
 
-    public void setFechaMantenimiento(String fechaMantenimiento) {
+    public void setFechaMantenimiento(LocalDate fechaMantenimiento) {
         this.fechaMantenimiento = fechaMantenimiento;
     }
 

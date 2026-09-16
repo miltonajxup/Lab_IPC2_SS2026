@@ -105,10 +105,10 @@
                     Nombre
                     <input name="nombre" value="<%=choferdb.getNombre()%>"/>
                 </label>
-                <label>
+<!--                <label>
                     Foto
                     <input name="foto" type="file"/>
-                </label>
+                </label>-->
                 <label>
                     Numero de Licencia
                     <input name="numero-licencia" value="<%=choferdb.getNumeroLicencia()%>"/>

@@ -21,7 +21,7 @@
                 <a class="boton" href="${pageContext.servletContext.contextPath}/mvc/usuario/viaje/crear-viaje-privado.jsp">Crear Viaje Privado</a>
                 <a class="boton" href="${pageContext.servletContext.contextPath}/mvc/usuario/viaje/consultar-viajes.jsp">Consultar Viajes Comprados</a>
                 <a class="boton" href="${pageContext.servletContext.contextPath}/mvc/usuario/perfil/modificar-perfil.jsp">Modificar Perfil</a>
-                <a class="boton" href="${pageContext.servletContext.contextPath}/index.jsp">Regresar</a>
+                <a class="boton" href="${pageContext.servletContext.contextPath}/index.jsp">Cerrar Sesion</a>
             </div>
             
         </c:if>

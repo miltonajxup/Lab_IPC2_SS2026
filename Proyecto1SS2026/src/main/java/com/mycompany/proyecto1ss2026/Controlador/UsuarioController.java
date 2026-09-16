@@ -63,12 +63,11 @@ public class UsuarioController extends HttpServlet {
                 setAsientosEnCompraBoleto(request, idViaje);
 
                 dispatcher = getServletContext().getRequestDispatcher("/mvc/usuario/viaje/comprar-boleto.jsp");
-                dispatcher.forward(request, response);
             } catch (AccesoALaDataException e) {
                 request.setAttribute("error", e.getMessage());
                 dispatcher = getServletContext().getRequestDispatcher("/mvc/usuario/viaje/comprar-boleto.jsp");
-                dispatcher.forward(request, response);
             }
+            dispatcher.forward(request, response);
         }
         
         String parametroUsuarios = request.getParameter("modificar-usuario");
@@ -80,13 +79,13 @@ public class UsuarioController extends HttpServlet {
                 setValoresModificarUsuario(request, dpiUsuario);
                 servicioUsuario.modificarEstadoUsuario(dpiUsuario, textoEstado);
                 setValoresModificarUsuario(request, dpiUsuario);
+                
                 dispatcher = getServletContext().getRequestDispatcher("/mvc/administrador/usuario/modificar-usuario.jsp");
-                dispatcher.forward(request, response);
             } catch (AccesoALaDataException | ValorInexistenteException | ValorInvalidoException e) {
                 request.setAttribute("error", e.getMessage());
                 dispatcher = getServletContext().getRequestDispatcher("/mvc/administrador/usuario/modificar-usuario.jsp");
-                dispatcher.forward(request, response);
             }        
+            dispatcher.forward(request, response);
         }
     }
 
@@ -94,6 +93,7 @@ public class UsuarioController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ServicioViaje servicioViaje = new ServicioViaje();
         String parametroCompraBoleto = request.getParameter("compra-boleto");
+        
         RequestDispatcher dispatcher;
         if (parametroCompraBoleto != null && parametroCompraBoleto.equals("compraBoleto")) {
             try {
@@ -110,12 +110,11 @@ public class UsuarioController extends HttpServlet {
                 request.setAttribute("respuesta", respuesta);
                 
                 dispatcher = getServletContext().getRequestDispatcher("/mvc/usuario/viaje/comprar-boleto.jsp");
-                dispatcher.forward(request, response);
             } catch (AccesoALaDataException | ValorInexistenteException | ValorInvalidoException e) {
                 request.setAttribute("error", e.getMessage());
                 dispatcher = getServletContext().getRequestDispatcher("/mvc/usuario/viaje/comprar-boleto.jsp");
-                dispatcher.forward(request, response);
             }
+            dispatcher.forward(request, response);
         }
         
         String parametroUsuarios = request.getParameter("modificar-usuario");
@@ -127,12 +126,37 @@ public class UsuarioController extends HttpServlet {
                 setValoresModificarUsuario(request, dpiUsuario);
                 
                 dispatcher = getServletContext().getRequestDispatcher("/mvc/administrador/usuario/modificar-usuario.jsp");
-                dispatcher.forward(request, response);
             } catch (AccesoALaDataException | ValorExistenteException | ValorInexistenteException | ValorInvalidoException e) {
                 request.setAttribute("error", e.getMessage());
                 dispatcher = getServletContext().getRequestDispatcher("/mvc/administrador/usuario/modificar-usuario.jsp");
-                dispatcher.forward(request, response);
             }
+            dispatcher.forward(request, response);
+        }
+        
+        String parametroCliente = request.getParameter("cliente");
+        if (parametroCliente != null && parametroCliente.equals("editar-perfil")) {
+            try {
+                editarUsuario(request);
+                dispatcher = getServletContext().getRequestDispatcher("/mvc/usuario/perfil/modificar-perfil.jsp");
+            } catch (AccesoALaDataException | ValorExistenteException | ValorInexistenteException | ValorInvalidoException e) {
+                request.setAttribute("error", e.getMessage());
+                dispatcher = getServletContext().getRequestDispatcher("/mvc/usuario/perfil/modificar-perfil.jsp");
+            }
+            dispatcher.forward(request, response);
+        }
+        
+        if (parametroCliente != null && parametroCliente.equals("agregar-creditos")) {
+            try {
+                String textoCreditos = request.getParameter("creditos");
+                String dpi = request.getParameter("dpi");
+                UsuarioDB usuarioActual = servicioUsuario.recargarCreditos(dpi, textoCreditos);
+                request.getSession().setAttribute("usuarioLogeado", usuarioActual);
+                dispatcher = getServletContext().getRequestDispatcher("/mvc/usuario/perfil/modificar-perfil.jsp");
+            } catch (AccesoALaDataException | ValorInexistenteException | ValorInvalidoException e) {
+                request.setAttribute("error", e.getMessage());
+                dispatcher = getServletContext().getRequestDispatcher("/mvc/usuario/perfil/modificar-perfil.jsp");
+            }
+            dispatcher.forward(request, response);
         }
     }
     
@@ -199,6 +223,18 @@ public class UsuarioController extends HttpServlet {
         String textoRol = request.getParameter("rol");
         String sucursal = request.getParameter("sucursal");
         servicioUsuario.modificacionPorAdmin(dpiUsuario, nombre, nit, telefono, direccion, textoRol, sucursal);
+    }
+    
+    public void editarUsuario(HttpServletRequest request) throws ValorInvalidoException, AccesoALaDataException, ValorExistenteException, ValorInexistenteException {
+        String dpi = request.getParameter("dpi");
+        String nombre = request.getParameter("nombre");
+        String nit = request.getParameter("nit");
+        String telefono = request.getParameter("telefono");
+        String direccion = request.getParameter("direccion");
+        String mensaje = servicioUsuario.modificarUsuario(dpi, nombre, nit, telefono, direccion);
+        UsuarioDB actual = usuariodao.getUsuarioPorDpi(dpi);
+        request.getSession().setAttribute("usuarioLogeado", actual);
+        request.setAttribute("mensaje", mensaje);
     }
 
 }

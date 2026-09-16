@@ -110,10 +110,10 @@
                     Número de Placa
                     <input name="numero-placa" value="<%=busActual.getNumeroPlaca()%>"/>
                 </label>
-                <label>
+<!--                <label>
                     Foto
                     <input name="foto" type="file" />
-                </label>
+                </label>-->
                 <label>
                     Marca
                     <input name="marca" value="<%=busActual.getMarca()%>"/>

@@ -73,7 +73,7 @@ public class ReporteAdministradorDAO {
             FROM gasto_taller WHERE fecha_mantenimiento >= ? AND fecha_mantenimiento < ?""";
     private final String GASTO_TALLER_SUCURSALES = 
             """
-            SELECT SUM(gas.monto_mano_obra) AS monto_mano_obra, SUM(gas.monto_repuestos) AS monto_repuestos 
+            SELECT SUM(gas.monto_mano_obra) AS monto_mano_obra, SUM(gas.monto_repuestos) AS monto_repuestos, suc.nombre 
             FROM gasto_taller AS gas 
             JOIN bus ON gas.bus = bus.numero_placa 
             JOIN sucursal AS suc ON bus.sucursal_base = suc.codigo_sucursal 

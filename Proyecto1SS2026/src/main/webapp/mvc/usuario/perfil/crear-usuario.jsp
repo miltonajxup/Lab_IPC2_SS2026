@@ -41,28 +41,29 @@
                 %> <p class="correcto"><%=respuesta.getMensaje()%></p> <%
             }
         %>
-        <form method="POST" action="crear-usuario.jsp">
-            <label>
-                DPI
-                <input name="dpi" />
-            </label>
-            <label>
-                Nombre
-                <input name="nombre" />
-            </label>
-            <label>
-                NIT
-                <input name="nit" />
-            </label>
-            <label>
-                Telefono
-                <input name="telefono" />
-            </label>
-            <label>
-                direccion
-                <input name="direccion" />
-            </label>
-            <button class="boton" type="submit">Guardar</button>
-        </form>
-        
+        <div class="contenedor-principal">
+            <form method="POST" action="crear-usuario.jsp">
+                <label>
+                    DPI
+                    <input name="dpi" />
+                </label>
+                <label>
+                    Nombre
+                    <input name="nombre" />
+                </label>
+                <label>
+                    NIT
+                    <input name="nit" />
+                </label>
+                <label>
+                    Telefono
+                    <input name="telefono" />
+                </label>
+                <label>
+                    direccion
+                    <input name="direccion" />
+                </label>
+                <button class="boton" type="submit">Guardar</button>
+            </form>
+        </div>
 </html>

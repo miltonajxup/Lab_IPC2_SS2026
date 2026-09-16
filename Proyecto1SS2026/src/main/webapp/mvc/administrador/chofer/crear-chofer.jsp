@@ -71,10 +71,10 @@
                     Nombre
                     <input name="nombre"/>
                 </label>
-                <label>
+<!--                <label>
                     Foto
                     <input name="foto" type="file"/>
-                </label>
+                </label>-->
                 <select name="tipo-licencia">
                     <option>Selecciona un tipo de Licencia</option>
                     <option value="<%=TipoLicencia.A.name()%>"><%=TipoLicencia.A%></option>

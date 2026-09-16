@@ -29,8 +29,16 @@
             if (usuario != null || chofer != null) {
         %>
         <h1>Controlar Viaje</h1>
+        <% if (usuario != null) { %>
         <jsp:include page="/mvc/menu-regreso/regreso-menu-administrador.jsp" />
+        <% } else if (chofer != null) { %>
+        <div class="menuBotones" >
+            <a class="boton" href="${pageContext.servletContext.contextPath}/mvc/chofer/menu-chofer.jsp">
+                Regresar
+            </a>
+        </div>
         <%
+            }
             ServicioViaje servicioViaje = new ServicioViaje();
             ServicioEjecucionViaje servicioEjecucion = new ServicioEjecucionViaje();
             List<ViajeDB> viajesSinTerminar = null;
