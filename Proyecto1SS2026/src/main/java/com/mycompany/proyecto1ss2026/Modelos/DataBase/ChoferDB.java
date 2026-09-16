@@ -23,6 +23,7 @@ public class ChoferDB {
     private final String sucursalBase;
     private final String sucursalActual;
     private final double saldoDisponible;
+    private int viajesCompletados;
 
     public ChoferDB(String numeroLicencia, String nombre, byte[] foto, TipoLicencia tipoLicencia, String fechaVencimiento, String numeroTelefono, double salarioPorViaje, boolean estadoOperativo, String sucursalBase, String sucursalActual, double saldoDisponible) {
         this.numeroLicencia = numeroLicencia;
@@ -80,6 +81,14 @@ public class ChoferDB {
 
     public double getSaldoDisponible() {
         return saldoDisponible;
+    }
+
+    public int getViajesCompletados() {
+        return viajesCompletados;
+    }
+
+    public void setViajesCompletados(int viajesCompletados) {
+        this.viajesCompletados = viajesCompletados;
     }
 
 }

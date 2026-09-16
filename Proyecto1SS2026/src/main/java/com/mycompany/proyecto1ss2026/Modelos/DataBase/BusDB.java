@@ -20,6 +20,7 @@ public class BusDB {
     private final boolean estadoOperativo;
     private final String sucursalBase;
     private final String sucursalActual;
+    private int viajesCompletados;
 
     public BusDB(String numeroPlaca, byte[] foto, String marca, String modelo, String fechaFabricacion, int capacidadPasajeros, int kilometraje, boolean estadoOperativo, String sucursalBase, String sucursalActual) {
         this.numeroPlaca = numeroPlaca;
@@ -72,6 +73,14 @@ public class BusDB {
 
     public String getSucursalActual() {
         return sucursalActual;
+    }
+
+    public int getViajesCompletados() {
+        return viajesCompletados;
+    }
+
+    public void setViajesCompletados(int viajesCompletados) {
+        this.viajesCompletados = viajesCompletados;
     }
 
 }

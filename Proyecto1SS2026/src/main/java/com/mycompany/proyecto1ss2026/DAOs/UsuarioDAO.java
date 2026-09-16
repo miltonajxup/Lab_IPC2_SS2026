@@ -32,6 +32,7 @@ public class UsuarioDAO {
     private final String GET_SUCURSAL_ADMIN = "SELECT * FROM admin_sucursal WHERE dpi = ?";
     private final String GET_ADMINS_SUCURSAL = "SELECT usu.*, adm.sucursal FROM usuario AS usu JOIN admin_sucursal AS adm ON usu.dpi = adm.dpi WHERE adm.sucursal = ?";
     private final String GET_USUARIO_POR_ID = "SELECT * FROM usuario WHERE dpi = ?";
+    private final String CANTIDAD_ADMINISTRADORES_ACTIVOS = "SELECT * FROM usuario WHERE rol = 'ADMINISTRADOR' AND estado = TRUE";
     
     public void agregarUsuario(Usuario request) throws AccesoALaDataException {
         Connection connection = DBConnection.getConnection();
@@ -225,6 +226,21 @@ public class UsuarioDAO {
             throw new AccesoALaDataException("Error al traer usuario por dpi " + e.getMessage());
         }
         return null;
+    }
+    
+    public int getCantidadAdministradoresActivos() throws AccesoALaDataException {
+        Connection connection = DBConnection.getConnection();
+        int contador = 0;
+        try {
+            PreparedStatement ps = connection.prepareStatement(CANTIDAD_ADMINISTRADORES_ACTIVOS);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                contador++;
+            }
+        } catch (SQLException e) {
+            throw new AccesoALaDataException("Error al consultar la cantidad de administradores activos");
+        }
+        return contador;
     }
     
     public UsuarioDB armarUsuario(ResultSet rs) throws SQLException {

@@ -38,3 +38,7 @@ function agregarElemento(valor, idInput, identificador, idInputElegido) {
     document.getElementById(idInput).value = valor;
     document.getElementById(idInputElegido).value = identificador;
 }
+
+function agregarElementoUnico(valor, idInput) {
+    document.getElementById(idInput).value = valor;
+}

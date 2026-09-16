@@ -32,6 +32,18 @@ select {
     margin-bottom: 20px
 }
 
+th {
+    border: 2px solid black;
+    padding: 15px;
+}
+
+td {
+    text-align: center;
+    border: 2px solid black;
+    margin: 5px;
+    padding: 10px;
+}
+
 a {
     text-decoration: none;
     color: black;
@@ -39,6 +51,16 @@ a {
 
 a:active {
     color: black;
+}
+
+.azul {
+    background-color: rgb(83, 150, 244);
+}
+.verde {
+    background-color: rgb(104, 209, 86);
+}
+.celeste {
+    background-color: rgb(176, 247, 247);
 }
 
 .head {
@@ -162,3 +184,16 @@ a:active {
     grid-template-columns: 1fr 1fr 1fr 1fr;
     gap: 10px;
 }
+
+.reporte {
+    width: 1700px;
+    border: 2px solid black;
+    margin: auto;
+    margin-bottom: 100px;
+    margin-top: 100px;
+    border-radius: 5px;
+    font-size: inherit;
+    padding: 20px;
+}
+
+

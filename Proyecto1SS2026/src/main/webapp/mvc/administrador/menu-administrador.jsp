@@ -58,6 +58,17 @@
             <a class="boton" href="${pageContext.servletContext.contextPath}/index.jsp">Regresar</a>
         </div>
         
+        Reportes
+        <div class="menuBotones">
+            <a class="boton" href="${pageContext.servletContext.contextPath}/mvc/administrador/reporte/reporte-ganancias.jsp">Reporte de Ganancias</a>
+            <a class="boton" href="${pageContext.servletContext.contextPath}/mvc/administrador/reporte/reporte-ruta.jsp">Reporte de Rutas</a>
+            <a class="boton" href="${pageContext.servletContext.contextPath}/mvc/administrador/reporte/reporte-gastos.jsp">Reporte de Gastos</a>
+            <a class="boton" href="${pageContext.servletContext.contextPath}/mvc/administrador/reporte/reporte-servlet?reporte-buses=reporteBuses&sucursal=${usuarioLogeado.sucursal}">Reporte de Buses</a>
+            <a class="boton" href="${pageContext.servletContext.contextPath}/mvc/administrador/reporte/reporte-servlet?reporte-choferes=reporteChoferes&sucursal=${usuarioLogeado.sucursal}">Reporte de Choferes</a>
+            <a class="boton" href="${pageContext.servletContext.contextPath}/mvc/administrador/reporte/reporte-boletos.jsp">Reporte de Boletos</a>
+            <a class="boton" href="${pageContext.servletContext.contextPath}/mvc/administrador/reporte/reporte-servlet?reporte-depreciacion=reporteDepreciacion&sucursal=${usuarioLogeado.sucursal}">Reporte de Depreciacion</a>
+        </div>
+        
         <% } else { %>
         <jsp:include page="/error-log.jsp"/>
         <% } %>

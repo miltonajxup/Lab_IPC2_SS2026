@@ -24,6 +24,7 @@ import com.mycompany.proyecto1ss2026.Respuesta.Respuesta;
 public class ServicioUsuario {
     
     private final int MINIMO_CREDITOS = 1;
+    private final int MINIMO_ADMINISTRADORES = 1;
     private final UsuarioDAO usuariodao;
     private final SucursalDAO sucursaldao;
 
@@ -94,7 +95,12 @@ public class ServicioUsuario {
         }
         existenciaUsuario(dpiUsuario);
         boolean estado = textoEstado.equalsIgnoreCase(Estado.TRUE.name());
-        
+        if (!estado) {
+            int usuariosActivos = usuariodao.getCantidadAdministradoresActivos();
+            if (usuariosActivos <= MINIMO_ADMINISTRADORES) {
+                throw new ValorInvalidoException("No se pueden dejar menos de " + MINIMO_ADMINISTRADORES + " administrador activo");
+            }
+        }
         usuariodao.modificarEstado(estado, dpiUsuario);
     }
     

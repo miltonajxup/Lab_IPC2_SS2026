@@ -55,20 +55,20 @@ public class UsuarioController extends HttpServlet {
         
         RequestDispatcher dispatcher;
         
-        try {
-            if (parametroRutas != null && parametroRutas.equals("todos")) {
+        if (parametroRutas != null && parametroRutas.equals("todos")) {
+            try {
                 String idViaje = setIdViaje(request);
-                
+
                 setRutasEnCompraBoleto(request, response);
                 setAsientosEnCompraBoleto(request, idViaje);
-                
+
+                dispatcher = getServletContext().getRequestDispatcher("/mvc/usuario/viaje/comprar-boleto.jsp");
+                dispatcher.forward(request, response);
+            } catch (AccesoALaDataException e) {
+                request.setAttribute("error", e.getMessage());
                 dispatcher = getServletContext().getRequestDispatcher("/mvc/usuario/viaje/comprar-boleto.jsp");
                 dispatcher.forward(request, response);
             }
-        } catch (AccesoALaDataException e) {
-            request.setAttribute("error", e.getMessage());
-            dispatcher = getServletContext().getRequestDispatcher("/mvc/usuario/viaje/comprar-boleto.jsp");
-            dispatcher.forward(request, response);
         }
         
         String parametroUsuarios = request.getParameter("modificar-usuario");
@@ -77,13 +77,14 @@ public class UsuarioController extends HttpServlet {
             try {
                 String dpiUsuario = request.getParameter("dpi-usuario");
                 String textoEstado = request.getParameter("estado");
+                setValoresModificarUsuario(request, dpiUsuario);
                 servicioUsuario.modificarEstadoUsuario(dpiUsuario, textoEstado);
                 setValoresModificarUsuario(request, dpiUsuario);
                 dispatcher = getServletContext().getRequestDispatcher("/mvc/administrador/usuario/modificar-usuario.jsp");
                 dispatcher.forward(request, response);
             } catch (AccesoALaDataException | ValorInexistenteException | ValorInvalidoException e) {
                 request.setAttribute("error", e.getMessage());
-                dispatcher = getServletContext().getRequestDispatcher("/mvc/administrador/menu-administrador.jsp");
+                dispatcher = getServletContext().getRequestDispatcher("/mvc/administrador/usuario/modificar-usuario.jsp");
                 dispatcher.forward(request, response);
             }        
         }
