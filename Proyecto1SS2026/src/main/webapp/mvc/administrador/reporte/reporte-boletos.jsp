@@ -40,7 +40,22 @@
                         </button>
                     </div>
                 </div>
+                <div class="contenedor-principal">
+                    <label>
+                        <br> <br>
+                        Ingresa un carpeta para guardar el reporte
+                        <input name="ruta" />
+                    </label>
+                </div>
+                <div >
+                    <c:if test="${rutaArchivo != null}">
+                        La carpeta de Guadado del Reporte es: <strong> ${rutaArchivo} </strong>
+                    </c:if>
+                </div>
             </form>
+            
+            <p class="cuadro-texto">Reporte de Boletos Vendidos de la Sucursal ${usuarioLogeado.sucursal}
+                    
             <table class="reporte" >
                 <tr>
                     <th class="verde">Viaje Id</th>
@@ -55,24 +70,24 @@
                     <th class="azul">Fecha de Salida</th>
                     <th class="verde">Boletos Vendidos</th>
                     <th class="azul">Ingreso Total</th>
-                    
-                    <c:forEach items="${ingresoBoletos}" var="ingreso">
-                    <tr class="celeste">
-                        <td > ${ingreso.viajeId} </td>
-                        <td > ${ingreso.licencia} </td>
-                        <td > ${ingreso.chofer} </td>
-                        <td > ${ingreso.bus} </td>
-                        <td > ${ingreso.rutaId} </td>
-                        <td > ${ingreso.distancia} </td>
-                        <td > ${ingreso.precioBoleto} </td>
-                        <td > ${ingreso.sucursalOrigen} </td>
-                        <td > ${ingreso.sucursalDestino} </td>
-                        <td > ${ingreso.fechaSalida} </td>
-                        <td > ${ingreso.boletosVendidos} </td>
-                        <td > ${ingreso.ingresoTotal} </td>
-                    </tr>
-                    </c:forEach>
                 </tr>
+                    
+                <c:forEach items="${ingresoBoletos}" var="ingreso">
+                <tr class="celeste">
+                    <td > ${ingreso.viajeId} </td>
+                    <td > ${ingreso.licencia} </td>
+                    <td > ${ingreso.chofer} </td>
+                    <td > ${ingreso.bus} </td>
+                    <td > ${ingreso.rutaId} </td>
+                    <td > ${ingreso.distancia} </td>
+                    <td > ${ingreso.precioBoleto} </td>
+                    <td > ${ingreso.sucursalOrigen} </td>
+                    <td > ${ingreso.sucursalDestino} </td>
+                    <td > ${ingreso.fechaSalida} </td>
+                    <td > ${ingreso.boletosVendidos} </td>
+                    <td > ${ingreso.ingresoTotal} </td>
+                </tr>
+                </c:forEach>
             </table>
         </c:if>
         <c:if test="${usuarioLogeado == null}">

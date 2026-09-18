@@ -4,10 +4,32 @@ CREATE DATABASE IF NOT EXISTS Proyecto1_SS2026;
 USE Proyecto1_SS2026;
 
 CREATE TABLE sucursal (
-    codigo_sucursal VARCHAR(20),
+    codigo_sucursal VARCHAR(40),
     nombre VARCHAR (40) NOT NULL,
     ciudad VARCHAR (60) NOT NULL, 
     CONSTRAINT pk_sucursal PRIMARY KEY (codigo_sucursal)
+);
+
+CREATE TABLE usuario (
+    dpi VARCHAR(13) NOT NULL, 
+    nombre VARCHAR(50) NOT NULL, 
+    nit VARCHAR(13) NOT NULL, 
+    telefono VARCHAR(10) NOT NULL, 
+    direccion VARCHAR(75) NOT NULL, 
+    credito_disponible DECIMAL(8,2) DEFAULT 0.00, 
+    estado BOOLEAN DEFAULT TRUE,
+    rol VARCHAR(30) NOT NULL,
+    CONSTRAINT pk_usuario PRIMARY KEY (dpi)
+);
+
+INSERT INTO usuario (dpi, nombre, nit, telefono, direccion, rol) VALUES ('1111111111111', 'admin1', '1111111111110', '12345678', 'guatemala', 'ADMINISTRADOR');
+
+CREATE TABLE admin_sucursal (
+    dpi VARCHAR(13) NOT NULL, 
+    sucursal VARCHAR(40) NOT NULL, 
+    CONSTRAINT pk_admin_sucursal PRIMARY KEY (dpi), 
+    CONSTRAINT fk_as_dpi FOREIGN KEY (dpi) REFERENCES usuario(dpi) ON DELETE CASCADE, 
+    CONSTRAINT fk_as_sucursal FOREIGN KEY (sucursal) REFERENCES sucursal(codigo_sucursal)
 );
 
 CREATE TABLE chofer (
@@ -126,9 +148,29 @@ CREATE TABLE viaje_privado (
     fecha_llegada DATE, 
     costo DECIMAL(8,2) NOT NULL, 
     usuario_solicitante VARCHAR(13) NOT NULL, 
+    sucursal_receptor VARCHAR(40) NOT NULL, 
     estado_viaje VARCHAR(20) DEFAULT 'EN_REVISION', 
     CONSTRAINT pk_viaje_privado PRIMARY KEY (id_viaje),
-    CONSTRAINT fk_vpriv_id_viaje FOREIGN KEY (id_viaje) REFERENCES viaje(id) ON DELETE CASCADE
+    CONSTRAINT fk_vpriv_id_viaje FOREIGN KEY (id_viaje) REFERENCES viaje(id) ON DELETE CASCADE,
+    CONSTRAINT fk_vpriv_usuario FOREIGN KEY (usuario_solicitante) REFERENCES usuario(dpi), 
+    CONSTRAINT fk_vpriv_sucursal FOREIGN KEY (sucursal_receptor) REFERENCES sucursal(codigo_sucursal)
+); 
+
+CREATE TABLE propuesta_viaje_privado (
+    id INT AUTO_INCREMENT, 
+    cantidad_pasajeros INT NOT NULL, 
+    origen VARCHAR(40) NOT NULL, 
+    destino VARCHAR(40) NOT NULL, 
+    distancia_aproximada INT NOT NULL, 
+    hora_salida TIME NOT NULL, 
+    hora_aprox_llegada TIME NOT NULL, 
+    fecha_salida DATE NOT NULL, 
+    fecha_llegada DATE, 
+    costo DECIMAL(8,2) NOT NULL, 
+    usuario_solicitante VARCHAR(13) NOT NULL, 
+    estado BOOLEAN DEFAULT FALSE, 
+    CONSTRAINT pk_propuesta_viaje_privado PRIMARY KEY (id), 
+    CONSTRAINT fk_pvp FOREIGN KEY (usuario_solicitante) REFERENCES usuario(dpi)
 ); 
 
 CREATE TABLE viaje_ejecucion (
@@ -143,28 +185,6 @@ CREATE TABLE viaje_ejecucion (
     CONSTRAINT fk_veje_viaje_id FOREIGN KEY (viaje_id) REFERENCES viaje(id)
 );
 
-CREATE TABLE usuario (
-    dpi VARCHAR(13) NOT NULL, 
-    nombre VARCHAR(50) NOT NULL, 
-    nit VARCHAR(13) NOT NULL, 
-    telefono VARCHAR(10) NOT NULL, 
-    direccion VARCHAR(75) NOT NULL, 
-    credito_disponible DECIMAL(8,2) DEFAULT 0.00, 
-    estado BOOLEAN DEFAULT TRUE,
-    rol VARCHAR(30) NOT NULL,
-    CONSTRAINT pk_usuario PRIMARY KEY (dpi)
-);
-
-INSERT INTO usuario (dpi, nombre, nit, telefono, direccion, rol) VALUES ('1111111111111', 'admin1', '1111111111110', '12345678', 'guatemala', 'ADMINISTRADOR');
-
-CREATE TABLE admin_sucursal (
-    dpi VARCHAR(13) NOT NULL, 
-    sucursal VARCHAR(40) NOT NULL, 
-    CONSTRAINT pk_admin_sucursal PRIMARY KEY (dpi), 
-    CONSTRAINT fk_as_dpi FOREIGN KEY (dpi) REFERENCES usuario(dpi) ON DELETE CASCADE, 
-    CONSTRAINT fk_as_sucursal FOREIGN KEY (sucursal) REFERENCES sucursal(codigo_sucursal)
-);
-
 CREATE TABLE boleto_viaje (
     id INT AUTO_INCREMENT, 
     usuario VARCHAR(13) NOT NULL, 
@@ -175,3 +195,30 @@ CREATE TABLE boleto_viaje (
     CONSTRAINT fk_vusu_usuario FOREIGN KEY (usuario) REFERENCES usuario(dpi),
     CONSTRAINT fk_vusu_viaje FOREIGN KEY (viaje) REFERENCES viaje(id) 
 );
+INSERT INTO viaje (chofer, bus) VALUES ('1234567890', 'BUS_001');
+
+-- INSERT INTO viaje_privado (
+--     id_viaje,
+--     cantidad_pasajeros,
+--     origen,
+--     destino,
+--     distancia_aproximada,
+--     hora_salida,
+--     hora_aprox_llegada,
+--     fecha_salida,
+--     fecha_llegada,
+--     costo,
+--     usuario_solicitante,
+--     sucursal_receptor
+-- )
+-- VALUES (
+--     LAST_INSERT_ID(),
+--     10,
+--     'Quetzaltenango',
+--     'Ciudad de Guatemala',
+--     180,
+--     '08:00:00',
+--     '11:30:00',
+--     '2026-09-20',
+--     '2026-09-20',
+--     1450.00, 'aaaa', 'SUC_001');

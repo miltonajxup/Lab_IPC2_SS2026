@@ -44,7 +44,22 @@
                         </button>
                     </div>
                 </div>
+                <div class="contenedor-principal">
+                    <label>
+                        <br> <br>
+                        Ingresa un carpeta para guardar el reporte
+                        <input name="ruta" />
+                    </label>
+                </div>
+                <div >
+                    <c:if test="${rutaHtml != null}">
+                        La carpeta de Guadado del Reporte es: <strong> ${rutaHtml} </strong>
+                    </c:if>
+                </div>
             </form>
+            
+            <p class="cuadro-texto">Ganancias de la Sucursal ${usuarioLogeado.sucursal}    
+                
             <table class="reporte" >
                 <tr>
                     <c:if test="${ganancias != null}">
@@ -56,7 +71,8 @@
                     <th class="azul">Gasto de Taller (Mano de Obra)</th>
                     <th class="verde">Gasto de Taller (Repuestos)</th>
                     <th class="azul">Depreciacion</th>
-                    <th class="verde">Total Ganancias</th>
+                    <th class="verde">Total Gastos</th>
+                    <th class="azul">Total Ganancias</th>
                 </tr>
                     
                 <c:if test="${gananciasTotales != null}" >
@@ -66,6 +82,7 @@
                     <td > ${gananciasTotales.gastoTallerMano} </td>
                     <td > ${gananciasTotales.gastoTallerRepuestos} </td>
                     <td > ${gananciasTotales.depreciacion} </td>
+                    <td > ${gananciasTotales.totalGastos} </td>
                     <td > ${gananciasTotales.totalGanancias} </td>
                 </tr>
                 </c:if>
@@ -77,6 +94,7 @@
                     <td > ${ganancia.gastoTallerMano} </td>
                     <td > ${ganancia.gastoTallerRepuestos} </td>
                     <td > ${ganancia.depreciacion} </td>
+                    <td > ${ganancia.totalGastos} </td>
                     <td > ${ganancia.totalGanancias} </td>
                 </tr>
                 </c:forEach>

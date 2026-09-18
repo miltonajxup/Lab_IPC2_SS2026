@@ -103,7 +103,7 @@ public class ServicioChofer {
             List<ViajeDB> viajesSinTerminar = viajedao.getViajesSinTerminar();
             for (ViajeDB viaje : viajesSinTerminar) {
                 if (viaje.getChofer().equals(numeroLicencia)) {
-                    return new Respuesta(false, "No se pude desactivar el chofer porque tiene un viaje sin terminar");
+                    return new Respuesta(false, "No se pude desactivar el chofer porque tiene un viaje sin terminar ( id del viaje: " + viaje.getId() + " )");
                 }
             }
         }

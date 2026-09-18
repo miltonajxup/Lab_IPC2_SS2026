@@ -18,15 +18,24 @@
             <h1>Reporte de Buses</h1>
             <jsp:include page="/mvc/menu-regreso/regreso-menu-administrador.jsp" />
             
-<!--            <form class="contenedor-principal" method="GET" action="${pageContext.servletContext.contextPath}/mvc/administrador/reporte/reporte-servlet">
+            <form class="contenedor-principal" method="GET" action="${pageContext.servletContext.contextPath}/mvc/administrador/reporte/reporte-servlet">
                 <input name="reporte-buses" value="reporteBuses" type="hidden"/>
                 <input name="sucursal" value="${usuarioLogeado.sucursal}" type="hidden"/>
+                <label>
+                    Indica la ruta de la carpeta donde se guardará el archivo
+                    <input name="ruta">
                 <div>
                     <button class="boton" >
-                        Buscar Registros
+                        GuardarReporte
                     </button>
                 </div>
-            </form>-->
+                </label>
+                <div >
+                    <c:if test="${rutaArchivo != null}">
+                        La carpeta del archivo es: <strong> ${rutaArchivo} </strong>
+                    </c:if>
+                </div>
+            </form>
             <p class="cuadro-texto">Buses de la Sucursal ${usuarioLogeado.sucursal}
             
             <p class="error">${error}</p>
@@ -40,27 +49,27 @@
                     <th class="verde">Estado Operativo</th>
                     <th class="azul">Kilometraje</th>
                     <th class="verde">Viajes Realizados</th>
-                    
-                    <c:forEach items="${buses}" var="bus">
-                    <tr class="celeste">
-                        <td > ${bus.numeroPlaca} </td>
-                        <td > ${bus.marca} </td>
-                        <td > ${bus.modelo} </td>
-                        <td > ${bus.capacidadPasajeros} </td>
-                        <c:if test="${bus.estadoOperativo == true}">
-                        <td > Activo </td>
-                        </c:if>
-                        <c:if test="${bus.estadoOperativo == false}">
-                        <td > Desactivado </td>
-                        </c:if>
-                        <td > ${bus.kilometraje} </td>
-                        <td > ${bus.viajesCompletados} </td>
-                    </tr>
-                    </c:forEach>
-                    <c:if test="${buses != null && empty buses}">
-                        <p class="cuadro-texto"> Esta sucural aun no tiene registros sus buses</p>
-                    </c:if>
                 </tr>
+                    
+                <c:forEach items="${buses}" var="bus">
+                <tr class="celeste">
+                    <td > ${bus.numeroPlaca} </td>
+                    <td > ${bus.marca} </td>
+                    <td > ${bus.modelo} </td>
+                    <td > ${bus.capacidadPasajeros} </td>
+                    <c:if test="${bus.estadoOperativo == true}">
+                    <td > Activo </td>
+                    </c:if>
+                    <c:if test="${bus.estadoOperativo == false}">
+                    <td > Desactivado </td>
+                    </c:if>
+                    <td > ${bus.kilometraje} </td>
+                    <td > ${bus.viajesCompletados} </td>
+                </tr>
+                </c:forEach>
+                <c:if test="${buses != null && empty buses}">
+                    <p class="cuadro-texto"> Esta sucural aun no tiene registros sus buses</p>
+                </c:if>
             </table>
         </c:if>
         <c:if test="${usuarioLogeado == null}">

@@ -22,6 +22,13 @@ public class ViajeDB {
         this.bus = bus;
     }
 
+    public ViajeDB(int id, String chofer, String bus, boolean comenzado) {
+        this.id = id;
+        this.chofer = chofer;
+        this.bus = bus;
+        this.comenzado = comenzado;
+    }
+
     public ViajeDB(int id, String chofer, String bus, boolean comenzado, String sucursalDestino) {
         this.id = id;
         this.chofer = chofer;

@@ -118,6 +118,7 @@ a:active {
     border: 1px solid black;
     border-radius: 5px;
     margin-bottom: 20px;
+    line-height: 1.6;
 }
 
 .menuBotones {
@@ -152,6 +153,14 @@ a:active {
     gap: 100px;
 }
 
+.carta {
+    width: 350px;
+    padding: 10px;
+    border: 2px solid black;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
 .contenedor-opciones {
     max-width: 400px;
     min-width: 400px;
@@ -161,6 +170,22 @@ a:active {
     padding: 20px;
     border: 2px solid black;
     overflow: auto;
+}
+
+.contenedor-doble {
+    max-width: 850px;
+    min-width: 400px;
+    max-height: 700px;
+    margin-top: 60px;
+    margin-bottom: 40px;
+    padding: 50px;
+    border: 2px solid black;
+    overflow: auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 50px;
+    line-height: 1.6;
 }
 
 .opcion {

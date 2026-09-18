@@ -38,7 +38,23 @@
                         </button>
                     </div>
                 </div>
+                
+                <div class="contenedor-principal">
+                    <label>
+                        <br> <br>
+                        Ingresa un carpeta para guardar el reporte
+                        <input name="ruta" />
+                    </label>
+                </div>
+                <div >
+                    <c:if test="${rutaHtml != null}">
+                        La carpeta de Guadado del Reporte es: <strong> ${rutaHtml} </strong>
+                    </c:if>
+                </div>
             </form>
+                
+            <p class="cuadro-texto">Reporte de Rutas de la Sucursal ${usuarioLogeado.sucursal}
+                
             <table class="reporte" >
                 <tr>
                     <th class="verde">Id Ruta</th>
@@ -49,20 +65,20 @@
                     <th class="azul">Ciudad Origen</th>
                     <th class="verde">Sucursal Destino</th>
                     <th class="azul">Ciudad Destino</th>
-                    
-                    <c:forEach items="${rutasDemandadas}" var="ruta">
-                    <tr class="celeste">
-                        <td > ${ruta.rutaId} </td>
-                        <td > ${ruta.boletosVendidos} </td>
-                        <td > ${ruta.precioBoleto} </td>
-                        <td > ${ruta.distancia} </td>
-                        <td > ${ruta.sucursalOrigen} </td>
-                        <td > ${ruta.ciudadOrigen} </td>
-                        <td > ${ruta.sucursalDestino} </td>
-                        <td > ${ruta.ciudadDestino} </td>
-                    </tr>
-                    </c:forEach>
                 </tr>
+                    
+                <c:forEach items="${rutasDemandadas}" var="ruta">
+                <tr class="celeste">
+                    <td > ${ruta.rutaId} </td>
+                    <td > ${ruta.boletosVendidos} </td>
+                    <td > ${ruta.precioBoleto} </td>
+                    <td > ${ruta.distancia} </td>
+                    <td > ${ruta.sucursalOrigen} </td>
+                    <td > ${ruta.ciudadOrigen} </td>
+                    <td > ${ruta.sucursalDestino} </td>
+                    <td > ${ruta.ciudadDestino} </td>
+                </tr>
+                </c:forEach>
             </table>
         </c:if>
         <c:if test="${usuarioLogeado == null}">

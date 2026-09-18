@@ -35,7 +35,6 @@
         Mas opciones
         <div class="menuBotones">
             <a class="boton" href="${pageContext.servletContext.contextPath}/mvc/administrador/depreciacion/modificar-depreciacion.jsp">Modificar Depreciacion</a>
-            <a class="boton" href=""></a>
         </div>
         <% } %>
         
@@ -50,9 +49,18 @@
             
             <a class="boton" href="${pageContext.servletContext.contextPath}/mvc/administrador/ruta/agregar-ruta.jsp">Agregar Ruta</a>
             <a class="boton" href="${pageContext.servletContext.contextPath}/mvc/administrador/ruta/modificar-ruta.jsp">Modificar Ruta</a>
-            <a class="boton" href="${pageContext.servletContext.contextPath}/mvc/administrador/viaje/crear-viaje-publico.jsp">Crear Viaje Publico</a>
-            <a class="boton" href="${pageContext.servletContext.contextPath}/mvc/administrador/viaje/controlar-viaje.jsp">Controlar Viaje</a>
-            <a class="boton" href="${pageContext.servletContext.contextPath}/mvc/administrador/taller/taller-servlet?id-sucursal=${usuarioLogeado.sucursal}">Agregar Gastos Taller</a>
+            <a class="boton" href="${pageContext.servletContext.contextPath}/mvc/administrador/viaje/crear-viaje-publico.jsp">
+                Crear Viaje Publico
+            </a>
+            <a class="boton" href="${pageContext.servletContext.contextPath}/mvc/administrador/viaje/controlar-viaje.jsp">
+                Controlar Viaje
+            </a>
+            <a class="boton" href="${pageContext.servletContext.contextPath}/mvc/administrador/taller/taller-servlet?id-sucursal=${usuarioLogeado.sucursal}">
+                Agregar Gastos Taller
+            </a>
+            <a class="boton" href="${pageContext.servletContext.contextPath}/mvc/viaje/viaje-privado-servlet?todo-propuestas=todoPropuestas">
+                Ver propuestas de Viajes Privados
+            </a>
             <% } %>
             
         </div>
@@ -64,7 +72,7 @@
             <a class="boton" href="${pageContext.servletContext.contextPath}/mvc/administrador/reporte/reporte-ganancias.jsp">Reporte de Ganancias</a>
             <a class="boton" href="${pageContext.servletContext.contextPath}/mvc/administrador/reporte/reporte-ruta.jsp">Reporte de Rutas</a>
             <a class="boton" href="${pageContext.servletContext.contextPath}/mvc/administrador/reporte/reporte-gastos.jsp">Reporte de Gastos</a>
-            
+            <a class="boton" href="${pageContext.servletContext.contextPath}/mvc/administrador/mapas/mapa-rutas.jsp">Ver Mapa de Rutas</a>
             <% } if (usuario.getRol() == RolUsuario.ADMINISTRADOR_SUCURSAL) { %>
             <a class="boton" 
                href="${pageContext.servletContext.contextPath}/mvc/administrador/reporte/reporte-servlet?reporte-buses=reporteBuses&sucursal=${usuarioLogeado.sucursal}">

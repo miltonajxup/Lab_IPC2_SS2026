@@ -18,6 +18,25 @@
             <h1>Reporte de Choferes</h1>
             <jsp:include page="/mvc/menu-regreso/regreso-menu-administrador.jsp" />
             
+            <form class="contenedor-principal" method="GET" action="${pageContext.servletContext.contextPath}/mvc/administrador/reporte/reporte-servlet">
+                <input name="reporte-choferes" value="reporteChoferes" type="hidden"/>
+                <input name="sucursal" value="${usuarioLogeado.sucursal}" type="hidden"/>
+                <label>
+                    Indica la ruta de la carpeta donde se guardará el archivo
+                    <input name="ruta">
+                <div>
+                    <button class="boton" >
+                        GuardarReporte
+                    </button>
+                </div>
+                </label>
+                <div >
+                    <c:if test="${rutaArchivo != null}">
+                        La carpeta del archivo es: <strong> ${rutaArchivo} </strong>
+                    </c:if>
+                </div>
+            </form>
+                
             <p class="cuadro-texto">Choferes de la Sucursal ${usuarioLogeado.sucursal}
             
             <p class="error">${error}</p>
@@ -30,6 +49,7 @@
                     <th class="azul">Fecha de Vencimiento</th>
                     <th class="verde">Estado</th>
                     <th class="verde">Viajes Realizados</th>
+                </tr>
                     
                     <c:forEach items="${choferes}" var="chofer">
                     <tr class="celeste">
@@ -49,7 +69,6 @@
                     <c:if test="${choferes != null && empty choferes}">
                         <p class="cuadro-texto"> Esta sucural aun no tiene registros de sus choferes</p>
                     </c:if>
-                </tr>
             </table>
         </c:if>
         <c:if test="${usuarioLogeado == null}">

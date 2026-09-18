@@ -21,8 +21,10 @@ public class EjecucionViajeDAO {
     
     private final String AGREGAR_VIAJE_EJECUCION = "INSERT INTO viaje_ejecucion (kilometraje_salida, viaje_id) VALUES (?,?)";
     private final String MODIFICAR_VIAJE_EJECUCION = "UPDATE viaje_ejecucion SET hora_llegada = CURRENT_TIME, kilometraje_llegada = ?, gasto_combustible = ? WHERE viaje_id = ?";
-    private final String ACTUALIZAR_KILOMETROS_BUS = "UPDATE bus SET kilometraje = ?, sucursal_actual = ? WHERE numero_placa = ?";
-    private final String ACTUALIZAR_SALDO_CHOFER = "UPDATE chofer SET saldo_disponible = ?, sucursal_actual = ? WHERE numero_de_licencia = ?";
+    private final String ACTUALIZAR_KILOMETROS_BUS = "UPDATE bus SET kilometraje = ? WHERE numero_placa = ?";
+    private final String ACTUALIZAR_POSICION_BUS = "UPDATE bus SET sucursal_actual = ? WHERE numero_placa = ?";
+    private final String ACTUALIZAR_SALDO_CHOFER = "UPDATE chofer SET saldo_disponible = ? WHERE numero_de_licencia = ?";
+    private final String ACTUALIZAR_POSICION_CHOFER = "UPDATE chofer SET sucursal_actual = ? WHERE numero_de_licencia = ?";
     private final String AGREGAR_REGISTRO_DEPRECIACION = "INSERT INTO depreciacion_bus (fecha_registro, kilometros_recorridos, bus, depreciacion_id, monto_depreciado) VALUES (?,?,?,?,?)";
     
     public void agregarViajeEjecucion(int kilometrajeSalida, int idViaje) throws AccesoALaDataException {
@@ -47,9 +49,14 @@ public class EjecucionViajeDAO {
             updateViaje.setString(3, conclusion.getIdViaje());
             updateViaje.executeUpdate();
             
-            actualizarBus(connection, conclusion.getKilometrajeLlegada(), conclusion.getDestino(), conclusion.getNumeroPlaca());
+            actualizarKilometroBus(connection, conclusion.getKilometrajeLlegada(), conclusion.getNumeroPlaca());
             
-            actualizarChofer(connection, conclusion.getSaldoChofer(), conclusion.getDestino(), conclusion.getNumeroLicencia());
+            actualizarSaldoChofer(connection, conclusion.getSaldoChofer(), conclusion.getNumeroLicencia());
+            
+            if (conclusion.getDestino() != null) {
+                actualizarPosicionBus(connection, conclusion.getDestino(), conclusion.getNumeroPlaca());
+                actualizarPosicionChofer(connection, conclusion.getDestino(), conclusion.getNumeroLicencia());
+            }
             
             agregarRegistroDepreciacion(depreciacion, connection);
             
@@ -71,24 +78,44 @@ public class EjecucionViajeDAO {
         
     }
     
-    private void actualizarBus(Connection connection, int kilometrajeLlegada, String sucursalActual, String numeroPlaca) throws AccesoALaDataException {
+    private void actualizarKilometroBus(Connection connection, int kilometrajeLlegada, String numeroPlaca) throws AccesoALaDataException {
         try {
             PreparedStatement updateBus = connection.prepareStatement(ACTUALIZAR_KILOMETROS_BUS);
             updateBus.setInt(1, kilometrajeLlegada);
-            updateBus.setString(2, sucursalActual);
-            updateBus.setString(3, numeroPlaca);
+            updateBus.setString(2, numeroPlaca);
             updateBus.executeUpdate();
         } catch (SQLException e) {
             throw new AccesoALaDataException("Error actualizar el saldo del chofer " + e.getMessage());
         }
     }
     
-    private void actualizarChofer(Connection connection, double saldoChofer, String sucursalActual, String numeroLicencia) throws AccesoALaDataException {
+    private void actualizarPosicionBus(Connection connection, String sucursalActual, String numeroPlaca) throws AccesoALaDataException {
+        try {
+            PreparedStatement updateBus = connection.prepareStatement(ACTUALIZAR_POSICION_BUS);
+            updateBus.setString(1, sucursalActual);
+            updateBus.setString(2, numeroPlaca);
+            updateBus.executeUpdate();
+        } catch (SQLException e) {
+            throw new AccesoALaDataException("Error actualizar el saldo del chofer " + e.getMessage());
+        }
+    }
+    
+    private void actualizarSaldoChofer(Connection connection, double saldoChofer, String numeroLicencia) throws AccesoALaDataException {
         try {
             PreparedStatement updateChofer = connection.prepareStatement(ACTUALIZAR_SALDO_CHOFER);
             updateChofer.setDouble(1, saldoChofer);
-            updateChofer.setString(2, sucursalActual);
-            updateChofer.setString(3, numeroLicencia);
+            updateChofer.setString(2, numeroLicencia);
+            updateChofer.executeUpdate();
+        } catch (SQLException e) {
+            throw new AccesoALaDataException("Error actualizar el saldo del chofer " + e.getMessage());
+        }
+    }
+    
+    private void actualizarPosicionChofer(Connection connection, String sucursalActual, String numeroLicencia) throws AccesoALaDataException {
+        try {
+            PreparedStatement updateChofer = connection.prepareStatement(ACTUALIZAR_POSICION_CHOFER);
+            updateChofer.setString(1, sucursalActual);
+            updateChofer.setString(2, numeroLicencia);
             updateChofer.executeUpdate();
         } catch (SQLException e) {
             throw new AccesoALaDataException("Error actualizar el saldo del chofer " + e.getMessage());

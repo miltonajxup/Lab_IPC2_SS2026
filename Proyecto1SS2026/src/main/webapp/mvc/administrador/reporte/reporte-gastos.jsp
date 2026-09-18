@@ -44,7 +44,22 @@
                         </button>
                     </div>
                 </div>
+                <div class="contenedor-principal">
+                    <label>
+                        <br> <br>
+                        Ingresa un carpeta para guardar el reporte
+                        <input name="ruta" />
+                    </label>
+                </div>
+                <div >
+                    <c:if test="${rutaArchivo != null}">
+                        La carpeta de Guadado del Reporte es: <strong> ${rutaArchivo} </strong>
+                    </c:if>
+                </div>
             </form>
+                
+            <p class="cuadro-texto">Gastos de la Sucursal ${usuarioLogeado.sucursal}
+                
             <table class="reporte" >
                 <tr>
                     <c:if test="${gastos != null}">
