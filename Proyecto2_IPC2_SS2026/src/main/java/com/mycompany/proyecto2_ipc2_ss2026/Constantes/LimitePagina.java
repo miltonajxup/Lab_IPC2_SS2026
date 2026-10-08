@@ -11,5 +11,6 @@ package com.mycompany.proyecto2_ipc2_ss2026.Constantes;
 public class LimitePagina {
     
     public static final int LIMITE = 10;
+    public static final int PAGINA_MINIMA = 1;
     
 }

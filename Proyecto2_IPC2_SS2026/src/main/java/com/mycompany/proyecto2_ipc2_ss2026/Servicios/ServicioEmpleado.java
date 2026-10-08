@@ -4,6 +4,7 @@
  */
 package com.mycompany.proyecto2_ipc2_ss2026.Servicios;
 
+import com.mycompany.proyecto2_ipc2_ss2026.Constantes.LimitePagina;
 import com.mycompany.proyecto2_ipc2_ss2026.Constantes.RolUsuario;
 import com.mycompany.proyecto2_ipc2_ss2026.DAOs.Administrador.EmpleadoDAO;
 import com.mycompany.proyecto2_ipc2_ss2026.DAOs.UsuarioDAO;
@@ -20,8 +21,6 @@ import java.util.List;
  * @author milton
  */
 public class ServicioEmpleado {
-    
-    private final int MINIMO_PAGINA = 1;
     
     private final UsuarioDAO usuariodao;
     private final EmpleadoDAO empleadodao;
@@ -63,8 +62,8 @@ public class ServicioEmpleado {
         } catch (IllegalArgumentException e) {
             throw new ValorInvalidoException("El valor " + rol + " no es un Rol de Usuario valido");
         }
-        if (pagina < MINIMO_PAGINA) {
-            throw new ValorInvalidoException("El valor de la pagina no puede ser menor que " + MINIMO_PAGINA);
+        if (pagina < LimitePagina.PAGINA_MINIMA) {
+            throw new ValorInvalidoException("El valor de la pagina no puede ser menor que " + LimitePagina.PAGINA_MINIMA);
         }
         return empleadodao.getEmpleadosPorRol(rol, pagina);
     }
