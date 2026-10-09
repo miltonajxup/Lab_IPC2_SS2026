@@ -5,6 +5,7 @@
 package com.mycompany.proyecto2_ipc2_ss2026.Servicios;
 
 import com.mycompany.proyecto2_ipc2_ss2026.Constantes.LimitePagina;
+import com.mycompany.proyecto2_ipc2_ss2026.Constantes.LimiteTamaño;
 import com.mycompany.proyecto2_ipc2_ss2026.DAOs.Administrador.CursoDAO;
 import com.mycompany.proyecto2_ipc2_ss2026.Exceptions.AccesoALaDataException;
 import com.mycompany.proyecto2_ipc2_ss2026.Exceptions.DataExistenteException;
@@ -37,6 +38,7 @@ public class ServicioCurso {
         if (curso.getNombre() == null || curso.getNombre().isEmpty()) {
             throw new ValorInvalidoException("Falta especificar el nombre del curso");
         }
+        revisarTamaños(curso);
         if (cursodao.existeCurso(curso.getNombre())) {
             throw new DataExistenteException("Ya existe un curso llamado " + curso.getNombre() + " en el sistema");
         }
@@ -47,6 +49,7 @@ public class ServicioCurso {
         if (curso.getNombre() == null || curso.getNombre().isEmpty()) {
             throw new ValorInvalidoException("Falta especificar el nombre del curso");
         }
+        revisarTamaños(curso);
         CursoDB cursodb = cursodao.getCursoId(idCurso);
         if (cursodb == null) {
             throw new DataInexistenteException("No se pudo encontrar el curso para modificar");
@@ -58,6 +61,15 @@ public class ServicioCurso {
         }
         
         return cursodao.modificarCurso(curso, idCurso);
+    }
+    
+    private void revisarTamaños(CursoRequest curso) throws ValorInvalidoException {
+        if (curso.getNombre().length() > LimiteTamaño.NOMBRE.getLimite()) {
+            throw new ValorInvalidoException("El nombre no puede tener mas de " + LimiteTamaño.NOMBRE.getLimite() + " caracteres");
+        }
+        if (curso.getDescripcion().length() > LimiteTamaño.DESCRIPCION.getLimite()) {
+            throw new ValorInvalidoException("La descripcion no puede tener mas de " + LimiteTamaño.DESCRIPCION.getLimite() + " caracteres");
+        }
     }
     
 }

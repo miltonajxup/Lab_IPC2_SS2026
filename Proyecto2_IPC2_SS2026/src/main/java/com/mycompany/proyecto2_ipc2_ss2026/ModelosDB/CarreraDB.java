@@ -4,6 +4,8 @@
  */
 package com.mycompany.proyecto2_ipc2_ss2026.ModelosDB;
 
+import java.util.List;
+
 /**
  *
  * @author milton
@@ -13,13 +15,13 @@ public class CarreraDB {
     private final String codigo;
     private final String nombre;
     private final boolean estado;
-    private final int gradoId;
+    private final List<GradoDB> grados;
 
-    public CarreraDB(String codigo, String nombre, boolean estado, int gradoId) {
+    public CarreraDB(String codigo, String nombre, boolean estado, List<GradoDB> grados) {
         this.codigo = codigo;
         this.nombre = nombre;
         this.estado = estado;
-        this.gradoId = gradoId;
+        this.grados = grados;
     }
 
     public String getCodigo() {
@@ -34,8 +36,8 @@ public class CarreraDB {
         return estado;
     }
 
-    public int getGradoId() {
-        return gradoId;
+    public List<GradoDB> getGrados() {
+        return grados;
     }
     
 }

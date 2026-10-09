@@ -5,6 +5,7 @@
 package com.mycompany.proyecto2_ipc2_ss2026.Servicios;
 
 import com.mycompany.proyecto2_ipc2_ss2026.Constantes.LimitePagina;
+import com.mycompany.proyecto2_ipc2_ss2026.Constantes.LimiteTamaño;
 import com.mycompany.proyecto2_ipc2_ss2026.Constantes.RolUsuario;
 import com.mycompany.proyecto2_ipc2_ss2026.DAOs.Administrador.EmpleadoDAO;
 import com.mycompany.proyecto2_ipc2_ss2026.DAOs.UsuarioDAO;
@@ -35,6 +36,7 @@ public class ServicioEmpleado {
                 usuario.getFechaContratacion() == null || usuario.getDpi().isEmpty() || usuario.getNombre().isEmpty()) {
             throw new ValorInvalidoException("No se pudo crear el usuario de empleado por falta de valores de creacion");
         }
+        revisarTamaños(usuario);
         if (usuariodao.existeUsuarioPorDpi(usuario.getDpi())) {
             throw new DataExistenteException("Ya existe un usuario con el DPI " + usuario.getDpi() + " registrado en el sistema");
         }
@@ -73,6 +75,12 @@ public class ServicioEmpleado {
             throw new DataInexistenteException("No existe un empleado con el dpi " + dpiEmpleado);
         }
         return empleadodao.getEmpleadoPorID(dpiEmpleado);
+    }
+    
+    private void revisarTamaños(UsuarioRequest usuario) throws ValorInvalidoException {
+        if (usuario.getNombre().length() > LimiteTamaño.NOMBRE.getLimite()) {
+            throw new ValorInvalidoException("El nombre no puede tener mas de " + LimiteTamaño.NOMBRE.getLimite() + " caracteres");
+        }
     }
     
 }
