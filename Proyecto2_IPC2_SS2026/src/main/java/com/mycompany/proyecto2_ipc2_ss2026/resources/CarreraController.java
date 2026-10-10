@@ -4,6 +4,7 @@
  */
 package com.mycompany.proyecto2_ipc2_ss2026.resources;
 
+import com.mycompany.proyecto2_ipc2_ss2026.DAOs.Administrador.CarreraDAO;
 import com.mycompany.proyecto2_ipc2_ss2026.Exceptions.AccesoALaDataException;
 import com.mycompany.proyecto2_ipc2_ss2026.Exceptions.DataExistenteException;
 import com.mycompany.proyecto2_ipc2_ss2026.Exceptions.DataInexistenteException;
@@ -56,6 +57,17 @@ public class CarreraController {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         } catch (DataInexistenteException e) {
             return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
+        }
+    }
+    
+    @GET
+    @Path("grados-carrera") 
+    public Response getGradosDisponiblesCarrera() {
+        CarreraDAO carreradao = new CarreraDAO();
+        try {
+            return Response.ok(carreradao.getGradosDisponibles()).build();
+        } catch (AccesoALaDataException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }
     }
     

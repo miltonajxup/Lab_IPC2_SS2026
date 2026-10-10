@@ -10,19 +10,10 @@ package com.mycompany.proyecto2_ipc2_ss2026.ModelosRequest;
  */
 public class GrupoAcademicoRequest {
     
-    private int id;
     private int añoLectivo;
     private int grado;
-    private int carrera;
-    private int seccion;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
+    private String carrera;
+    private String seccion;
 
     public int getAñoLectivo() {
         return añoLectivo;
@@ -40,19 +31,19 @@ public class GrupoAcademicoRequest {
         this.grado = grado;
     }
 
-    public int getCarrera() {
+    public String getCarrera() {
         return carrera;
     }
 
-    public void setCarrera(int carrera) {
+    public void setCarrera(String carrera) {
         this.carrera = carrera;
     }
 
-    public int getSeccion() {
+    public String getSeccion() {
         return seccion;
     }
 
-    public void setSeccion(int seccion) {
+    public void setSeccion(String seccion) {
         this.seccion = seccion;
     }
 

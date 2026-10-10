@@ -10,18 +10,9 @@ package com.mycompany.proyecto2_ipc2_ss2026.ModelosRequest;
  */
 public class CurriculoRequest {
     
-    private int id;
     private int cursoId;
     private int gradoId;
     private String carreraId;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public int getCursoId() {
         return cursoId;
