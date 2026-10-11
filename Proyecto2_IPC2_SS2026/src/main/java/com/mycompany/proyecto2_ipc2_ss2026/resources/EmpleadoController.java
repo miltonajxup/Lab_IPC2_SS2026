@@ -4,6 +4,7 @@
  */
 package com.mycompany.proyecto2_ipc2_ss2026.resources;
 
+import com.mycompany.proyecto2_ipc2_ss2026.Constantes.RolUsuario;
 import com.mycompany.proyecto2_ipc2_ss2026.Exceptions.AccesoALaDataException;
 import com.mycompany.proyecto2_ipc2_ss2026.Exceptions.DataExistenteException;
 import com.mycompany.proyecto2_ipc2_ss2026.Exceptions.DataInexistenteException;
@@ -47,7 +48,7 @@ public class EmpleadoController {
     @GET
     @Path("empleados-rol/{rol}/{pagina}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response empleadosPorRol(@PathParam("rol") String rol, @PathParam("pagina") int pagina) {
+    public Response empleadosPorRol(@PathParam("rol") RolUsuario rol, @PathParam("pagina") int pagina) {
         try {
             return Response.ok(servicio.buscarEmpleadosPorRol(rol, pagina)).build();
         } catch (AccesoALaDataException e) {
@@ -86,6 +87,8 @@ public class EmpleadoController {
             return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
         } catch (DataExistenteException e) {
             return Response.status(Response.Status.CONFLICT).entity(e.getMessage()).build();
+        } catch (ValorInvalidoException e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
         }
     }
     

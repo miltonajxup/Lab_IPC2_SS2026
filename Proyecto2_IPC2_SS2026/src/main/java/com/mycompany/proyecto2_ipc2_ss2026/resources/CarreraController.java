@@ -37,9 +37,9 @@ public class CarreraController {
     @GET
     @Path("{pagina}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getCarreras(@PathParam("pagina") int pagina) {
+    public Response getCarrerasActivas(@PathParam("pagina") int pagina) {
         try {
-            return Response.ok(servicio.buscarCarreras(pagina)).build();
+            return Response.ok(servicio.buscarCarrerasActivas(pagina)).build();
         } catch (AccesoALaDataException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         } catch (ValorInvalidoException e) {
@@ -65,7 +65,7 @@ public class CarreraController {
     public Response getGradosDisponiblesCarrera() {
         CarreraDAO carreradao = new CarreraDAO();
         try {
-            return Response.ok(carreradao.getGradosDisponibles()).build();
+            return Response.ok(carreradao.getGradosCarrera()).build();
         } catch (AccesoALaDataException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }
@@ -115,6 +115,8 @@ public class CarreraController {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         } catch (DataInexistenteException e) {
             return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
+        } catch (ValorInvalidoException e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
         }
     }
     

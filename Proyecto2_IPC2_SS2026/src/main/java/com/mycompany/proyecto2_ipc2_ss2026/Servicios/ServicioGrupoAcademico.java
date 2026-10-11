@@ -35,30 +35,37 @@ public class ServicioGrupoAcademico {
     }
     
     public List<GrupoAcademicoDB> crearGrupoAcademicoGrado(GrupoAcademicoRequest grupo) throws AccesoALaDataException, ValorInvalidoException, DataExistenteException {
-        revisarAño(grupo.getAñoLectivo());
-        if (faltanValores(grupo)) {
-            throw new ValorInvalidoException("Faltan valores para crear un grupo adademico de grado");
+        if (grupo == null || grupo.getSeccion() == null || grupo.getSeccion().isEmpty()) {
+            throw new ValorInvalidoException("Hacen falta valores para el grupo academico");
         }
+        
+        revisarAño(grupo.getAñoLectivo()); 
+        
         if (grupodao.existeGrupoGrado(grupo)) {
             throw new DataExistenteException("Ya existe un grupo academico de grado con estos valores registrado en el sistema");
         }
-        List<GradoDB> gradosCarrera = carreradao.getGradosDisponibles();
-        for (GradoDB grado : gradosCarrera) {
-            if (grado.getId() == grupo.getGrado()) {
-                throw new ValorInvalidoException("No se puede crear el grupo porque el grado seleccionado pertenece al nivel de carrera");
-            }
-        }
+        
+        List<GradoDB> grados = carreradao.getGradosNormales();
+        revisarGrado(grados, grupo.getGrado());
+        
         return grupodao.crearGrupoAcademicoGrado(grupo);
     }
     
     public List<GrupoAcademicoDB> crearGrupoAcademicoCarrera(GrupoAcademicoRequest grupo) throws AccesoALaDataException, ValorInvalidoException, DataExistenteException {
-        revisarAño(grupo.getAñoLectivo());
-        if (faltanValores(grupo) || grupo.getCarrera() == null || grupo.getCarrera().isEmpty()) {
-            throw new ValorInvalidoException("Faltan valores para crear un grupo academico de una carrera");
+        if (grupo == null || grupo.getSeccion() == null || grupo.getCarrera() == null || 
+                grupo.getSeccion().isEmpty() || grupo.getCarrera().isEmpty()) {
+            throw new ValorInvalidoException("Hacen falta valores para crear un grupo Academico");
         }
+        
+        revisarAño(grupo.getAñoLectivo());
+        
         if (grupodao.existeGrupoCarrera(grupo)) {
             throw new DataExistenteException("Ya existe un grupo academico de carrera con estos valores registrados en el sistema");
         }
+        
+        List<GradoDB> gradosCarrera = carreradao.getGradosCarrera();
+        revisarGrado(gradosCarrera, grupo.getGrado());
+        
         return grupodao.crearGrupoAcademicoCarrera(grupo);
     }
     
@@ -77,17 +84,31 @@ public class ServicioGrupoAcademico {
         }
     }
     
-    public List<CurriculoDB> agregarCursoCurriculoGrado(CurriculoRequest curriculo) throws AccesoALaDataException, DataExistenteException {
+    public List<CurriculoDB> agregarCursoCurriculoGrado(CurriculoRequest curriculo) throws AccesoALaDataException, DataExistenteException, ValorInvalidoException {
+        if (curriculo == null) {
+            throw new ValorInvalidoException("No se ha mandado ningun valor para el Curriculo");
+        }
+        
+        List<GradoDB> grados = carreradao.getGradosNormales();
+        revisarGrado(grados, curriculo.getGradoId());
+        
         if (grupodao.existeCurriculoGrado(curriculo)) {
             throw new DataExistenteException("Ya se encuentra registrado el curso para el grado");
         }
         return grupodao.crearCurriculoParaGrado(curriculo);
     }
     
-    public List<CurriculoDB> agregarCursoCurriculoCarrera(CurriculoRequest curriculo) throws AccesoALaDataException, DataExistenteException {
+    public List<CurriculoDB> agregarCursoCurriculoCarrera(CurriculoRequest curriculo) throws AccesoALaDataException, DataExistenteException, ValorInvalidoException {
+        if (curriculo == null || curriculo.getCarreraId() == null || curriculo.getCarreraId().isEmpty()) {
+            throw new ValorInvalidoException("Hacen falta valores para el curriculo");
+        }
         if (grupodao.existeCurriculoCarrera(curriculo)) {
             throw new DataExistenteException("Ya se encuentra registrado el curso para el nivel de carrera");
         }
+        
+        List<GradoDB> grados = carreradao.getGradosCarrera();
+        revisarGrado(grados, curriculo.getGradoId());
+        
         return grupodao.crearCurriculoParaCarrera(curriculo);
     }
     
@@ -105,8 +126,13 @@ public class ServicioGrupoAcademico {
         }
     }
     
-    private boolean faltanValores(GrupoAcademicoRequest grupo) {
-        return grupo.getAñoLectivo() == 0 || grupo.getGrado() == 0;
+    private void revisarGrado(List<GradoDB> grados, int gradoGrupo) throws ValorInvalidoException {
+        for (GradoDB grado : grados) {
+            if (grado.getId() == gradoGrupo) {
+                return;
+            }
+        }
+        throw new ValorInvalidoException("El grado seleccionado no es valido para usarse con esta opcion");
     }
     
 }

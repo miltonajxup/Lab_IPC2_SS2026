@@ -58,6 +58,10 @@ public class ServicioAdministrador {
     }
     
     public String asignarCursoMaestro(CursoMaestroRequest cursoMaestro) throws AccesoALaDataException, DataInexistenteException, ValorInvalidoException {
+        if (cursoMaestro == null || cursoMaestro.getMaestro() == null || 
+                cursoMaestro.getCurso() <= 0 || cursoMaestro.getMaestro().isEmpty()) {
+            throw new ValorInvalidoException("Hacen falta valores para asignar un maestro a un curso");
+        }
         CursoDAO cursodao = new CursoDAO();
         CursoDB curso = cursodao.getCursoId(cursoMaestro.getCurso());
         if (curso == null) {

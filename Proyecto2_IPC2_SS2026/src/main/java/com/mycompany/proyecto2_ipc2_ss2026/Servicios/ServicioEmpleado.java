@@ -32,8 +32,8 @@ public class ServicioEmpleado {
     }
     
     public String crearEmpleado(UsuarioRequest usuario) throws AccesoALaDataException, ValorInvalidoException, DataExistenteException {
-        if (usuario.getDpi() == null ||  usuario.getNombre() == null || usuario.getRol() == null || 
-                usuario.getFechaContratacion() == null || usuario.getDpi().isEmpty() || usuario.getNombre().isEmpty()) {
+        if (usuario == null || usuario.getDpi() == null ||  usuario.getNombre() == null || usuario.getRol() == null || 
+                 usuario.getDpi().isEmpty() || usuario.getNombre().isEmpty()) {
             throw new ValorInvalidoException("No se pudo crear el usuario de empleado por falta de valores de creacion");
         }
         revisarTamaños(usuario);
@@ -47,7 +47,12 @@ public class ServicioEmpleado {
         return "Se ha creado y contratado al usuario " + usuario.getNombre() + " con exito";
     }
     
-    public String contratarEmpleado(UsuarioRequest usuario) throws AccesoALaDataException, DataInexistenteException, DataExistenteException {
+    public String contratarEmpleado(UsuarioRequest usuario) throws AccesoALaDataException, DataInexistenteException, DataExistenteException, ValorInvalidoException {
+        if (usuario == null || usuario.getDpi() == null ||  usuario.getNombre() == null ||  
+                usuario.getDpi().isEmpty() || usuario.getNombre().isEmpty()) {
+            throw new ValorInvalidoException("Hacen falta valores para completar la contratacion");
+        }
+        revisarSalario(usuario.getSalario());
         if (!usuariodao.existeUsuarioPorDpi(usuario.getDpi())) {
             throw new DataInexistenteException("No se pudo encontrar a un empleado con el dpi " + usuario.getDpi() + " en el sistema");
         }
@@ -58,16 +63,11 @@ public class ServicioEmpleado {
         return "Se ha re contratado al usuario " + usuario.getNombre();
     }
     
-    public List<EmpleadoDB> buscarEmpleadosPorRol(String rol, int pagina) throws AccesoALaDataException, ValorInvalidoException {
-        try {
-            RolUsuario.valueOf(rol);
-        } catch (IllegalArgumentException e) {
-            throw new ValorInvalidoException("El valor " + rol + " no es un Rol de Usuario valido");
-        }
+    public List<EmpleadoDB> buscarEmpleadosPorRol(RolUsuario rol, int pagina) throws AccesoALaDataException, ValorInvalidoException {
         if (pagina < LimitePagina.PAGINA_MINIMA) {
             throw new ValorInvalidoException("El valor de la pagina no puede ser menor que " + LimitePagina.PAGINA_MINIMA);
         }
-        return empleadodao.getEmpleadosPorRol(rol, pagina);
+        return empleadodao.getEmpleadosPorRol(rol.name(), pagina);
     }
     
     public EmpleadoDB buscarEmpleadoPorDpi(String dpiEmpleado) throws AccesoALaDataException, DataInexistenteException {
@@ -80,6 +80,12 @@ public class ServicioEmpleado {
     private void revisarTamaños(UsuarioRequest usuario) throws ValorInvalidoException {
         if (usuario.getNombre().length() > LimiteTamaño.NOMBRE.getLimite()) {
             throw new ValorInvalidoException("El nombre no puede tener mas de " + LimiteTamaño.NOMBRE.getLimite() + " caracteres");
+        }
+    }
+    
+    private void revisarSalario(double salario) throws ValorInvalidoException {
+        if (salario <= 0) {
+            throw new ValorInvalidoException("El salario debe ser mayor a 0");
         }
     }
     

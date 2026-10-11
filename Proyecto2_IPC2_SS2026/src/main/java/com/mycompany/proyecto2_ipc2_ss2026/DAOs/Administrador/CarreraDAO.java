@@ -24,12 +24,13 @@ import java.util.List;
 public class CarreraDAO {
     
     private final String GRADOS_DISPONIBLES = "SELECT gra.*, niv.nombre AS nombre_nivel FROM grado AS gra JOIN nivel_academico AS niv ON gra.nivel_id = niv.id WHERE nivel_id = 4";
+    private final String GRADOS_GUARDADOS = "SELECT gra.*, niv.nombre AS nombre_nivel FROM grado AS gra JOIN nivel_academico AS niv ON gra.nivel_id = niv.id WHERE nivel_id != 4";
     private final String EXISTE_CARRERA = "SELECT * FROM carrera WHERE nombre = ?";
     private final String CREAR_CARRERA = "INSERT INTO carrera (codigo, nombre) VALUES (?,?)";
     private final String AGREGAR_GRADO_CARRERA = "INSERT INTO grado_carrera (carrera_id, grado_id) VALUES (?,?)";
     private final String MODIFICAR_CARRERA = "UPDATE carrera SET nombre = ? WHERE codigo = ?";
     private final String MODIFICAR_ESTADO_CARRERA = "UPDATE carrera SET estado = ? WHERE codigo = ?";
-    private final String GET_CARRERAS = "SELECT * FROM carrera LIMIT ?, ?";
+    private final String GET_CARRERAS_ACTIVAS = "SELECT * FROM carrera WHERE estado = TRUE LIMIT ?, ?";
     private final String GET_CARRERA_POR_ID = "SELECT * FROM carrera WHERE codigo = ?";
     private final String GET_GRADOS_CARRERA = 
             """
@@ -39,7 +40,7 @@ public class CarreraDAO {
             JOIN carrera AS carr ON grca.carrera_id = carr.codigo 
             WHERE carr.codigo = ?""";
     
-    public List<GradoDB> getGradosDisponibles() throws AccesoALaDataException {
+    public List<GradoDB> getGradosCarrera() throws AccesoALaDataException {
         List<GradoDB> grados = new ArrayList<>();
         Connection connection = DBConnectionSingleton.getInstancia().getConnection();
         try {
@@ -52,6 +53,21 @@ public class CarreraDAO {
             throw new AccesoALaDataException("Error al buscar los grados para carreras: " + e.getMessage());
         }
         return grados;
+    }
+    
+    public List<GradoDB>  getGradosNormales() throws AccesoALaDataException {
+        List<GradoDB> guardados = new ArrayList<>();
+        Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+        try {
+            PreparedStatement psGrados = connection.prepareStatement(GRADOS_GUARDADOS);
+            ResultSet rsGrados = psGrados.executeQuery();
+            while (rsGrados.next()) {
+                guardados.add(armarGrado(rsGrados));
+            }
+        } catch (SQLException e) {
+            throw new AccesoALaDataException("Error al buscar los grados guardados: " + e.getMessage());
+        }
+        return guardados;
     }
     
     public boolean existeNombreCarrera(String nombre) throws AccesoALaDataException {
@@ -98,7 +114,7 @@ public class CarreraDAO {
                 throw new AccesoALaDataException("Error al devolver el auto commit al fallar creando una carrera: " + e.getMessage());
             }
         }
-        return getCarreras(LimitePagina.PAGINA_MINIMA); 
+        return getCarrerasActivas(LimitePagina.PAGINA_MINIMA); 
     }
     
     public CarreraDB modificarCarrera(CarreraRequest carrera, String codigoCarrera) throws AccesoALaDataException {
@@ -129,12 +145,12 @@ public class CarreraDAO {
         }
     }
     
-    public List<CarreraDB> getCarreras(int pagina) throws AccesoALaDataException {
+    public List<CarreraDB> getCarrerasActivas(int pagina) throws AccesoALaDataException {
         List<CarreraDB> carreras = new ArrayList<>();
         Connection connection = DBConnectionSingleton.getInstancia().getConnection();
         try {
             int paginacion = (pagina - 1) * LimitePagina.LIMITE;
-            PreparedStatement ps = connection.prepareStatement(GET_CARRERAS);
+            PreparedStatement ps = connection.prepareStatement(GET_CARRERAS_ACTIVAS);
             ps.setInt(1, paginacion);
             ps.setInt(2, LimitePagina.LIMITE);
             ResultSet rs = ps.executeQuery();
