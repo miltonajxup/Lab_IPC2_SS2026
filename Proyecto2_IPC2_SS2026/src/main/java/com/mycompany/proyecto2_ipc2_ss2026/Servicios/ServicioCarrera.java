@@ -7,6 +7,7 @@ package com.mycompany.proyecto2_ipc2_ss2026.Servicios;
 import com.mycompany.proyecto2_ipc2_ss2026.Constantes.LimitePagina;
 import com.mycompany.proyecto2_ipc2_ss2026.Constantes.LimiteTamaño;
 import com.mycompany.proyecto2_ipc2_ss2026.DAOs.Administrador.CarreraDAO;
+import com.mycompany.proyecto2_ipc2_ss2026.DAOs.GradoDAO;
 import com.mycompany.proyecto2_ipc2_ss2026.Exceptions.AccesoALaDataException;
 import com.mycompany.proyecto2_ipc2_ss2026.Exceptions.DataExistenteException;
 import com.mycompany.proyecto2_ipc2_ss2026.Exceptions.DataInexistenteException;
@@ -23,13 +24,15 @@ import java.util.List;
 public class ServicioCarrera {
     
     private final CarreraDAO carreradao;
+    private final GradoDAO gradodao;
     
     public ServicioCarrera() {
         carreradao = new CarreraDAO();
+        gradodao = new GradoDAO();
     }
     
     public List<CarreraDB> crearCarrera(CarreraRequest carrera) throws AccesoALaDataException, ValorInvalidoException, DataExistenteException {
-        if (carrera.getCodigo() == null || carrera.getNombre() == null || 
+        if (carrera == null || carrera.getCodigo() == null || carrera.getNombre() == null || 
                 carrera.getCodigo().isEmpty() || carrera.getNombre().isEmpty()) {
             throw new ValorInvalidoException("Faltan valores para crear una carrera nueva");
         }
@@ -47,7 +50,7 @@ public class ServicioCarrera {
     }
     
     public CarreraDB modificarCarrera(CarreraRequest carrera, String codigoCarrera) throws AccesoALaDataException, ValorInvalidoException, DataInexistenteException, DataExistenteException {
-        if (codigoCarrera == null || carrera.getNombre() == null || 
+        if (carrera == null || codigoCarrera == null || carrera.getNombre() == null || 
                 codigoCarrera.isEmpty() || carrera.getNombre().isEmpty()) {
             throw new ValorInvalidoException("Faltan valores para modificar una carrera");
         }
@@ -64,21 +67,24 @@ public class ServicioCarrera {
         return carreradao.modificarCarrera(carrera, codigoCarrera);
     }
     
-    public CarreraDB modificarEstadoCarrera(CarreraRequest carrera, String codigoCarrera) throws AccesoALaDataException, DataInexistenteException {
+    public CarreraDB modificarEstadoCarrera(CarreraRequest carrera, String codigoCarrera) throws AccesoALaDataException, DataInexistenteException, ValorInvalidoException {
+        if (carrera == null || codigoCarrera == null) {
+            throw new ValorInvalidoException("Hacen falta valores para modificar la carrera");
+        }
         if (carreradao.getCarreraPorId(codigoCarrera) == null) {
             throw new DataInexistenteException("No se pudo encontrar la carrera con el codigo " + codigoCarrera);
         }
         return carreradao.modificarEstadoCarrera(carrera.isEstado(), codigoCarrera);
     }
     
-    public List<CarreraDB> buscarCarreras(int pagina) throws AccesoALaDataException, ValorInvalidoException {
+    public List<CarreraDB> buscarCarrerasActivas(int pagina) throws AccesoALaDataException, ValorInvalidoException {
         if (pagina < LimitePagina.PAGINA_MINIMA) {
             throw new ValorInvalidoException("La pagina minima para buscar es: " + LimitePagina.PAGINA_MINIMA);
         }
-        return carreradao.getCarreras(pagina);
+        return carreradao.getCarrerasActivas(pagina);
     }
     
-    public CarreraDB buscarCarrera(String codigoCarrera) throws AccesoALaDataException, DataInexistenteException {
+    public CarreraDB buscarCarreraPorId(String codigoCarrera) throws AccesoALaDataException, DataInexistenteException {
         CarreraDB carreradb = carreradao.getCarreraPorId(codigoCarrera);
         if (carreradb == null) {
             throw new DataInexistenteException("No se pudo encontrar la carrera con el codigo: " + codigoCarrera);
@@ -86,8 +92,16 @@ public class ServicioCarrera {
         return carreradb;
     }
     
+    public List<CarreraDB> buscarCarrerasPorGrado(int idGrado) throws AccesoALaDataException, DataInexistenteException {
+        List<CarreraDB> carreras = carreradao.getCarrerasPorGrado(idGrado);
+        if (carreras.isEmpty()) {
+            throw new DataInexistenteException("No se pudieron encontrar Carreras para este Grado");
+        }
+        return carreras;
+    }
+    
     private void revisarCodigosGrado(List<Integer> codigos) throws AccesoALaDataException, ValorInvalidoException {
-        List<GradoDB> gradosDisponibles = carreradao.getGradosDisponibles();
+        List<GradoDB> gradosDisponibles = gradodao.getGradosCarrera();
         if (codigos == null || codigos.isEmpty()) {
             throw new ValorInvalidoException("Debe seleccionar al menos un grado." );
         }
@@ -103,9 +117,9 @@ public class ServicioCarrera {
                 throw new ValorInvalidoException("El grado que con codigo " + codigo + " no es valido para asignarle una carrera");
             }
         }
-        int duracion = gradosDisponibles.size() - codigos.size();
-        if (duracion > 0) {
-            revisarGradosValidos(codigos, gradosDisponibles, duracion);
+        int direrencia = gradosDisponibles.size() - codigos.size();
+        if (direrencia > 0) {
+            revisarGradosValidos(codigos, gradosDisponibles, direrencia);
         }
     }
     

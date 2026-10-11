@@ -23,8 +23,6 @@ import java.util.List;
  */
 public class CarreraDAO {
     
-    private final String GRADOS_DISPONIBLES = "SELECT gra.*, niv.nombre AS nombre_nivel FROM grado AS gra JOIN nivel_academico AS niv ON gra.nivel_id = niv.id WHERE nivel_id = 4";
-    private final String GRADOS_GUARDADOS = "SELECT gra.*, niv.nombre AS nombre_nivel FROM grado AS gra JOIN nivel_academico AS niv ON gra.nivel_id = niv.id WHERE nivel_id != 4";
     private final String EXISTE_CARRERA = "SELECT * FROM carrera WHERE nombre = ?";
     private final String CREAR_CARRERA = "INSERT INTO carrera (codigo, nombre) VALUES (?,?)";
     private final String AGREGAR_GRADO_CARRERA = "INSERT INTO grado_carrera (carrera_id, grado_id) VALUES (?,?)";
@@ -32,6 +30,7 @@ public class CarreraDAO {
     private final String MODIFICAR_ESTADO_CARRERA = "UPDATE carrera SET estado = ? WHERE codigo = ?";
     private final String GET_CARRERAS_ACTIVAS = "SELECT * FROM carrera WHERE estado = TRUE LIMIT ?, ?";
     private final String GET_CARRERA_POR_ID = "SELECT * FROM carrera WHERE codigo = ?";
+    private final String GET_CARRERAS_POR_GRADO = "SELECT carr.* FROM carrera AS carr JOIN grado_carrera AS cagr ON carr.codigo = cagr.carrera_id WHERE cagr.grado_id = ?";
     private final String GET_GRADOS_CARRERA = 
             """
             SELECT gra.*, niv.nombre AS nombre_nivel FROM grado AS gra 
@@ -39,36 +38,6 @@ public class CarreraDAO {
             JOIN grado_carrera AS grca ON gra.id = grca.grado_id 
             JOIN carrera AS carr ON grca.carrera_id = carr.codigo 
             WHERE carr.codigo = ?""";
-    
-    public List<GradoDB> getGradosCarrera() throws AccesoALaDataException {
-        List<GradoDB> grados = new ArrayList<>();
-        Connection connection = DBConnectionSingleton.getInstancia().getConnection();
-        try {
-            PreparedStatement ps = connection.prepareStatement(GRADOS_DISPONIBLES);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                grados.add(armarGrado(rs));
-            }
-        } catch (SQLException e) {
-            throw new AccesoALaDataException("Error al buscar los grados para carreras: " + e.getMessage());
-        }
-        return grados;
-    }
-    
-    public List<GradoDB>  getGradosNormales() throws AccesoALaDataException {
-        List<GradoDB> guardados = new ArrayList<>();
-        Connection connection = DBConnectionSingleton.getInstancia().getConnection();
-        try {
-            PreparedStatement psGrados = connection.prepareStatement(GRADOS_GUARDADOS);
-            ResultSet rsGrados = psGrados.executeQuery();
-            while (rsGrados.next()) {
-                guardados.add(armarGrado(rsGrados));
-            }
-        } catch (SQLException e) {
-            throw new AccesoALaDataException("Error al buscar los grados guardados: " + e.getMessage());
-        }
-        return guardados;
-    }
     
     public boolean existeNombreCarrera(String nombre) throws AccesoALaDataException {
         Connection connection = DBConnectionSingleton.getInstancia().getConnection();
@@ -176,6 +145,22 @@ public class CarreraDAO {
             throw new AccesoALaDataException("Error al buscar una carrera por id: " + e.getMessage());
         }
         return null;
+    }
+    
+    public List<CarreraDB> getCarrerasPorGrado(int idGrado) throws AccesoALaDataException {
+        List<CarreraDB> carreras = new ArrayList<>();
+        Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+        try {
+            PreparedStatement ps = connection.prepareStatement(GET_CARRERAS_POR_GRADO);
+            ps.setInt(1, idGrado);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                carreras.add(armarCarrera(connection, rs));
+            }
+        } catch (SQLException e) {
+            throw new AccesoALaDataException("Error al buscar carreras por Grado: " + e.getMessage());
+        }
+        return carreras;
     }
     
     private GradoDB armarGrado(ResultSet rs) throws SQLException {

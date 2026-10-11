@@ -5,9 +5,9 @@
 package com.mycompany.proyecto2_ipc2_ss2026.Servicios;
 
 import com.mycompany.proyecto2_ipc2_ss2026.Constantes.LimitePagina;
-import com.mycompany.proyecto2_ipc2_ss2026.DAOs.Administrador.CarreraDAO;
 import com.mycompany.proyecto2_ipc2_ss2026.DAOs.Administrador.GrupoAcademicoDAO;
 import com.mycompany.proyecto2_ipc2_ss2026.DAOs.CicloEscolar;
+import com.mycompany.proyecto2_ipc2_ss2026.DAOs.GradoDAO;
 import com.mycompany.proyecto2_ipc2_ss2026.Exceptions.AccesoALaDataException;
 import com.mycompany.proyecto2_ipc2_ss2026.Exceptions.DataExistenteException;
 import com.mycompany.proyecto2_ipc2_ss2026.Exceptions.ValorInvalidoException;
@@ -25,12 +25,12 @@ import java.util.List;
 public class ServicioGrupoAcademico {
     
     private final GrupoAcademicoDAO grupodao;
-    private final CarreraDAO carreradao;
+    private final GradoDAO gradodao;
     private final CicloEscolar ciclo;
     
     public ServicioGrupoAcademico() {
         grupodao = new GrupoAcademicoDAO();
-        carreradao = new CarreraDAO();
+        gradodao = new GradoDAO();
         ciclo = new CicloEscolar();
     }
     
@@ -45,7 +45,7 @@ public class ServicioGrupoAcademico {
             throw new DataExistenteException("Ya existe un grupo academico de grado con estos valores registrado en el sistema");
         }
         
-        List<GradoDB> grados = carreradao.getGradosNormales();
+        List<GradoDB> grados = gradodao.getGradosNormales();
         revisarGrado(grados, grupo.getGrado());
         
         return grupodao.crearGrupoAcademicoGrado(grupo);
@@ -63,7 +63,7 @@ public class ServicioGrupoAcademico {
             throw new DataExistenteException("Ya existe un grupo academico de carrera con estos valores registrados en el sistema");
         }
         
-        List<GradoDB> gradosCarrera = carreradao.getGradosCarrera();
+        List<GradoDB> gradosCarrera = gradodao.getGradosCarrera();
         revisarGrado(gradosCarrera, grupo.getGrado());
         
         return grupodao.crearGrupoAcademicoCarrera(grupo);
@@ -89,7 +89,7 @@ public class ServicioGrupoAcademico {
             throw new ValorInvalidoException("No se ha mandado ningun valor para el Curriculo");
         }
         
-        List<GradoDB> grados = carreradao.getGradosNormales();
+        List<GradoDB> grados = gradodao.getGradosNormales();
         revisarGrado(grados, curriculo.getGradoId());
         
         if (grupodao.existeCurriculoGrado(curriculo)) {
@@ -106,7 +106,7 @@ public class ServicioGrupoAcademico {
             throw new DataExistenteException("Ya se encuentra registrado el curso para el nivel de carrera");
         }
         
-        List<GradoDB> grados = carreradao.getGradosCarrera();
+        List<GradoDB> grados = gradodao.getGradosCarrera();
         revisarGrado(grados, curriculo.getGradoId());
         
         return grupodao.crearCurriculoParaCarrera(curriculo);

@@ -4,7 +4,6 @@
  */
 package com.mycompany.proyecto2_ipc2_ss2026.resources;
 
-import com.mycompany.proyecto2_ipc2_ss2026.DAOs.Administrador.CarreraDAO;
 import com.mycompany.proyecto2_ipc2_ss2026.Exceptions.AccesoALaDataException;
 import com.mycompany.proyecto2_ipc2_ss2026.Exceptions.DataExistenteException;
 import com.mycompany.proyecto2_ipc2_ss2026.Exceptions.DataInexistenteException;
@@ -52,7 +51,7 @@ public class CarreraController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getCarreraPorId(@PathParam("codigo") String codigo) {
         try {
-            return Response.ok(servicio.buscarCarrera(codigo)).build();
+            return Response.ok(servicio.buscarCarreraPorId(codigo)).build();
         } catch (AccesoALaDataException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         } catch (DataInexistenteException e) {
@@ -61,13 +60,15 @@ public class CarreraController {
     }
     
     @GET
-    @Path("grados-carrera") 
-    public Response getGradosDisponiblesCarrera() {
-        CarreraDAO carreradao = new CarreraDAO();
+    @Path("por-grado/{idGrado}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getCarrerasPorGrado(@PathParam("idGrado") int idGrado) {
         try {
-            return Response.ok(carreradao.getGradosCarrera()).build();
+            return Response.ok(servicio.buscarCarrerasPorGrado(idGrado)).build();
         } catch (AccesoALaDataException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        } catch (DataInexistenteException e) {
+            return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
         }
     }
     
