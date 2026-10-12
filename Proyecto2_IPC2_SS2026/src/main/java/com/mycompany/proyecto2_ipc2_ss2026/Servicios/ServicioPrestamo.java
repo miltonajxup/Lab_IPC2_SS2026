@@ -53,6 +53,14 @@ public class ServicioPrestamo {
         return prestamodao.getTodosLosRegistros(pagina);
     }
     
+    public PrestamoDB getPrestamoPorId(int id) throws AccesoALaDataException, DataInexistenteException {
+        PrestamoDB prestamo = prestamodao.prestamoPorId(id);
+        if (prestamo == null) {
+            throw new DataInexistenteException("No se pudo encontrar el prestamo");
+        }
+        return prestamo;
+    }
+    
     public String prestarLibro(PrestamoRequest prestamo) throws AccesoALaDataException, DataInexistenteException, ValorInvalidoException {
         if (prestamo.getLibrosPrestamo() == null || prestamo.getPrestamista() == null || prestamo.getFechaPrestamo() == null || 
                prestamo.getFechaDevolucionEsperada() == null || prestamo.getPrestamista().isEmpty()) {

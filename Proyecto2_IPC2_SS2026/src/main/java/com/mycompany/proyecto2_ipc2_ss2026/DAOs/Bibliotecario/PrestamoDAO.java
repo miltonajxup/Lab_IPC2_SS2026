@@ -153,6 +153,22 @@ public class PrestamoDAO {
         }
     }
     
+    public PrestamoDB prestamoPorId(int id) throws AccesoALaDataException {
+        Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+        try {
+            PreparedStatement ps = connection.prepareStatement(GET_PRESTAMO_POR_ID);
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                List<LibroPrestamoDB> libros = getLibrosPrestamo(connection, id);
+                return armarPrestamo(libros, rs);
+            }
+        } catch (SQLException e) {
+            throw new AccesoALaDataException("Error al revisar la existencia de un prestamo: " + e.getMessage());
+        }
+        return null;
+    }
+    
     public List<PrestamoDB> getPrestamoPorNombre(String nombrePrestamista) throws AccesoALaDataException {
         List<PrestamoDB> prestamos = new ArrayList<>();
         Connection connection = DBConnectionSingleton.getInstancia().getConnection();

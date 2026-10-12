@@ -71,6 +71,19 @@ public class PrestamoController {
         }
     }
     
+    @GET
+    @Path("unico/{id}") 
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getPrestamoPorId(@PathParam("id") int id) {
+        try {
+            return Response.ok(servicio.getPrestamoPorId(id)).build();
+        } catch (AccesoALaDataException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        } catch (DataInexistenteException e) {
+            return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
+        }
+    }
+    
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response prestarLibro(PrestamoRequest prestamo) {
