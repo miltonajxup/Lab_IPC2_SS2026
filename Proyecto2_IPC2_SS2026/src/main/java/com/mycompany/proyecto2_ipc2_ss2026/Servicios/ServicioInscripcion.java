@@ -81,9 +81,7 @@ public class ServicioInscripcion {
         if (inscripcion == null || inscripcion.getDpiEstudiante() == null || inscripcion.getDpiEstudiante().isEmpty()) {
             throw new ValorInvalidoException("Hacen falta valores para la inscripcion");
         }
-        UsuarioRequest usuario = inscripcion.getEstudiante();
-        revisarTamaños(usuario);
-        if (!usuariodao.existeUsuarioPorDpi(usuario.getDpi())) {
+        if (!usuariodao.existeUsuarioPorDpi(inscripcion.getDpiEstudiante())) {
             throw new DataInexistenteException("No se pudo encontrar el usuario para su reinscripcion");
         }
         if (!inscripciondao.existeGrupoCicloEscolar(inscripcion.getGrupoId())) {

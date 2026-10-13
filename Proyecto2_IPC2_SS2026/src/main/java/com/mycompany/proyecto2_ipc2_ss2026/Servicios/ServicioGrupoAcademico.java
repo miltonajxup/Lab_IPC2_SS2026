@@ -113,9 +113,6 @@ public class ServicioGrupoAcademico {
     }
     
     public void eliminarCurriculo(int idCurriculo) throws AccesoALaDataException, ValorInvalidoException {
-        if (grupodao.curriculoUtilizado(idCurriculo)) {
-            throw new ValorInvalidoException("No se puede eliminar el curso porque esta siendo usado por otros registros");
-        }
         grupodao.eliminarCurriculo(idCurriculo);
     }
     

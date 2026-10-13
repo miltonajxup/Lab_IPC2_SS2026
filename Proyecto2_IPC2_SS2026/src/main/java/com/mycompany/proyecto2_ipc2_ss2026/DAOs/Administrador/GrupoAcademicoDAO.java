@@ -40,7 +40,7 @@ public class GrupoAcademicoDAO {
     private final String FORMATO_GET_CURRICULOS = 
             """
             SELECT 
-                curr.id, cu.nombre AS nombre_curso, 
+                curr.id, cu.id AS id_curso, cu.nombre AS nombre_curso, 
                 gra.nombre AS nombre_grado, 
                 niv.nombre AS nombre_nivel, 
                 carr.nombre AS nombre_carrera 
@@ -54,7 +54,6 @@ public class GrupoAcademicoDAO {
     
     private final String EXISTE_CURRICULO_GRADO = "SELECT * FROM curriculo WHERE curso_id = ? AND grado_id = ?";
     private final String EXISTE_CURRICULO_CARRERA = "SELECT * FROM curriculo WHERE curso_id = ? AND grado_id = ? AND carrera_id = ?";
-    private final String CURRICULO_CON_CURSOS = "SELECT curr.* FROM curriculo AS curr JOIN curso_estudiante AS cures ON curr.id = cures.curso_curriculo WHERE curr.id = ?";
     private final String CREAR_CURRICULO_PARA_GRADO = "INSERT INTO curriculo (curso_id, grado_id) VALUES (?,?)";
     private final String CREAR_CURRICULO_PARA_CARRERA = "INSERT INTO curriculo (curso_id, grado_id, carrera_id) VALUES (?,?,?)";
     private final String ELIMINAR_CURRICULO = "DELETE FROM curriculo WHERE id = ?";
@@ -185,6 +184,7 @@ public class GrupoAcademicoDAO {
     private CurriculoDB armarCurriculo(ResultSet rs) throws SQLException {
         return new CurriculoDB(
                 rs.getInt("id"), 
+                rs.getInt("id_curso"), 
                 rs.getString("nombre_curso"), 
                 rs.getString("nombre_grado"), 
                 rs.getString("nombre_nivel"), 
@@ -244,18 +244,6 @@ public class GrupoAcademicoDAO {
             return getCurriculosCarrera(request);
         } catch (SQLException e) {
             throw new AccesoALaDataException("Error al crear un curriculo para carrera: " + e.getMessage());
-        }
-    }
-    
-    public boolean curriculoUtilizado(int idCurriculo) throws AccesoALaDataException {
-        Connection connection = DBConnectionSingleton.getInstancia().getConnection();
-        try {
-            PreparedStatement ps = connection.prepareStatement(CURRICULO_CON_CURSOS);
-            ps.setInt(1, idCurriculo);
-            ResultSet rs = ps.executeQuery();
-            return rs.next();
-        } catch (SQLException e) {
-            throw new AccesoALaDataException("Error al buscar un curriculo con cursos de estudiante: " + e.getMessage());
         }
     }
     

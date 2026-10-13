@@ -43,9 +43,10 @@ public class AdministradorDAO {
     private final String PAGAR_MENSUALIDAD = "INSERT INTO pago_empleado (monto_pagado, mes_pago, ciclo_escolar_id, empleado_pagado) VALUES (?,?,?,?)";
     private final String GET_PAGOS_REALIZADOS = "SELECT pago.*, usu.nombre AS nombre_empleado FROM pago_empleado AS pago JOIN usuario AS usu ON pago.empleado_pagado = usu.dpi WHERE ciclo_escolar_id = ? AND mes_pago = ? LIMIT ?, ?";
     
-    private final String CURSO_ASIGNADO = "SELECT * FROM curso_maestro WHERE ciclo_escolar_id = ? AND curso_id = ?";
-    private final String ASIGNAR_MAESTRO_CURSO = "INSERT INTO curso_maestro (maestro_id, curso_id, ciclo_escolar_id) VALUES (?,?,?)";
-    private final String CAMBIAR_MAESTRO_ASIGNADO = "UPDATE curso_maestro SET maestro_id = ? WHERE curso_id = ? AND ciclo_escolar_id = ?";
+    private final String CURSO_ASIGNADO = "SELECT * FROM curso_maestro WHERE curso_id = ? AND grupo_id = ?";
+    private final String EXISTE_GRUPO_ACADEMICO = "SELECT * FROM grupo_ciclo_escolar WHERE id = ?";
+    private final String ASIGNAR_MAESTRO_CURSO = "INSERT INTO curso_maestro (maestro_id, curso_id, grupo_id) VALUES (?,?,?)";
+    private final String CAMBIAR_MAESTRO_ASIGNADO = "UPDATE curso_maestro SET maestro_id = ? WHERE curso_id = ? AND grupo_id = ?";
     
     private final CicloEscolar ciclo;
     private final ArmarBoletaPago boleta;
@@ -189,28 +190,38 @@ public class AdministradorDAO {
                 rs.getString("nombre_empleado"));
     }
     
-    public boolean cursoTieneMaestro(int curso) throws AccesoALaDataException {
+    public boolean cursoTieneMaestro(int curso, int idGrupo) throws AccesoALaDataException {
         Connection connection = DBConnectionSingleton.getInstancia().getConnection();
-        int año = ciclo.getAñoActivo();
         try {
             PreparedStatement ps = connection.prepareStatement(CURSO_ASIGNADO);
-            ps.setInt(1, año);
             ps.setInt(2, curso);
+            ps.setInt(1, idGrupo);
             ResultSet rs = ps.executeQuery();
             return rs.next();
         } catch (SQLException e) {
             throw new AccesoALaDataException("Error al revisar si un curso tiene asignado un maestro: " + e.getMessage());
         }
     }
+    
+    public boolean existeGrupoAcademico(int id) throws AccesoALaDataException {
+        Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+        try {
+            PreparedStatement ps = connection.prepareStatement(EXISTE_GRUPO_ACADEMICO);
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            return rs.next();
+        } catch (SQLException e) {
+            throw new AccesoALaDataException("Error al revisar si un grupo academico existe: " + e.getMessage());
+        }
+    }
             
     public void asignarMaestroCurso(CursoMaestroRequest request) throws AccesoALaDataException {
         Connection connection = DBConnectionSingleton.getInstancia().getConnection();
-        int año = ciclo.getAñoActivo();
         try {
             PreparedStatement ps = connection.prepareStatement(ASIGNAR_MAESTRO_CURSO);
             ps.setString(1, request.getMaestro());
-            ps.setInt(2, request.getCurso());
-            ps.setInt(3, año);
+            ps.setInt(2, request.getCursoId());
+            ps.setInt(3, request.getGrupoId());
             ps.executeUpdate();
         } catch (SQLException e) {
             throw new AccesoALaDataException("Error al asignar a un maestro a un curso " + e.getMessage());
@@ -219,12 +230,11 @@ public class AdministradorDAO {
     
     public void modificarCursoMaestro(CursoMaestroRequest curso) throws AccesoALaDataException {
         Connection connection = DBConnectionSingleton.getInstancia().getConnection();
-        int año = ciclo.getAñoActivo();
         try {
             PreparedStatement ps = connection.prepareStatement(CAMBIAR_MAESTRO_ASIGNADO);
             ps.setString(1, curso.getMaestro());
-            ps.setInt(2, curso.getCurso());
-            ps.setInt(3, año);
+            ps.setInt(2, curso.getCursoId());
+            ps.setInt(3, curso.getGrupoId());
             ps.executeUpdate();
         } catch (SQLException e) {
             throw new AccesoALaDataException("Error al modificar al maestro asignado a un curso: " + e.getMessage());

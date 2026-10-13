@@ -11,7 +11,8 @@ package com.mycompany.proyecto2_ipc2_ss2026.ModelosRequest;
 public class CursoMaestroRequest {
     
     private String maestro;
-    private int curso;
+    private int cursoId;
+    private int grupoId;
 
     public String getMaestro() {
         return maestro;
@@ -21,12 +22,20 @@ public class CursoMaestroRequest {
         this.maestro = maestro;
     }
 
-    public int getCurso() {
-        return curso;
+    public int getCursoId() {
+        return cursoId;
     }
 
-    public void setCurso(int curso) {
-        this.curso = curso;
+    public void setCursoId(int cursoId) {
+        this.cursoId = cursoId;
+    }
+
+    public int getGrupoId() {
+        return grupoId;
+    }
+
+    public void setGrupoId(int grupoId) {
+        this.grupoId = grupoId;
     }
     
 }

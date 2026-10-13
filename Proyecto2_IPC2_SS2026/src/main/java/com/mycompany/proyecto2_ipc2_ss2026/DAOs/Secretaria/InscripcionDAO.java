@@ -30,12 +30,13 @@ public class InscripcionDAO {
     private final String ESTUDIANTE_INSCRITO = "SELECT * FROM inscripcion WHERE estudiante = ? AND grupo_id = ?";
     private final String AGREGAR_ESTUDIANTE = "INSERT INTO estudiante (dpi_estudiante, numero_encargado, numero_estudiante) VALUES (?,?,?)";
     private final String GENERAR_INSCRIPCION = "INSERT INTO inscripcion (estudiante, grupo_id) VALUES (?,?)";
+    private final String ULTIMA_INSCRIPCION = "SELECT * FROM inscripcion ORDER BY id DESC LIMIT 1";
     private final String GENERAR_BOLETA_PAGO = "INSERT INTO boleta_pago (monto, tipo_pago, ciclo_escolar_id, estudiante_dpi) VALUES (?,?,?,?)";
     private final String GET_COSTO_INSCRIPCION = "SELECT gra.costo_inscripcion FROM grado AS gra JOIN grupo_ciclo_escolar AS grup ON gra.id = grup.grado_id AND grup.id = ?";
     private final String GET_GRUPO_CICLO_ESCOLAR = "SELECT * FROM grupo_ciclo_escolar WHERE id = ?";
     private final String GET_CURRICULO_GRADO = "SELECT * FROM curriculo WHERE grado_id = ?";
     private final String GET_CURRICULO_CARRERA = "SELECT * FROM curriculo WHERE carrera_id = ?";
-    private final String ASIGNAR_ESTUDIANTE_CURSO = "INSERT INTO curso_estudiante (estudiante_id, curso_curriculo) VALUES (?,?)";
+    private final String ASIGNAR_ESTUDIANTE_CURSO = "INSERT INTO curso_estudiante (estudiante_id, curso_id, inscripcion_id) VALUES (?,?,?)";
     
     private final UsuarioDAO usuariodao;
     private final CicloEscolar ciclo;
@@ -110,9 +111,15 @@ public class InscripcionDAO {
             ps.setInt(2, inscripcion.getGrupoId());
             ps.executeUpdate();
             
-            generarBoletaInscripcion(connection, inscripcion.getGrupoId(), inscripcion.getEstudiante().getDpi());
-            
-            asignarCursosEstudiante(connection, inscripcion.getGrupoId(), inscripcion.getEstudiante().getDpi());
+            PreparedStatement psId = connection.prepareStatement(ULTIMA_INSCRIPCION);
+            ResultSet rsId = psId.executeQuery();
+            if (rsId.next()) {
+                generarBoletaInscripcion(connection, inscripcion.getGrupoId(), inscripcion.getEstudiante().getDpi());
+
+                asignarCursosEstudiante(connection, inscripcion.getGrupoId(), inscripcion.getEstudiante().getDpi(), rsId.getInt("id"));
+            } else {
+                throw new AccesoALaDataException("No se pudo encontrar el ID de la inscripcion");
+            }
             
             connection.setAutoCommit(false);
         } catch (SQLException | AccesoALaDataException e) {
@@ -141,9 +148,15 @@ public class InscripcionDAO {
             ps.setInt(2, inscripcion.getGrupoId());
             ps.executeUpdate();
             
-            generarBoletaInscripcion(connection, inscripcion.getGrupoId(), inscripcion.getDpiEstudiante());
-            
-            asignarCursosEstudiante(connection, inscripcion.getGrupoId(), inscripcion.getDpiEstudiante());
+            PreparedStatement psId = connection.prepareStatement(ULTIMA_INSCRIPCION);
+            ResultSet rs = psId.executeQuery();
+            if (rs.next()) {
+                generarBoletaInscripcion(connection, inscripcion.getGrupoId(), inscripcion.getDpiEstudiante());
+
+                asignarCursosEstudiante(connection, inscripcion.getGrupoId(), inscripcion.getDpiEstudiante(), rs.getInt("id"));
+            } else {
+                throw new AccesoALaDataException("No se pude encontar el ID de la inscripcion: ");
+            }
             
             connection.commit();
         } catch (SQLException | AccesoALaDataException e) {
@@ -200,7 +213,7 @@ public class InscripcionDAO {
         }
     }
     
-    private void asignarCursosEstudiante(Connection connection, int grupoId, String dpiEstudiante) throws AccesoALaDataException {
+    private void asignarCursosEstudiante(Connection connection, int grupoId, String dpiEstudiante, int idInscripcion) throws AccesoALaDataException {
         try {
             boolean esCarrera = false;
             int gradoId = 0;
@@ -229,11 +242,12 @@ public class InscripcionDAO {
                 ResultSet rs = ps.executeQuery();
                 idCursosCurriculo = getListaCursos(rs);
             }
-            
+            //estudiante_id, curso_id, inscripcion_id
             for (Integer cursoCurriculo : idCursosCurriculo) {
                 PreparedStatement ps = connection.prepareStatement(ASIGNAR_ESTUDIANTE_CURSO);
                 ps.setString(1, dpiEstudiante);
                 ps.setInt(2, cursoCurriculo);
+                ps.setInt(3, idInscripcion);
                 ps.executeUpdate();
             }
             
@@ -245,7 +259,7 @@ public class InscripcionDAO {
     private List<Integer> getListaCursos(ResultSet rs) throws SQLException {
         List<Integer> idCursos = new ArrayList<>();
         while (rs.next()) {
-            idCursos.add(rs.getInt("id"));
+            idCursos.add(rs.getInt("curso_id"));
         }
         return idCursos;
     }

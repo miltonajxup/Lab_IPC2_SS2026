@@ -59,13 +59,16 @@ public class ServicioAdministrador {
     
     public String asignarCursoMaestro(CursoMaestroRequest cursoMaestro) throws AccesoALaDataException, DataInexistenteException, ValorInvalidoException {
         if (cursoMaestro == null || cursoMaestro.getMaestro() == null || 
-                cursoMaestro.getCurso() <= 0 || cursoMaestro.getMaestro().isEmpty()) {
+                cursoMaestro.getCursoId() <= 0 || cursoMaestro.getMaestro().isEmpty()) {
             throw new ValorInvalidoException("Hacen falta valores para asignar un maestro a un curso");
         }
         CursoDAO cursodao = new CursoDAO();
-        CursoDB curso = cursodao.getCursoId(cursoMaestro.getCurso());
+        CursoDB curso = cursodao.getCursoId(cursoMaestro.getCursoId());
         if (curso == null) {
             throw new DataInexistenteException("El curso que se quiere asignar no existe");
+        }
+        if (!administradordao.existeGrupoAcademico(cursoMaestro.getGrupoId())) {
+            throw new DataInexistenteException("No se pudo encontar el grupo academico");
         }
         EmpleadoDAO empleadodao = new EmpleadoDAO();
         EmpleadoDB empleado = empleadodao.getEmpleadoPorID(cursoMaestro.getMaestro());
@@ -75,7 +78,7 @@ public class ServicioAdministrador {
         if (empleado.getRol() != RolUsuario.MAESTRO) {
             throw new ValorInvalidoException("El empleado que se quiere agregar no es un " + RolUsuario.MAESTRO);
         }
-        if (administradordao.cursoTieneMaestro(cursoMaestro.getCurso())) {
+        if (administradordao.cursoTieneMaestro(cursoMaestro.getCursoId(), cursoMaestro.getGrupoId())) {
             //throw new ValorInvalidoException("El curso ya tiene asignado un maestro");
             administradordao.modificarCursoMaestro(cursoMaestro);
         } else {
