@@ -10,6 +10,7 @@ import com.mycompany.proyecto2_ipc2_ss2026.Exceptions.AccesoALaDataException;
 import com.mycompany.proyecto2_ipc2_ss2026.ModelosDB.AsistenciaDB;
 import com.mycompany.proyecto2_ipc2_ss2026.ModelosDB.CursoMaestro;
 import com.mycompany.proyecto2_ipc2_ss2026.ModelosDB.EstudianteCurso;
+import com.mycompany.proyecto2_ipc2_ss2026.ModelosDB.NotaDB;
 import com.mycompany.proyecto2_ipc2_ss2026.ModelosRequest.AsistenciaDiaRequest;
 import com.mycompany.proyecto2_ipc2_ss2026.ModelosRequest.AsistenciaRequest;
 import java.sql.Connection;
@@ -77,6 +78,17 @@ public class MaestroDAO {
             WHERE grup.id = ? AND curso_id = ? AND asi.fecha = ?""";
     private final String TOMAR_ASISTENCIA = "UPDATE asistencia SET estado = ? WHERE id = ?";
     private final String GET_REGISTRO_ASISTENCIA = "SELECT * FROM asistencia WHERE id = ?";
+    private final String GET_NOTAS_CURSO = 
+            """
+            SELECT usu.nombre AS nombre_estudiante, notas.* FROM notas 
+            JOIN curso_estudiante AS cures ON notas.curso_estudiante_id = cures.id 
+            JOIN usuario AS usu ON cures.estudiante_id = usu.dpi 
+            JOIN inscripcion AS ins ON cures.inscripcion_id = ins.id 
+            JOIN grupo_ciclo_escolar AS grup ON ins.grupo_id = grup.id 
+            WHERE grup.id = ? AND cures.curso_id = ?""";
+    private final String GET_NOTA_POR_ID = "SELECT * FROM notas WHERE id = ?";
+    private final String MODIFICAR_ZONA = "UPDATE notas SET zona = ? WHERE id = ?";
+    private final String MODIFICAR_FINAL = "UPDATE notas SET examen_final = ? WHERE id = ?";
     
     public List<CursoMaestro> getCursosMaestro(String dpiMaestro) throws AccesoALaDataException {
         CicloEscolar ciclo = new CicloEscolar();
@@ -220,6 +232,63 @@ public class MaestroDAO {
         }
     }
     
+    public List<NotaDB> getNotasCurso(int idGrupo, int idCurso) throws AccesoALaDataException {
+        List<NotaDB> notas = new ArrayList<>();
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement ps = connection.prepareStatement(GET_NOTAS_CURSO)) {
+            ps.setInt(1, idGrupo);
+            ps.setInt(2, idCurso);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                notas.add(armarNota(rs));
+            }
+        } catch (SQLException e) {
+            throw new AccesoALaDataException("Error al buscar las notas de un curso: " + e.getMessage());
+        }
+        return notas;
+    }
+    
+    public NotaDB modificarZona(int notaZona , int id) throws AccesoALaDataException {
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement ps = connection.prepareStatement(MODIFICAR_ZONA)) {
+            ps.setInt(1, notaZona);
+            ps.setInt(2, id);
+            ps.executeUpdate();
+            
+            return getNotaPorId(id);
+        } catch (SQLException e) {
+            throw new AccesoALaDataException("Error al modificar la zona de una nota: " + e.getMessage());
+        }
+    }
+    
+    public NotaDB modificarExamen(int notaExamen, int id) throws AccesoALaDataException {
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement ps = connection.prepareStatement(MODIFICAR_FINAL)) {
+            ps.setInt(1, notaExamen);
+            ps.setInt(2, id);
+            ps.executeUpdate();
+            
+            return getNotaPorId(id);
+        } catch (SQLException e) {
+            throw new AccesoALaDataException("Error al modificar el examen final de una nota: " + e.getMessage());
+        }
+    }
+    
+    public NotaDB getNotaPorId(int id) throws AccesoALaDataException {
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement ps = connection.prepareStatement(GET_NOTA_POR_ID)) {
+            ps.setInt(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return armarNota(rs);
+                }
+            }
+        } catch (SQLException e) {
+            throw new AccesoALaDataException("Error al buscar una nota por ID: " + e.getMessage());
+        }
+        return null;
+    }
+    
     private EstudianteCurso armarEstudiante(ResultSet rs) throws SQLException {
         return new EstudianteCurso(rs.getString("dpi"), rs.getString("nombre"), rs.getInt("id_curso_estudiante"));
     }
@@ -241,6 +310,15 @@ public class MaestroDAO {
                 rs.getInt("curso_estudiante_id"), 
                 rs.getBoolean("estado"), 
                 rs.getDate("fecha").toLocalDate());
+    }
+    
+    private NotaDB armarNota(ResultSet rs) throws SQLException {
+        return new NotaDB(
+                rs.getString("nombre_estudiante"), 
+                rs.getInt("id"), 
+                rs.getInt("zona"), 
+                rs.getInt("examen_final"), 
+                rs.getInt("curso_estudiante_id"));
     }
     
 }

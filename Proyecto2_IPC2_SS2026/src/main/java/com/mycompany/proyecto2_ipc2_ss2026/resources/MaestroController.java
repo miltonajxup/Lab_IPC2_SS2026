@@ -9,6 +9,7 @@ import com.mycompany.proyecto2_ipc2_ss2026.Exceptions.DataInexistenteException;
 import com.mycompany.proyecto2_ipc2_ss2026.Exceptions.ValorInvalidoException;
 import com.mycompany.proyecto2_ipc2_ss2026.ModelosRequest.AsistenciaDiaRequest;
 import com.mycompany.proyecto2_ipc2_ss2026.ModelosRequest.AsistenciaRequest;
+import com.mycompany.proyecto2_ipc2_ss2026.ModelosRequest.NotaRequest;
 import com.mycompany.proyecto2_ipc2_ss2026.Servicios.ServicioMaestro;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
@@ -108,11 +109,43 @@ public class MaestroController {
         }
     }
     
-    /*
-    administrador/asignar-curso-maestro
-    "maestro": "202612001",
-    "cursoId": 1,
-    "grupoId": 1
-    */
+    @GET
+    @Path("notas-curso/{idGrupo}/{idCurso}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response buscarNotasCurso(@PathParam("idGrupo") int idGrupo, @PathParam("idCurso") int idCurso) {
+        try {
+            return Response.ok(servicio.getNotasCurso(idGrupo, idCurso)).build();
+        } catch (AccesoALaDataException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        }
+    }
+    
+    @PUT
+    @Path("modificar-zona/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response modificarZona(NotaRequest nota, @PathParam("id") int id) {
+        try {
+            return Response.ok(servicio.modificarZona(nota, id)).build();
+        } catch (AccesoALaDataException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        } catch (ValorInvalidoException e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+        }
+    }
+    
+    @PUT
+    @Path("modificar-examen-final/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response modificarExamenFinal(NotaRequest nota, @PathParam("id") int id) {
+        try {
+            return Response.ok(servicio.modificarExamen(nota, id)).build();
+        } catch (AccesoALaDataException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        } catch (ValorInvalidoException e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+        }
+    }
     
 }

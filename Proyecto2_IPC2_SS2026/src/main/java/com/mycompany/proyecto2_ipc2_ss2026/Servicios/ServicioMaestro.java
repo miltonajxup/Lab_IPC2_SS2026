@@ -4,19 +4,21 @@
  */
 package com.mycompany.proyecto2_ipc2_ss2026.Servicios;
 
+import com.mycompany.proyecto2_ipc2_ss2026.Constantes.Nota;
 import com.mycompany.proyecto2_ipc2_ss2026.Constantes.RolUsuario;
 import com.mycompany.proyecto2_ipc2_ss2026.DAOs.Administrador.EmpleadoDAO;
 import com.mycompany.proyecto2_ipc2_ss2026.DAOs.Maestro.MaestroDAO;
 import com.mycompany.proyecto2_ipc2_ss2026.Exceptions.AccesoALaDataException;
-import com.mycompany.proyecto2_ipc2_ss2026.Exceptions.DataExistenteException;
 import com.mycompany.proyecto2_ipc2_ss2026.Exceptions.DataInexistenteException;
 import com.mycompany.proyecto2_ipc2_ss2026.Exceptions.ValorInvalidoException;
 import com.mycompany.proyecto2_ipc2_ss2026.ModelosDB.AsistenciaDB;
 import com.mycompany.proyecto2_ipc2_ss2026.ModelosDB.CursoMaestro;
 import com.mycompany.proyecto2_ipc2_ss2026.ModelosDB.EmpleadoDB;
 import com.mycompany.proyecto2_ipc2_ss2026.ModelosDB.EstudianteCurso;
+import com.mycompany.proyecto2_ipc2_ss2026.ModelosDB.NotaDB;
 import com.mycompany.proyecto2_ipc2_ss2026.ModelosRequest.AsistenciaDiaRequest;
 import com.mycompany.proyecto2_ipc2_ss2026.ModelosRequest.AsistenciaRequest;
+import com.mycompany.proyecto2_ipc2_ss2026.ModelosRequest.NotaRequest;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.List;
@@ -80,6 +82,30 @@ public class ServicioMaestro {
     
     public AsistenciaDB tomarAsistencia(AsistenciaRequest asistencia, int id) throws AccesoALaDataException {
         return maestrodao.tomarAsistencia(asistencia, id);
+    }
+    
+    public List<NotaDB> getNotasCurso(int idGrupo, int idCurso) throws AccesoALaDataException {
+        return maestrodao.getNotasCurso(idGrupo, idCurso);
+    }
+    
+    public NotaDB modificarZona(NotaRequest nota, int id) throws AccesoALaDataException, ValorInvalidoException {
+        if (nota.getNotaZona() < Nota.MINIMO.getValor()) {
+            throw new ValorInvalidoException("La nota minima permitida es: " + Nota.MINIMO.getValor());
+        }
+        if (nota.getNotaZona() > Nota.MAXIMO_ZONA.getValor()) {
+            throw new ValorInvalidoException("La nota maxima para la zona es: " + Nota.MAXIMO_ZONA);
+        }
+        return maestrodao.modificarZona(nota.getNotaZona(), id);
+    }
+    
+    public NotaDB modificarExamen(NotaRequest nota, int id) throws AccesoALaDataException, ValorInvalidoException {
+        if (nota.getExamenFinal() < Nota.MINIMO.getValor()) {
+            throw new ValorInvalidoException("La nota minima permitida es: " + Nota.MINIMO);
+        }
+        if (nota.getExamenFinal() > Nota.MAXIMO_FINAL.getValor()) {
+            throw new ValorInvalidoException("La nota maxima para el examen final es: " + Nota.MAXIMO_FINAL.getValor());
+        }
+        return maestrodao.modificarExamen(nota.getExamenFinal(), id);
     }
     
 }

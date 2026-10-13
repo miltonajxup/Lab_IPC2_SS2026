@@ -37,6 +37,8 @@ public class InscripcionDAO {
     private final String GET_CURRICULO_GRADO = "SELECT * FROM curriculo WHERE grado_id = ?";
     private final String GET_CURRICULO_CARRERA = "SELECT * FROM curriculo WHERE carrera_id = ?";
     private final String ASIGNAR_ESTUDIANTE_CURSO = "INSERT INTO curso_estudiante (estudiante_id, curso_id, inscripcion_id) VALUES (?,?,?)";
+    private final String GET_ULTIMO_CURSO_ESTUDIANTE = "SELECT * FROM curso_estudiante ORDER BY id DESC LIMIT 1";
+    private final String CREAR_ESPACIO_NOTAS = "INSERT INTO notas (curso_estudiante_id) VALUES (?)";
     
     private final UsuarioDAO usuariodao;
     private final CicloEscolar ciclo;
@@ -257,10 +259,29 @@ public class InscripcionDAO {
                 ps.setInt(2, cursoCurriculo);
                 ps.setInt(3, idInscripcion);
                 ps.executeUpdate();
+                
+                crearEspacioNotas(connection);
             }
             
-        } catch (SQLException e) {
+        } catch (SQLException | AccesoALaDataException e) {
             throw new AccesoALaDataException("Error al asignar los cursos del curriculo al estudiante: " + e.getMessage());
+        }
+    }
+    
+    private void crearEspacioNotas(Connection connection) throws SQLException, AccesoALaDataException {
+        int idCursoEstudiante;
+        try (PreparedStatement ps = connection.prepareStatement(GET_ULTIMO_CURSO_ESTUDIANTE)) {
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    idCursoEstudiante = rs.getInt("id");
+                } else {
+                    throw new AccesoALaDataException("No se pudo encontrar el ID del curso y estudiante");
+                }
+            }
+        }
+        try (PreparedStatement ps = connection.prepareStatement(CREAR_ESPACIO_NOTAS)) {
+            ps.setInt(1, idCursoEstudiante);
+            ps.executeUpdate();
         }
     }
     
