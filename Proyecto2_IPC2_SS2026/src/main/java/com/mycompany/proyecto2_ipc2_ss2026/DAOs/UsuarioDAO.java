@@ -32,9 +32,8 @@ public class UsuarioDAO {
     }
     
     public void modificarContraseña(UsuarioRequest usuario) throws AccesoALaDataException {
-        Connection connection = DBConnectionSingleton.getInstancia().getConnection();
-        try {
-            PreparedStatement ps = connection.prepareStatement(ACTUALIZAR_CONSTRASEÑA);
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement ps = connection.prepareStatement(ACTUALIZAR_CONSTRASEÑA)) {
             ps.setString(1, usuario.getContrasenia());
             ps.setString(2, usuario.getDpi());
             ps.executeUpdate();
@@ -44,9 +43,8 @@ public class UsuarioDAO {
     }
     
     public boolean existeUsuarioPorDpi(String dpiUsuario) throws AccesoALaDataException {
-        Connection connection = DBConnectionSingleton.getInstancia().getConnection();
-        try {
-            PreparedStatement ps = connection.prepareStatement(GET_USUARIO_POR_ID);
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement ps = connection.prepareStatement(GET_USUARIO_POR_ID)) {
             ps.setString(1, dpiUsuario);
             ResultSet rs = ps.executeQuery();
             return rs.next();
@@ -56,9 +54,8 @@ public class UsuarioDAO {
     }
     
     public boolean existeUsuarioPorNombre(String nombreUsuario) throws AccesoALaDataException {
-        Connection connection = DBConnectionSingleton.getInstancia().getConnection();
-        try {
-            PreparedStatement ps = connection.prepareStatement(GET_USUARIO_POR_NOMBRE);
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement ps = connection.prepareStatement(GET_USUARIO_POR_NOMBRE)) {
             ps.setString(1, nombreUsuario);
             ResultSet rs = ps.executeQuery();
             return rs.next();

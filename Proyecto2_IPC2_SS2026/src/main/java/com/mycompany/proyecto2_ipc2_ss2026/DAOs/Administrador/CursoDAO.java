@@ -36,9 +36,8 @@ public class CursoDAO {
     }
     
     public List<CursoDB> crearCurso(CursoRequest request) throws AccesoALaDataException {
-        Connection connection = DBConnectionSingleton.getInstancia().getConnection();
-        try {
-            PreparedStatement ps = connection.prepareStatement(CREAR_CURSO);
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement ps = connection.prepareStatement(CREAR_CURSO)) {
             ps.setString(1, request.getNombre());
             ps.setString(2, request.getDescripcion());
             ps.executeUpdate();
@@ -49,9 +48,8 @@ public class CursoDAO {
     }
     
     public CursoDB modificarCurso(CursoRequest request, int idCurso) throws AccesoALaDataException {
-        Connection connection = DBConnectionSingleton.getInstancia().getConnection();
-        try {
-            PreparedStatement ps = connection.prepareStatement(MODIFICAR_CURSO);
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement ps = connection.prepareStatement(MODIFICAR_CURSO)) {
             ps.setString(1, request.getNombre());
             ps.setString(2, request.getDescripcion());
             ps.setInt(3, idCurso);
@@ -63,9 +61,8 @@ public class CursoDAO {
     }
     
     public boolean existeCurso(String nombre) throws AccesoALaDataException {
-        Connection connection = DBConnectionSingleton.getInstancia().getConnection();
-        try {
-            PreparedStatement ps = connection.prepareStatement(GET_CURSO_POR_NOMBRE);
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement ps = connection.prepareStatement(GET_CURSO_POR_NOMBRE)) {
             ps.setString(1, nombre);
             ResultSet rs = ps.executeQuery();
             return rs.next();
@@ -75,9 +72,8 @@ public class CursoDAO {
     }
     
     public CursoDB getCursoId(int idCurso) throws AccesoALaDataException {
-        Connection connection = DBConnectionSingleton.getInstancia().getConnection();
-        try {
-            PreparedStatement ps = connection.prepareStatement(GET_CURSO_POR_ID);
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement ps = connection.prepareStatement(GET_CURSO_POR_ID)) {
             ps.setInt(1, idCurso);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
@@ -91,9 +87,8 @@ public class CursoDAO {
     
     public List<CursoDB> getTodosLosCursos(int numeroPagina) throws AccesoALaDataException {
         List<CursoDB> cursos = new ArrayList<>();
-        Connection connection = DBConnectionSingleton.getInstancia().getConnection();
-        try {
-            PreparedStatement ps = connection.prepareStatement(GET_TODOS_CURSOS);
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement ps = connection.prepareStatement(GET_TODOS_CURSOS)) {
             ps.setInt(1, (numeroPagina - 1) * LimitePagina.LIMITE);
             ps.setInt(2, LimitePagina.LIMITE);
             ResultSet rs = ps.executeQuery();

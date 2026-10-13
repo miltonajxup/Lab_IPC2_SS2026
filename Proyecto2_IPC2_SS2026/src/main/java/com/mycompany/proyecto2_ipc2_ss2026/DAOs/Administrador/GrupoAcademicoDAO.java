@@ -59,9 +59,8 @@ public class GrupoAcademicoDAO {
     private final String ELIMINAR_CURRICULO = "DELETE FROM curriculo WHERE id = ?";
     
     public boolean existeGrupoGrado(GrupoAcademicoRequest grupo) throws AccesoALaDataException {
-        Connection connection = DBConnectionSingleton.getInstancia().getConnection();
-        try {
-            PreparedStatement ps = connection.prepareStatement(GRUPO_ACADEMICO_POR_GRADO);
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement ps = connection.prepareStatement(GRUPO_ACADEMICO_POR_GRADO)) {
             ps.setInt(1, grupo.getAñoLectivo());
             ps.setInt(2, grupo.getGrado());
             ps.setString(3, grupo.getSeccion());
@@ -73,9 +72,8 @@ public class GrupoAcademicoDAO {
     }
     
     public boolean existeGrupoCarrera(GrupoAcademicoRequest grupo) throws AccesoALaDataException {
-        Connection connection = DBConnectionSingleton.getInstancia().getConnection();
-        try {
-            PreparedStatement ps = connection.prepareStatement(GRUPO_ACADEMICO_POR_CARRERA);
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement ps = connection.prepareStatement(GRUPO_ACADEMICO_POR_CARRERA)) {
             ps.setInt(1, grupo.getAñoLectivo());
             ps.setInt(2, grupo.getGrado());
             ps.setString(3, grupo.getCarrera());
@@ -88,9 +86,8 @@ public class GrupoAcademicoDAO {
     }
     
     public List<GrupoAcademicoDB> crearGrupoAcademicoGrado(GrupoAcademicoRequest request) throws AccesoALaDataException {
-        Connection connection = DBConnectionSingleton.getInstancia().getConnection();
-        try {
-            PreparedStatement ps = connection.prepareStatement(CREAR_GRUPO_ACADEMICO_GRADO);
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement ps = connection.prepareStatement(CREAR_GRUPO_ACADEMICO_GRADO)) {
             ps.setInt(1, request.getAñoLectivo());
             ps.setInt(2, request.getGrado());
             ps.setString(3, request.getSeccion());
@@ -103,9 +100,8 @@ public class GrupoAcademicoDAO {
     }
     
     public List<GrupoAcademicoDB> crearGrupoAcademicoCarrera(GrupoAcademicoRequest request) throws AccesoALaDataException {
-        Connection connection = DBConnectionSingleton.getInstancia().getConnection();
-        try {
-            PreparedStatement ps = connection.prepareStatement(CREAR_GRUPO_ACADEMICO_CARRERA);
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement ps = connection.prepareStatement(CREAR_GRUPO_ACADEMICO_CARRERA)) {
             ps.setInt(1, request.getAñoLectivo());
             ps.setInt(2, request.getGrado());
             ps.setString(3, request.getCarrera());
@@ -119,17 +115,17 @@ public class GrupoAcademicoDAO {
     }
     
     public List<GrupoAcademicoDB> getGruposPorAño(int año, int pagina) throws AccesoALaDataException {
+        int paginacion = (pagina - 1) * LimitePagina.LIMITE;
         List<GrupoAcademicoDB> grupos = new ArrayList<>();
-        Connection connection = DBConnectionSingleton.getInstancia().getConnection();
-        try {
-            int paginacion = (pagina - 1) * LimitePagina.LIMITE;
-            PreparedStatement ps = connection.prepareStatement(GET_CRUPOS_POR_AÑO);
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement ps = connection.prepareStatement(GET_CRUPOS_POR_AÑO)) {
             ps.setInt(1, año);
             ps.setInt(2, paginacion);
             ps.setInt(3, LimitePagina.LIMITE);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                grupos.add(armarGrupoAcademico(rs));
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    grupos.add(armarGrupoAcademico(rs));
+                }
             }
         } catch (SQLException e) {
             throw new AccesoALaDataException("Error al buscar los grupos academicos por año: " + e.getMessage());
@@ -151,13 +147,14 @@ public class GrupoAcademicoDAO {
     
     public List<CurriculoDB> getCurriculosGrado(CurriculoRequest curriculo) throws AccesoALaDataException {
         List<CurriculoDB> curriculos = new ArrayList<>();
-        Connection connection = DBConnectionSingleton.getInstancia().getConnection();
-        try {
-            PreparedStatement ps = connection.prepareStatement(GET_CURRICULOS_GRADO);
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement ps = connection.prepareStatement(GET_CURRICULOS_GRADO)) {
             ps.setInt(1, curriculo.getGradoId());
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                curriculos.add(armarCurriculo(rs));
+            
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    curriculos.add(armarCurriculo(rs));
+                }
             }
         } catch (SQLException e) {
             throw new AccesoALaDataException("Error al buscar los cursos de un grado: " + e.getMessage());
@@ -167,13 +164,14 @@ public class GrupoAcademicoDAO {
     
     public List<CurriculoDB> getCurriculosCarrera(CurriculoRequest curriculo) throws AccesoALaDataException {
         List<CurriculoDB> curriculos = new ArrayList<>();
-        Connection connection = DBConnectionSingleton.getInstancia().getConnection();
-        try {
-            PreparedStatement ps = connection.prepareStatement(GET_CURRICULOS_CARRERA);
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement ps = connection.prepareStatement(GET_CURRICULOS_CARRERA)) {
             ps.setString(1, curriculo.getCarreraId());
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                curriculos.add(armarCurriculo(rs));
+            
+            try(ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    curriculos.add(armarCurriculo(rs));
+                }
             }
         } catch (SQLException e) {
             throw new AccesoALaDataException("Error al buscar los cursos de una carrera: " + e.getMessage());
@@ -192,9 +190,8 @@ public class GrupoAcademicoDAO {
     }
     
     public boolean existeCurriculoGrado(CurriculoRequest curriculo) throws AccesoALaDataException {
-        Connection connection = DBConnectionSingleton.getInstancia().getConnection();
-        try {
-            PreparedStatement ps = connection.prepareStatement(EXISTE_CURRICULO_GRADO);
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement ps = connection.prepareStatement(EXISTE_CURRICULO_GRADO)) {
             ps.setInt(1, curriculo.getCursoId());
             ps.setInt(2, curriculo.getGradoId());
             ResultSet rs = ps.executeQuery();
@@ -205,9 +202,8 @@ public class GrupoAcademicoDAO {
     }
     
     public boolean existeCurriculoCarrera(CurriculoRequest curriculo) throws AccesoALaDataException {
-        Connection connection = DBConnectionSingleton.getInstancia().getConnection();
-        try {
-            PreparedStatement ps = connection.prepareStatement(EXISTE_CURRICULO_CARRERA);
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement ps = connection.prepareStatement(EXISTE_CURRICULO_CARRERA)) {
             ps.setInt(1, curriculo.getCursoId());
             ps.setInt(2, curriculo.getGradoId());
             ps.setString(3, curriculo.getCarreraId());
@@ -219,9 +215,8 @@ public class GrupoAcademicoDAO {
     }
     
     public List<CurriculoDB> crearCurriculoParaGrado(CurriculoRequest request) throws AccesoALaDataException {
-        Connection connection = DBConnectionSingleton.getInstancia().getConnection();
-        try {
-            PreparedStatement ps = connection.prepareStatement(CREAR_CURRICULO_PARA_GRADO);
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement ps = connection.prepareStatement(CREAR_CURRICULO_PARA_GRADO)) {
             ps.setInt(1, request.getCursoId());
             ps.setInt(2, request.getGradoId());
             ps.executeUpdate();
@@ -233,9 +228,8 @@ public class GrupoAcademicoDAO {
     }
     
     public List<CurriculoDB> crearCurriculoParaCarrera(CurriculoRequest request) throws AccesoALaDataException {
-        Connection connection = DBConnectionSingleton.getInstancia().getConnection();
-        try {
-            PreparedStatement ps = connection.prepareStatement(CREAR_CURRICULO_PARA_CARRERA);
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement ps = connection.prepareStatement(CREAR_CURRICULO_PARA_CARRERA)) {
             ps.setInt(1, request.getCursoId());
             ps.setInt(2, request.getGradoId());
             ps.setString(3, request.getCarreraId());
@@ -248,9 +242,8 @@ public class GrupoAcademicoDAO {
     }
     
     public void eliminarCurriculo(int idCurriculo) throws AccesoALaDataException {
-        Connection connection = DBConnectionSingleton.getInstancia().getConnection();
-        try {
-            PreparedStatement ps = connection.prepareStatement(ELIMINAR_CURRICULO);
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement ps = connection.prepareStatement(ELIMINAR_CURRICULO)) {
             ps.setInt(1, idCurriculo);
             ps.executeUpdate();
         } catch (SQLException e) {

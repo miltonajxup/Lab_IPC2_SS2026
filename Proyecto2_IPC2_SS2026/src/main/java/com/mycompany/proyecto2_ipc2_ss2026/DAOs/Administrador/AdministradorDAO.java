@@ -59,9 +59,8 @@ public class AdministradorDAO {
     public int generarBoletasDePago(String mesBoleta) throws AccesoALaDataException {
         int año = ciclo.getAñoActivo();
         int boletasGeneradas = 0;
-        Connection connection = DBConnectionSingleton.getInstancia().getConnection();
-        try {
-            PreparedStatement psInscritos = connection.prepareStatement(GET_ESTUDIANTES_INSCRITOS);
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement psInscritos = connection.prepareStatement(GET_ESTUDIANTES_INSCRITOS)) {
             psInscritos.setInt(1, año);
             ResultSet rsInscritos = psInscritos.executeQuery();
             while (rsInscritos.next()) {
@@ -102,9 +101,8 @@ public class AdministradorDAO {
         List<BoletaPagoDB> boletas = new ArrayList<>();
         int año = ciclo.getAñoActivo();
         int paginacion = (pagina - 1) * LimitePagina.LIMITE;
-        Connection connection = DBConnectionSingleton.getInstancia().getConnection();
-        try {
-            PreparedStatement ps = connection.prepareStatement(GET_BOLETAS_GENERERADAS);
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement ps = connection.prepareStatement(GET_BOLETAS_GENERERADAS)) {
             ps.setInt(1, año);
             ps.setString(2, mes);
             ps.setInt(3, paginacion);
@@ -122,9 +120,8 @@ public class AdministradorDAO {
     public int pagarAEmpleados(String mesPago) throws AccesoALaDataException {
         int año = ciclo.getAñoActivo();
         int pagosRealizados = 0;
-        Connection connection = DBConnectionSingleton.getInstancia().getConnection();
-        try {
-            PreparedStatement psEmpleados = connection.prepareStatement(GET_EMPLEADOS_CONTRATADOS);
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement psEmpleados = connection.prepareStatement(GET_EMPLEADOS_CONTRATADOS)) {
             psEmpleados.setInt(1, año);
             ResultSet rsEmpleados = psEmpleados.executeQuery();
             while (rsEmpleados.next()) {
@@ -162,9 +159,8 @@ public class AdministradorDAO {
         int año = ciclo.getAñoActivo();
         int paginacion = (pagina - 1) * LimitePagina.LIMITE;
         List<PagoEmpleadoDB> pagos = new ArrayList<>();
-        Connection connection = DBConnectionSingleton.getInstancia().getConnection();
-        try {
-            PreparedStatement ps = connection.prepareStatement(GET_PAGOS_REALIZADOS);
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement ps = connection.prepareStatement(GET_PAGOS_REALIZADOS)) {
             ps.setInt(1, año);
             ps.setString(2, mes);
             ps.setInt(3, paginacion);
@@ -191,9 +187,8 @@ public class AdministradorDAO {
     }
     
     public boolean cursoTieneMaestro(int curso, int idGrupo) throws AccesoALaDataException {
-        Connection connection = DBConnectionSingleton.getInstancia().getConnection();
-        try {
-            PreparedStatement ps = connection.prepareStatement(CURSO_ASIGNADO);
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement ps = connection.prepareStatement(CURSO_ASIGNADO)) {
             ps.setInt(2, curso);
             ps.setInt(1, idGrupo);
             ResultSet rs = ps.executeQuery();
@@ -204,9 +199,8 @@ public class AdministradorDAO {
     }
     
     public boolean existeGrupoAcademico(int id) throws AccesoALaDataException {
-        Connection connection = DBConnectionSingleton.getInstancia().getConnection();
-        try {
-            PreparedStatement ps = connection.prepareStatement(EXISTE_GRUPO_ACADEMICO);
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement ps = connection.prepareStatement(EXISTE_GRUPO_ACADEMICO)) {
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
             return rs.next();
@@ -216,9 +210,8 @@ public class AdministradorDAO {
     }
             
     public void asignarMaestroCurso(CursoMaestroRequest request) throws AccesoALaDataException {
-        Connection connection = DBConnectionSingleton.getInstancia().getConnection();
-        try {
-            PreparedStatement ps = connection.prepareStatement(ASIGNAR_MAESTRO_CURSO);
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement ps = connection.prepareStatement(ASIGNAR_MAESTRO_CURSO)) {
             ps.setString(1, request.getMaestro());
             ps.setInt(2, request.getCursoId());
             ps.setInt(3, request.getGrupoId());
@@ -229,9 +222,8 @@ public class AdministradorDAO {
     }
     
     public void modificarCursoMaestro(CursoMaestroRequest curso) throws AccesoALaDataException {
-        Connection connection = DBConnectionSingleton.getInstancia().getConnection();
-        try {
-            PreparedStatement ps = connection.prepareStatement(CAMBIAR_MAESTRO_ASIGNADO);
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement ps = connection.prepareStatement(CAMBIAR_MAESTRO_ASIGNADO)) {
             ps.setString(1, curso.getMaestro());
             ps.setInt(2, curso.getCursoId());
             ps.setInt(3, curso.getGrupoId());

@@ -29,9 +29,8 @@ public class MultaDAO {
     private final String GET_MULTA_POR_PRESTAMO = "SELECT * FROM multa WHERE prestamo_id = ?";
     
     public boolean existeMulta(int id) throws AccesoALaDataException {
-        Connection connection = DBConnectionSingleton.getInstancia().getConnection();
-        try {
-            PreparedStatement ps = connection.prepareStatement(MULTA_POR_ID);
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement ps = connection.prepareStatement(MULTA_POR_ID)) {
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
             return rs.next();
@@ -41,9 +40,8 @@ public class MultaDAO {
     }
     
     public MultaDB multaPorId(int id) throws AccesoALaDataException {
-        Connection connection = DBConnectionSingleton.getInstancia().getConnection();
-        try {
-            PreparedStatement ps = connection.prepareStatement(MULTA_POR_ID);
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement ps = connection.prepareStatement(MULTA_POR_ID)) {
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
@@ -56,9 +54,8 @@ public class MultaDAO {
     }
     
     public void agregarMulta(MultaRequest multa) throws AccesoALaDataException{
-        Connection connection = DBConnectionSingleton.getInstancia().getConnection();
-        try {
-            PreparedStatement ps = connection.prepareStatement(AGREGAR_MULTA);
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement ps = connection.prepareStatement(AGREGAR_MULTA)) {
             ps.setDouble(1, multa.getMonto());
             ps.setInt(2, multa.getIdPrestamo());
             ps.executeUpdate();
@@ -68,40 +65,27 @@ public class MultaDAO {
     }
     
     public void pagarMulta(int idMulta) throws AccesoALaDataException {
-        Connection connection = DBConnectionSingleton.getInstancia().getConnection();
-        try {
-            connection.setAutoCommit(false);
-            PreparedStatement ps = connection.prepareStatement(PAGAR_MULTA);
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement ps = connection.prepareStatement(PAGAR_MULTA)) {
             ps.setInt(1, idMulta);
-            
-            connection.commit();
+            ps.executeUpdate();
         } catch (SQLException e) {
-            try {
-                connection.rollback();
-            } catch (SQLException ex) {
-                throw new AccesoALaDataException("Error al hacer un rollback al pagar una multa: " + ex.getMessage() + "\nError original: " + e.getMessage());
-            }
             throw new AccesoALaDataException("Error al pagar una multa: " + e.getMessage());
-        } finally {
-            try {
-                connection.setAutoCommit(true);
-            } catch (SQLException e) {
-                throw new AccesoALaDataException("Error al devolver el auto commit al pagar una multa: " + e.getMessage());
-            }
         }
     }
     
     public List<MultaDB> getMultasSinPagar(int numeroPagina) throws AccesoALaDataException {
+        int paginacion = (numeroPagina - 1) * LimitePagina.LIMITE;
         List<MultaDB> multas = new ArrayList<>();
-        Connection connection = DBConnectionSingleton.getInstancia().getConnection();
-        try {
-            int paginacion = (numeroPagina - 1) * LimitePagina.LIMITE;
-            PreparedStatement ps = connection.prepareStatement(GET_MULTAS_SIN_PAGAR);
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement ps = connection.prepareStatement(GET_MULTAS_SIN_PAGAR)) {
             ps.setInt(1, paginacion);
             ps.setInt(2, LimitePagina.LIMITE);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                multas.add(armarMulta(rs));
+            
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    multas.add(armarMulta(rs));
+                }
             }
         } catch (SQLException e) {
             throw new AccesoALaDataException("Error al buscar las multas sin pagar en la pagina " + numeroPagina + ": " + e.getMessage());
@@ -111,13 +95,14 @@ public class MultaDAO {
     
     public List<MultaDB> getMultPorPrestamo(int idPrestamo) throws AccesoALaDataException {
         List<MultaDB> multas = new ArrayList<>();
-        Connection connection = DBConnectionSingleton.getInstancia().getConnection();
-        try {
-            PreparedStatement ps = connection.prepareStatement(GET_MULTA_POR_PRESTAMO);
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement ps = connection.prepareStatement(GET_MULTA_POR_PRESTAMO)) {
             ps.setInt(1, idPrestamo);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                multas.add(armarMulta(rs));
+            
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    multas.add(armarMulta(rs));
+                }
             }
         } catch (SQLException e) {
             throw new AccesoALaDataException("Error al buscar las multas relacionadas a un prestamo: " + e.getMessage());

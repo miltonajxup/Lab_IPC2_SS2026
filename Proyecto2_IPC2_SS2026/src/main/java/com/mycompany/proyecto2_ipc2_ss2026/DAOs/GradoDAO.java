@@ -26,9 +26,8 @@ public class GradoDAO {
     
     public List<GradoDB> getGradosCarrera() throws AccesoALaDataException {
         List<GradoDB> grados = new ArrayList<>();
-        Connection connection = DBConnectionSingleton.getInstancia().getConnection();
-        try {
-            PreparedStatement ps = connection.prepareStatement(GRADOS_CARRERA);
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement ps = connection.prepareStatement(GRADOS_CARRERA)) {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 grados.add(armarGrado(rs));
@@ -41,9 +40,8 @@ public class GradoDAO {
     
     public List<GradoDB>  getGradosNormales() throws AccesoALaDataException {
         List<GradoDB> guardados = new ArrayList<>();
-        Connection connection = DBConnectionSingleton.getInstancia().getConnection();
-        try {
-            PreparedStatement psGrados = connection.prepareStatement(GRADOS_NORMALES);
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement psGrados = connection.prepareStatement(GRADOS_NORMALES)) {
             ResultSet rsGrados = psGrados.executeQuery();
             while (rsGrados.next()) {
                 guardados.add(armarGrado(rsGrados));
@@ -56,9 +54,8 @@ public class GradoDAO {
     
     public List<GradoDB> getTodosLosGrados() throws AccesoALaDataException {
         List<GradoDB> grados = new ArrayList<>();
-        Connection connection = DBConnectionSingleton.getInstancia().getConnection();
-        try {
-            PreparedStatement ps = connection.prepareStatement(TODOS_LOS_GRADOS);
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement ps = connection.prepareStatement(TODOS_LOS_GRADOS)) {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 grados.add(armarGrado(rs));

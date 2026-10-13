@@ -29,9 +29,8 @@ public class LibroDAO {
     private final String GET_LIBROS_BIBLIOTECA = "SELECT * FROM libro ORDER BY titulo ASC LIMIT ?, ?";
     
     public boolean existeCodigoLibro(String codigo) throws AccesoALaDataException {
-        Connection connection = DBConnectionSingleton.getInstancia().getConnection();
-        try {
-            PreparedStatement ps = connection.prepareStatement(LIBRO_POR_ID);
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement ps = connection.prepareStatement(LIBRO_POR_ID)) {
             ps.setString(1, codigo);
             ResultSet rs = ps.executeQuery();
             return rs.next();
@@ -41,9 +40,8 @@ public class LibroDAO {
     }
     
     public void agregarLibro(LibroRequest libro) throws AccesoALaDataException {
-        Connection connection = DBConnectionSingleton.getInstancia().getConnection();
-        try {
-            PreparedStatement ps = connection.prepareStatement(AGREGAR_LIBRO);
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement ps = connection.prepareStatement(AGREGAR_LIBRO)) {
             ps.setString(1, libro.getCodigo());
             ps.setString(2, libro.getTitulo());
             ps.setString(3, libro.getAutor());
@@ -56,9 +54,8 @@ public class LibroDAO {
     }
     
     public LibroDB modificarLibro(LibroRequest libro, String codigo) throws AccesoALaDataException {
-        Connection connection = DBConnectionSingleton.getInstancia().getConnection();
-        try {
-            PreparedStatement ps = connection.prepareStatement(MODIFICAR_LIBRO);
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement ps = connection.prepareStatement(MODIFICAR_LIBRO)) {
             ps.setString(1, libro.getTitulo());
             ps.setString(2, libro.getAutor());
             ps.setString(3, libro.getEditorial());
@@ -72,29 +69,30 @@ public class LibroDAO {
     }
     
     public void modificarCantidadLibros(int cantidadLibros, String codigoLibro) throws AccesoALaDataException {
-        Connection connection = DBConnectionSingleton.getInstancia().getConnection();
-        modificarCantidadLibros(connection, cantidadLibros, codigoLibro);
-    }
-    
-    public void modificarCantidadLibros(Connection connection, int cantidadLibros, String codigoLibro) throws AccesoALaDataException {
-        try {
-            PreparedStatement ps = connection.prepareStatement(MODIFICAR_CANTIDAD_LIBROS);
-            ps.setInt(1, cantidadLibros);
-            ps.setString(2, codigoLibro);
-            ps.executeUpdate();
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection()) {
+            modificarCantidadLibros(connection, cantidadLibros, codigoLibro);
         } catch (SQLException e) {
             throw new AccesoALaDataException("Error al modificar la cantidad de libros: " + e.getMessage());
         }
     }
     
+    public void modificarCantidadLibros(Connection connection, int cantidadLibros, String codigoLibro) throws SQLException {
+        try (PreparedStatement ps = connection.prepareStatement(MODIFICAR_CANTIDAD_LIBROS)) {
+            ps.setInt(1, cantidadLibros);
+            ps.setString(2, codigoLibro);
+            ps.executeUpdate();
+        }
+    }
+    
     public LibroDB getLibroPorId(String codigoLibro) throws AccesoALaDataException {
-        Connection connection = DBConnectionSingleton.getInstancia().getConnection();
-        try {
-            PreparedStatement ps = connection.prepareStatement(LIBRO_POR_ID);
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement ps = connection.prepareStatement(LIBRO_POR_ID)) {
             ps.setString(1, codigoLibro);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                return armarLibro(rs);
+            
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return armarLibro(rs);
+                }
             }
         } catch (SQLException e) {
             throw new AccesoALaDataException("Error al buscar un libro por su ID: " + e.getMessage());
@@ -105,14 +103,15 @@ public class LibroDAO {
     public List<LibroDB> getTodosLosLibros(int pagina) throws AccesoALaDataException {
         int paginacion = (pagina - 1) * LimitePagina.LIMITE;
         List<LibroDB> libros = new ArrayList<>();
-        Connection connection = DBConnectionSingleton.getInstancia().getConnection();
-        try {
-            PreparedStatement ps = connection.prepareStatement(GET_LIBROS_BIBLIOTECA);
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement ps = connection.prepareStatement(GET_LIBROS_BIBLIOTECA)) {
             ps.setInt(1, paginacion);
             ps.setInt(2, LimitePagina.LIMITE);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                libros.add(armarLibro(rs));
+            
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    libros.add(armarLibro(rs));
+                }
             }
         } catch (SQLException e) {
             throw new AccesoALaDataException("Error al buscar los libros de biblioteca: " + e.getMessage());

@@ -20,9 +20,8 @@ public class CicloEscolar {
     private final String GET_AÑO_ESCOLAR_ACTIVO = "SELECT anio FROM ciclo_escolar WHERE estado = TRUE";
     
     public int getAñoActivo() throws AccesoALaDataException {
-        Connection connection = DBConnectionSingleton.getInstancia().getConnection();
-        try {
-            PreparedStatement ps = connection.prepareStatement(GET_AÑO_ESCOLAR_ACTIVO);
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement ps = connection.prepareStatement(GET_AÑO_ESCOLAR_ACTIVO)) {
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 return rs.getInt("anio");

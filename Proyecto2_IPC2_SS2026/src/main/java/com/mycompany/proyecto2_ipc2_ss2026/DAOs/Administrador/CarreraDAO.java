@@ -40,9 +40,8 @@ public class CarreraDAO {
             WHERE carr.codigo = ?""";
     
     public boolean existeNombreCarrera(String nombre) throws AccesoALaDataException {
-        Connection connection = DBConnectionSingleton.getInstancia().getConnection();
-        try {
-            PreparedStatement ps = connection.prepareStatement(EXISTE_CARRERA);
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement ps = connection.prepareStatement(EXISTE_CARRERA)) {
             ps.setString(1, nombre);
             ResultSet rs = ps.executeQuery();
             return rs.next();
@@ -52,44 +51,47 @@ public class CarreraDAO {
     }
     
     public List<CarreraDB> crearCarrera(CarreraRequest carrera) throws AccesoALaDataException {
-        Connection connection = DBConnectionSingleton.getInstancia().getConnection();
-        try {
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection()) {
             connection.setAutoCommit(false);
-            
-            PreparedStatement ps = connection.prepareStatement(CREAR_CARRERA);
-            ps.setString(1, carrera.getCodigo());
-            ps.setString(2, carrera.getNombre());
-            ps.executeUpdate();
-            
-            PreparedStatement psGrado = connection.prepareStatement(AGREGAR_GRADO_CARRERA);
-            for (Integer codigo : carrera.getGrados()) {
-                psGrado.setString(1, carrera.getCodigo());
-                psGrado.setInt(2, codigo);
-                psGrado.executeUpdate();
-            }
-            
-            connection.commit();
-        } catch (SQLException e) {
             try {
-                connection.rollback();
-            } catch (SQLException ex) {
-                throw new AccesoALaDataException("Error al hacer el rollback al fallar creando una carrera: " + ex.getMessage() + " \nOrigen: " + e.getMessage());
-            }
-            throw new AccesoALaDataException("Error al agregar una carrera " + e.getMessage());
-        } finally {
-            try {
-                connection.setAutoCommit(true);
+                try (PreparedStatement ps = connection.prepareStatement(CREAR_CARRERA)) {
+                    ps.setString(1, carrera.getCodigo());
+                    ps.setString(2, carrera.getNombre());
+                    ps.executeUpdate();
+                }
+
+                try (PreparedStatement psGrado = connection.prepareStatement(AGREGAR_GRADO_CARRERA)) {
+                    for (Integer codigo : carrera.getGrados()) {
+                        psGrado.setString(1, carrera.getCodigo());
+                        psGrado.setInt(2, codigo);
+                        psGrado.executeUpdate();
+                    }
+                }
+
+                connection.commit();
             } catch (SQLException e) {
-                throw new AccesoALaDataException("Error al devolver el auto commit al fallar creando una carrera: " + e.getMessage());
+                try {
+                    connection.rollback();
+                } catch (SQLException ex) {
+                    throw new AccesoALaDataException("Error al hacer el rollback al fallar creando una carrera: " + ex.getMessage() + " \nOrigen: " + e.getMessage());
+                }
+                throw new AccesoALaDataException("Error al agregar una carrera " + e.getMessage());
+            } finally {
+                try {
+                    connection.setAutoCommit(true);
+                } catch (SQLException e) {
+                    throw new AccesoALaDataException("Error al devolver el auto commit al fallar creando una carrera: " + e.getMessage());
+                }
             }
+        } catch (SQLException e) {
+            throw new AccesoALaDataException("Error al cerrar la conexion al agregar una carrera: " + e.getMessage());
         }
         return getCarrerasActivas(LimitePagina.PAGINA_MINIMA); 
     }
     
     public CarreraDB modificarCarrera(CarreraRequest carrera, String codigoCarrera) throws AccesoALaDataException {
-        Connection connection = DBConnectionSingleton.getInstancia().getConnection();
-        try {
-            PreparedStatement ps = connection.prepareStatement(MODIFICAR_CARRERA);
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement ps = connection.prepareStatement(MODIFICAR_CARRERA)) {
             ps.setString(1, carrera.getNombre());
             ps.setString(2, codigoCarrera);
             ps.executeUpdate();
@@ -101,9 +103,8 @@ public class CarreraDAO {
     }
     
     public CarreraDB modificarEstadoCarrera(boolean estado, String codigo) throws AccesoALaDataException {
-        Connection connection = DBConnectionSingleton.getInstancia().getConnection();
-        try {
-            PreparedStatement ps = connection.prepareStatement(MODIFICAR_ESTADO_CARRERA);
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement ps = connection.prepareStatement(MODIFICAR_ESTADO_CARRERA)) {
             ps.setBoolean(1, estado);
             ps.setString(2, codigo);
             ps.executeUpdate();
@@ -116,10 +117,9 @@ public class CarreraDAO {
     
     public List<CarreraDB> getCarrerasActivas(int pagina) throws AccesoALaDataException {
         List<CarreraDB> carreras = new ArrayList<>();
-        Connection connection = DBConnectionSingleton.getInstancia().getConnection();
-        try {
-            int paginacion = (pagina - 1) * LimitePagina.LIMITE;
-            PreparedStatement ps = connection.prepareStatement(GET_CARRERAS_ACTIVAS);
+        int paginacion = (pagina - 1) * LimitePagina.LIMITE;
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement ps = connection.prepareStatement(GET_CARRERAS_ACTIVAS)) {
             ps.setInt(1, paginacion);
             ps.setInt(2, LimitePagina.LIMITE);
             ResultSet rs = ps.executeQuery();
@@ -133,9 +133,8 @@ public class CarreraDAO {
     }
     
     public CarreraDB getCarreraPorId(String codigo) throws AccesoALaDataException {
-        Connection connection = DBConnectionSingleton.getInstancia().getConnection();
-        try {
-            PreparedStatement ps = connection.prepareStatement(GET_CARRERA_POR_ID);
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement ps = connection.prepareStatement(GET_CARRERA_POR_ID)) {
             ps.setString(1, codigo);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
@@ -149,9 +148,8 @@ public class CarreraDAO {
     
     public List<CarreraDB> getCarrerasPorGrado(int idGrado) throws AccesoALaDataException {
         List<CarreraDB> carreras = new ArrayList<>();
-        Connection connection = DBConnectionSingleton.getInstancia().getConnection();
-        try {
-            PreparedStatement ps = connection.prepareStatement(GET_CARRERAS_POR_GRADO);
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement ps = connection.prepareStatement(GET_CARRERAS_POR_GRADO)) {
             ps.setInt(1, idGrado);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {

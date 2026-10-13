@@ -47,12 +47,12 @@ public class InscripcionDAO {
     }
     
     public InscripcionDB revisarInscripcion(String estudiante) throws AccesoALaDataException {
-        Connection connection = DBConnectionSingleton.getInstancia().getConnection();
-        try {
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement psPago = connection.prepareStatement(PAGO_INSCRIPCION)) {
             boolean pagoRealizado = false;
-            PreparedStatement psPago = connection.prepareStatement(PAGO_INSCRIPCION);
             psPago.setString(1, TipoPago.INSCRIPCION.name());
             psPago.setString(2, estudiante);
+            
             ResultSet rsPago = psPago.executeQuery();
             if (rsPago.next()) {
                 pagoRealizado = rsPago.getBoolean("estado");
@@ -75,21 +75,21 @@ public class InscripcionDAO {
     }
     
     public boolean existeGrupoCicloEscolar(int idGrupo) throws AccesoALaDataException {
-        Connection connection = DBConnectionSingleton.getInstancia().getConnection();
-        try {
-            PreparedStatement ps = connection.prepareStatement(GET_GRUPO_CICLO_ESCOLAR);
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement ps = connection.prepareStatement(GET_GRUPO_CICLO_ESCOLAR)) {
             ps.setInt(1, idGrupo);
-            ResultSet rs = ps.executeQuery();
-            return rs.next();
+            
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
         } catch (SQLException e) {
             throw new AccesoALaDataException("Error al revisar la existencia de un grupo escolar: " + e.getMessage());
         }
     }
     
     public boolean estaInscrito(String dpiEstudiante, int grupoId) throws AccesoALaDataException {
-        Connection connection = DBConnectionSingleton.getInstancia().getConnection();
-        try {
-            PreparedStatement ps = connection.prepareStatement(ESTUDIANTE_INSCRITO);
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement ps = connection.prepareStatement(ESTUDIANTE_INSCRITO)) {
             ps.setString(1, dpiEstudiante);
             ps.setInt(2, grupoId);
             ResultSet rs = ps.executeQuery();
@@ -100,78 +100,86 @@ public class InscripcionDAO {
     }
     
     public void inscribirEstudiantePrimerIngreso(InscripcionRequest inscripcion) throws AccesoALaDataException {
-        Connection connection = DBConnectionSingleton.getInstancia().getConnection();
-        try {
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection()) {
             connection.setAutoCommit(false);
             
-            agregarEstudiante(connection, inscripcion.getEstudiante());
-            
-            PreparedStatement ps = connection.prepareStatement(GENERAR_INSCRIPCION);
-            ps.setString(1, inscripcion.getEstudiante().getDpi());
-            ps.setInt(2, inscripcion.getGrupoId());
-            ps.executeUpdate();
-            
-            PreparedStatement psId = connection.prepareStatement(ULTIMA_INSCRIPCION);
-            ResultSet rsId = psId.executeQuery();
-            if (rsId.next()) {
-                generarBoletaInscripcion(connection, inscripcion.getGrupoId(), inscripcion.getEstudiante().getDpi());
+            try {
+                agregarEstudiante(connection, inscripcion.getEstudiante());
+                
+                try (PreparedStatement ps = connection.prepareStatement(GENERAR_INSCRIPCION)) {
+                    ps.setString(1, inscripcion.getEstudiante().getDpi());
+                    ps.setInt(2, inscripcion.getGrupoId());
+                    ps.executeUpdate();
+                }
+                
+                PreparedStatement psId = connection.prepareStatement(ULTIMA_INSCRIPCION);
+                ResultSet rsId = psId.executeQuery();
+                if (rsId.next()) {
+                    generarBoletaInscripcion(connection, inscripcion.getGrupoId(), inscripcion.getEstudiante().getDpi());
 
-                asignarCursosEstudiante(connection, inscripcion.getGrupoId(), inscripcion.getEstudiante().getDpi(), rsId.getInt("id"));
-            } else {
-                throw new AccesoALaDataException("No se pudo encontrar el ID de la inscripcion");
+                    asignarCursosEstudiante(connection, inscripcion.getGrupoId(), inscripcion.getEstudiante().getDpi(), rsId.getInt("id"));
+                } else {
+                    throw new AccesoALaDataException("No se pudo encontrar el ID de la inscripcion");
+                }
+
+                connection.setAutoCommit(false);
+            } catch (SQLException | AccesoALaDataException e) {
+                try {
+                    connection.rollback();
+                } catch (SQLException ex) {
+                    throw new AccesoALaDataException("Error al realizar el rollback al incribir a un estudiante: " + ex.getMessage() + "\nCon origen: " + e.getMessage());
+                }
+                throw new AccesoALaDataException("Error al inscribir a un estudiante: \n" + e.getMessage());
+            } finally {
+                try {
+                    connection.setAutoCommit(true);
+                } catch (SQLException e) {
+                    throw new AccesoALaDataException("Error al regresar el auto commit al crear un estudiante " + e.getMessage());
+                }
             }
-            
-            connection.setAutoCommit(false);
-        } catch (SQLException | AccesoALaDataException e) {
-            try {
-                connection.rollback();
-            } catch (SQLException ex) {
-                throw new AccesoALaDataException("Error al realizar el rollback al incribir a un estudiante: " + ex.getMessage() + "\nCon origen: " + e.getMessage());
-            }
-            throw new AccesoALaDataException("Error al inscribir a un estudiante: \n" + e.getMessage());
-        } finally {
-            try {
-                connection.setAutoCommit(true);
-            } catch (SQLException e) {
-                throw new AccesoALaDataException("Error al regresar el auto commit al crear un estudiante " + e.getMessage());
-            }
+        } catch (SQLException e) {
+            throw new AccesoALaDataException("Error de conexion con una inscripcion de primer ingreso: " + e.getMessage());
         }
     }
     
     public void inscribirEstudianteReingreso(InscripcionRequest inscripcion) throws AccesoALaDataException {
-        Connection connection = DBConnectionSingleton.getInstancia().getConnection();
-        try {
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection()) {
             connection.setAutoCommit(false);
             
-            PreparedStatement ps = connection.prepareStatement(GENERAR_INSCRIPCION);
-            ps.setString(1, inscripcion.getDpiEstudiante());
-            ps.setInt(2, inscripcion.getGrupoId());
-            ps.executeUpdate();
-            
-            PreparedStatement psId = connection.prepareStatement(ULTIMA_INSCRIPCION);
-            ResultSet rs = psId.executeQuery();
-            if (rs.next()) {
-                generarBoletaInscripcion(connection, inscripcion.getGrupoId(), inscripcion.getDpiEstudiante());
+            try {
+                try (PreparedStatement ps = connection.prepareStatement(GENERAR_INSCRIPCION)) {
+                    ps.setString(1, inscripcion.getDpiEstudiante());
+                    ps.setInt(2, inscripcion.getGrupoId());
+                    ps.executeUpdate();
+                }
 
-                asignarCursosEstudiante(connection, inscripcion.getGrupoId(), inscripcion.getDpiEstudiante(), rs.getInt("id"));
-            } else {
-                throw new AccesoALaDataException("No se pude encontar el ID de la inscripcion: ");
+                PreparedStatement psId = connection.prepareStatement(ULTIMA_INSCRIPCION);
+                ResultSet rs = psId.executeQuery();
+                if (rs.next()) {
+                    generarBoletaInscripcion(connection, inscripcion.getGrupoId(), inscripcion.getDpiEstudiante());
+
+                    asignarCursosEstudiante(connection, inscripcion.getGrupoId(), inscripcion.getDpiEstudiante(), rs.getInt("id"));
+                } else {
+                    throw new AccesoALaDataException("No se pude encontar el ID de la inscripcion: ");
+                }
+
+                connection.commit();
+            } catch (SQLException | AccesoALaDataException e) {
+                try {
+                    connection.rollback();
+                } catch (SQLException ex) {
+                    throw new AccesoALaDataException("Error al hacer un rollback en inscribir estudiante de reingreso: " + ex.getMessage() + "\n Con origen: " + e.getMessage());
+                }
+                throw new AccesoALaDataException("Error al incribir a un estudiante de reingreso: " + e.getMessage());
+            } finally {
+                try {
+                    connection.setAutoCommit(true);
+                } catch (SQLException e) {
+                    throw new AccesoALaDataException("Error al regresar el auto commit al inscribir de reingreso: " + e.getMessage());
+                }
             }
-            
-            connection.commit();
-        } catch (SQLException | AccesoALaDataException e) {
-            try {
-                connection.rollback();
-            } catch (SQLException ex) {
-                throw new AccesoALaDataException("Error al hacer un rollback en inscribir estudiante de reingreso: " + ex.getMessage() + "\n Con origen: " + e.getMessage());
-            }
-            throw new AccesoALaDataException("Error al incribir a un estudiante de reingreso: " + e.getMessage());
-        } finally {
-            try {
-                connection.setAutoCommit(true);
-            } catch (SQLException e) {
-                throw new AccesoALaDataException("Error al regresar el auto commit al inscribir de reingreso: " + e.getMessage());
-            }
+        } catch (SQLException e) {
+            throw new AccesoALaDataException("Error de conexion con uns inscripcion de reingreso: " + e.getMessage());
         }
     }
     

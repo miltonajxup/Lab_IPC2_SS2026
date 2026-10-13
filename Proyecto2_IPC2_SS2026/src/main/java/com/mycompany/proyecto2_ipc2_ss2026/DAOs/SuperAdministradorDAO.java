@@ -35,9 +35,8 @@ public class SuperAdministradorDAO {
     
     public List<AñoLectivoDB> getAñosLectivos() throws AccesoALaDataException {
         List<AñoLectivoDB> años = new ArrayList<>();
-        Connection connection = DBConnectionSingleton.getInstancia().getConnection();
-        try {
-            PreparedStatement ps = connection.prepareStatement(GET_AÑOS_LECTIVOS);
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement ps = connection.prepareStatement(GET_AÑOS_LECTIVOS)) {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 años.add(armarAñoLectivo(rs));
@@ -49,9 +48,8 @@ public class SuperAdministradorDAO {
     }
     
     public AñoLectivoDB getAñoPorId(int año) throws AccesoALaDataException {
-        Connection connection = DBConnectionSingleton.getInstancia().getConnection();
-        try {
-            PreparedStatement ps = connection.prepareStatement(GET_AÑO_POR_ID);
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement ps = connection.prepareStatement(GET_AÑO_POR_ID)) {
             ps.setInt(1, año);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
@@ -68,9 +66,8 @@ public class SuperAdministradorDAO {
     }
     
     public boolean existeAñoLectivo(int año) throws AccesoALaDataException {
-        Connection connection = DBConnectionSingleton.getInstancia().getConnection();
-        try {
-            PreparedStatement ps = connection.prepareStatement(GET_AÑO_POR_ID);
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement ps = connection.prepareStatement(GET_AÑO_POR_ID);) {
             ps.setInt(1, año);
             ResultSet rs = ps.executeQuery();
             return rs.next();
@@ -80,9 +77,8 @@ public class SuperAdministradorDAO {
     }
     
     public List<AñoLectivoDB> crearAñoLectivo(AñoLectivoRequest request) throws AccesoALaDataException {
-        Connection connection = DBConnectionSingleton.getInstancia().getConnection();
-        try {
-            PreparedStatement ps = connection.prepareStatement(CREAR_NUEVO_AÑO_LECTIVO);
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement ps = connection.prepareStatement(CREAR_NUEVO_AÑO_LECTIVO);) {
             ps.setInt(1, request.getAño());
             Date dateInicio = Date.valueOf(request.getFechaInicio());
             Date dateFin = Date.valueOf(request.getFechaFin());
@@ -97,9 +93,8 @@ public class SuperAdministradorDAO {
     }   
     
     public AñoLectivoDB modificarAñoLectivo(AñoLectivoRequest añoLectivo, int año) throws AccesoALaDataException {
-        Connection connection = DBConnectionSingleton.getInstancia().getConnection();
-        try {
-            PreparedStatement ps = connection.prepareStatement(MODIFICAR_AÑO_LECTIVO);
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement ps = connection.prepareStatement(MODIFICAR_AÑO_LECTIVO)) {
             Date dateInicio = Date.valueOf(añoLectivo.getFechaInicio());
             Date dateFin = Date.valueOf(añoLectivo.getFechaFin());
             ps.setDate(1, dateInicio);
@@ -113,9 +108,8 @@ public class SuperAdministradorDAO {
     }
     
     public List<AñoLectivoDB> modificarEstadoAñoLectivo(int año) throws AccesoALaDataException {
-        Connection connection = DBConnectionSingleton.getInstancia().getConnection();
-        try {
-            PreparedStatement ps1 = connection.prepareStatement(DESACTIVAR_CICLOS_ACTIVOS);
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement ps1 = connection.prepareStatement(DESACTIVAR_CICLOS_ACTIVOS)) {
             ps1.executeUpdate();
             
             PreparedStatement ps2 = connection.prepareStatement(ACTIVAR_CICLO_ESCOLAR_ACTUAL);
@@ -128,9 +122,8 @@ public class SuperAdministradorDAO {
     }
     
     public void modificarSalario(double salarioActual, String dpiUsuario) throws AccesoALaDataException {
-        Connection connection = DBConnectionSingleton.getInstancia().getConnection();
-        try {
-            PreparedStatement ps = connection.prepareStatement(MODIFICAR_SALARIO);
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement ps = connection.prepareStatement(MODIFICAR_SALARIO)) {
             ps.setDouble(1, salarioActual);
             ps.setString(2, dpiUsuario);
             ps.executeUpdate();
@@ -140,9 +133,8 @@ public class SuperAdministradorDAO {
     }
     
     public void modificarCostoColegiatura(GradoRequest grado, int idGrado) throws AccesoALaDataException {
-        Connection connection = DBConnectionSingleton.getInstancia().getConnection();
-        try {
-            PreparedStatement ps = connection.prepareStatement(MODIFICAR_COSTO_COLEGIATURA);
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement ps = connection.prepareStatement(MODIFICAR_COSTO_COLEGIATURA)) {
             ps.setDouble(1, grado.getCostoColegiatura());
             ps.setInt(2, idGrado);
             ps.executeUpdate();
@@ -152,9 +144,8 @@ public class SuperAdministradorDAO {
     }
     
     public void modificarCostoInscripcion(GradoRequest grado, int idGrado) throws AccesoALaDataException {
-        Connection connection = DBConnectionSingleton.getInstancia().getConnection();
-        try {
-            PreparedStatement ps = connection.prepareStatement(MODIFICAR_COSTO_INSCRIPCION);
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement ps = connection.prepareStatement(MODIFICAR_COSTO_INSCRIPCION)) {
             ps.setDouble(1, grado.getCostoInscripcion());
             ps.setInt(1, idGrado);
             ps.executeUpdate();

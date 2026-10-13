@@ -48,39 +48,47 @@ public class PrestamoDAO {
     }
     
     public void generarPrestamo(PrestamoRequest prestamo) throws AccesoALaDataException {
-        Connection connection = DBConnectionSingleton.getInstancia().getConnection();
-        try {
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection()) {
             connection.setAutoCommit(false); 
             
-            PreparedStatement ps = connection.prepareStatement(GENERAR_PRESTAMO);
-            Date datePrestamo = Date.valueOf(prestamo.getFechaPrestamo());
-            Date dateDevolucion = Date.valueOf(prestamo.getFechaDevolucionEsperada());
-            ps.setDate(1, datePrestamo);
-            ps.setDate(2, dateDevolucion);
-            ps.setString(3, prestamo.getPrestamista());
-            ps.executeUpdate();
-            
-            PreparedStatement psId = connection.prepareStatement(GET_ULTIMO_ID);
-            ResultSet rs = psId.executeQuery();
-            if (rs.next()) {
-                int idPrestamo = rs.getInt("id");
-                modificarLibrosPrestamo(connection, idPrestamo, prestamo);
-            }
-            
-            connection.commit();
-        } catch (SQLException | AccesoALaDataException e) {
             try {
-                connection.rollback();
-            } catch (SQLException ex) {
-                throw new AccesoALaDataException("Error al hacer rollback de un prestamo: " + ex.getMessage() + ". \nError original: " + e.getMessage());
+                try (PreparedStatement ps = connection.prepareStatement(GENERAR_PRESTAMO)) {
+                    Date datePrestamo = Date.valueOf(prestamo.getFechaPrestamo());
+                    Date dateDevolucion = Date.valueOf(prestamo.getFechaDevolucionEsperada());
+                    ps.setDate(1, datePrestamo);
+                    ps.setDate(2, dateDevolucion);
+                    ps.setString(3, prestamo.getPrestamista());
+                    ps.executeUpdate();
+                }
+
+                try (PreparedStatement psId = connection.prepareStatement(GET_ULTIMO_ID)) {
+                    try (ResultSet rs = psId.executeQuery()) {
+                        if (rs.next()) {
+                            int idPrestamo = rs.getInt("id");
+                            modificarLibrosPrestamo(connection, idPrestamo, prestamo);
+                        } else {
+                            throw new AccesoALaDataException("No se pudo encontrar el ID del Prestamo");
+                        }
+                    }
+                }
+
+                connection.commit();
+            } catch (SQLException | AccesoALaDataException e) {
+                try {
+                    connection.rollback();
+                } catch (SQLException ex) {
+                    throw new AccesoALaDataException("Error al hacer rollback de un prestamo: " + ex.getMessage() + ". \nError original: " + e.getMessage());
+                }
+                throw new AccesoALaDataException("Error al generar un prestamo de libro: " + e.getMessage());
+            } finally {
+                try {
+                    connection.setAutoCommit(true);
+                } catch (SQLException e) {
+                    throw new AccesoALaDataException("Error al devolver el auto commit al generar al generar un prestamo " + e.getMessage());
+                }
             }
-            throw new AccesoALaDataException("Error al generar un prestamo de libro: " + e.getMessage());
-        } finally {
-            try {
-                connection.setAutoCommit(true);
-            } catch (SQLException e) {
-                throw new AccesoALaDataException("Error al devolver el auto commit al generar al generar un prestamo " + e.getMessage());
-            }
+        } catch (SQLException e) {
+            throw new AccesoALaDataException("Error de conexion al Generar un Prestamo de Libro: " + e.getMessage());
         }
     }
     
@@ -103,37 +111,41 @@ public class PrestamoDAO {
     }
     
     public void concluirPrestamo(PrestamoRequest prestamo, int idPrestamo) throws AccesoALaDataException {
-        Connection connection = DBConnectionSingleton.getInstancia().getConnection();
-        try {
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection()) {
             connection.setAutoCommit(false);
-            
-            PreparedStatement ps = connection.prepareStatement(CONCLUIR_PRESTAMO);
-            Date dateFinal = Date.valueOf(prestamo.getFechaDevolucionCompletada());
-            ps.setDate(1, dateFinal);
-            ps.setInt(2, idPrestamo);
-            ps.executeUpdate();
-            
-            List<LibroPrestamoDB> libros = getLibrosPrestamo(connection, idPrestamo);
-            devolverLibros(connection, libros);
-            
-            connection.commit();
-        } catch (SQLException | AccesoALaDataException e) {
+
             try {
-                connection.rollback();
-            } catch (SQLException ex) {
-                throw new AccesoALaDataException("Error al hacer rollback de una devolucion de libro: " + ex.getMessage() + ". \nOrigen: " + e.getMessage());
+                try (PreparedStatement ps = connection.prepareStatement(CONCLUIR_PRESTAMO)) {
+                    Date dateFinal = Date.valueOf(prestamo.getFechaDevolucionCompletada());
+                    ps.setDate(1, dateFinal);
+                    ps.setInt(2, idPrestamo);
+                    ps.executeUpdate();
+                }
+
+                List<LibroPrestamoDB> libros = getLibrosPrestamo(connection, idPrestamo);
+                devolverLibros(connection, libros);
+
+                connection.commit();
+            } catch (SQLException | AccesoALaDataException e) {
+                try {
+                    connection.rollback();
+                } catch (SQLException ex) {
+                    throw new AccesoALaDataException("Error al hacer rollback de una devolucion de libro: " + ex.getMessage() + ". \nOrigen: " + e.getMessage());
+                }
+                throw new AccesoALaDataException("Error al concluir un prestamo: " + e.getMessage());
+            } finally {
+                try {
+                    connection.setAutoCommit(true);
+                } catch (SQLException e) {
+                    throw new AccesoALaDataException("Error al devolver el auto commit al devolver un libro " + e.getMessage());
+                }
             }
-            throw new AccesoALaDataException("Error al concluir un prestamo: " + e.getMessage());
-        } finally {
-            try {
-                connection.setAutoCommit(true);
-            } catch (SQLException e) {
-                throw new AccesoALaDataException("Error al devolver el auto commit al devolver un libro " + e.getMessage());
-            }
+        } catch (SQLException e) {
+            throw new AccesoALaDataException("Error de conexion al concluir un prestamo: " + e.getMessage());
         }
     }
     
-    private void devolverLibros(Connection connection, List<LibroPrestamoDB> libros) throws AccesoALaDataException {
+    private void devolverLibros(Connection connection, List<LibroPrestamoDB> libros) throws AccesoALaDataException, SQLException {
         for (LibroPrestamoDB libro : libros) {
             LibroDB actual = librodao.getLibroPorId(libro.getCodigo());
             int cantidadActual = actual.getCantidadDisponible() + libro.getCantidad();
@@ -142,9 +154,8 @@ public class PrestamoDAO {
     }
     
     public boolean existePrestamo(int id) throws AccesoALaDataException {
-        Connection connection = DBConnectionSingleton.getInstancia().getConnection();
-        try {
-            PreparedStatement ps = connection.prepareStatement(GET_PRESTAMO_POR_ID);
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement ps = connection.prepareStatement(GET_PRESTAMO_POR_ID)) {
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
             return rs.next();
@@ -154,14 +165,15 @@ public class PrestamoDAO {
     }
     
     public PrestamoDB prestamoPorId(int id) throws AccesoALaDataException {
-        Connection connection = DBConnectionSingleton.getInstancia().getConnection();
-        try {
-            PreparedStatement ps = connection.prepareStatement(GET_PRESTAMO_POR_ID);
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement ps = connection.prepareStatement(GET_PRESTAMO_POR_ID)) {
             ps.setInt(1, id);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                List<LibroPrestamoDB> libros = getLibrosPrestamo(connection, id);
-                return armarPrestamo(libros, rs);
+            
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    List<LibroPrestamoDB> libros = getLibrosPrestamo(connection, id);
+                    return armarPrestamo(libros, rs);
+                }
             }
         } catch (SQLException e) {
             throw new AccesoALaDataException("Error al revisar la existencia de un prestamo: " + e.getMessage());
@@ -171,14 +183,15 @@ public class PrestamoDAO {
     
     public List<PrestamoDB> getPrestamoPorNombre(String nombrePrestamista) throws AccesoALaDataException {
         List<PrestamoDB> prestamos = new ArrayList<>();
-        Connection connection = DBConnectionSingleton.getInstancia().getConnection();
-        try {
-            PreparedStatement ps = connection.prepareStatement(GET_PRESTAMO_POR_NOMBRE);
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement ps = connection.prepareStatement(GET_PRESTAMO_POR_NOMBRE)) {
             ps.setString(1, nombrePrestamista);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                List<LibroPrestamoDB> libros = getLibrosPrestamo(connection, rs.getInt("id"));
-                prestamos.add(armarPrestamo(libros, rs));
+            
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    List<LibroPrestamoDB> libros = getLibrosPrestamo(connection, rs.getInt("id"));
+                    prestamos.add(armarPrestamo(libros, rs));
+                }
             }
         } catch (SQLException | AccesoALaDataException e) {
             throw new AccesoALaDataException("Error al buscar un prestamo por el prestamista: " + e.getMessage());
@@ -187,17 +200,18 @@ public class PrestamoDAO {
     }
     
     public List<PrestamoDB> getPrestamosSinTerminar(int numeroPagina) throws AccesoALaDataException {
+        int inicioPaginacion = (numeroPagina - 1) * LimitePagina.LIMITE;
         List<PrestamoDB> prestamos = new ArrayList<>();
-        Connection connection = DBConnectionSingleton.getInstancia().getConnection();
-        try {
-            int inicioPaginacion = (numeroPagina - 1) * LimitePagina.LIMITE;
-            PreparedStatement ps = connection.prepareStatement(CONSULTAR_PRESTAMOS_SIN_TERMINAR);
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement ps = connection.prepareStatement(CONSULTAR_PRESTAMOS_SIN_TERMINAR)) {
             ps.setInt(1, inicioPaginacion);
             ps.setInt(2, LimitePagina.LIMITE);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                List<LibroPrestamoDB> libros = getLibrosPrestamo(connection, rs.getInt("id"));
-                prestamos.add(armarPrestamo(libros, rs));
+            
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    List<LibroPrestamoDB> libros = getLibrosPrestamo(connection, rs.getInt("id"));
+                    prestamos.add(armarPrestamo(libros, rs));
+                }
             }
         } catch (SQLException | AccesoALaDataException e) {
             throw new AccesoALaDataException("Error al consultar los prestamos sin terminar: " + e.getMessage());
@@ -206,17 +220,18 @@ public class PrestamoDAO {
     }
     
     public List<PrestamoDB> getTodosLosRegistros(int numeroPagina) throws AccesoALaDataException {
+        int inicioPaginacion = (numeroPagina - 1) * LimitePagina.LIMITE;
         List<PrestamoDB> prestamos = new ArrayList<>();
-        Connection connection = DBConnectionSingleton.getInstancia().getConnection();
-        try {
-            int inicioPaginacion = (numeroPagina - 1) * LimitePagina.LIMITE;
-            PreparedStatement ps = connection.prepareStatement(GET_TODOS_LOS_REGISTROS);
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement ps = connection.prepareStatement(GET_TODOS_LOS_REGISTROS)) {
             ps.setInt(1, inicioPaginacion);
             ps.setInt(2, LimitePagina.LIMITE);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                List<LibroPrestamoDB> libros = getLibrosPrestamo(connection, rs.getInt("id"));
-                prestamos.add(armarPrestamo(libros, rs));
+            
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    List<LibroPrestamoDB> libros = getLibrosPrestamo(connection, rs.getInt("id"));
+                    prestamos.add(armarPrestamo(libros, rs));
+                }
             }
         } catch (SQLException | AccesoALaDataException e) {
             throw new AccesoALaDataException("Error al consultar todos los prestamos: " + e.getMessage());

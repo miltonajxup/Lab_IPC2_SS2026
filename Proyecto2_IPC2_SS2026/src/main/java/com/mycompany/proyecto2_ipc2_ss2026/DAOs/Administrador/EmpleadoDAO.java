@@ -52,41 +52,44 @@ public class EmpleadoDAO {
     }
     
     public void agregarEmpleado(UsuarioRequest usuario) throws AccesoALaDataException {
-        Connection connection = DBConnectionSingleton.getInstancia().getConnection();
         try {
-            connection.setAutoCommit(false);
-            
-            usuariodao.agregarUsuario(connection, usuario);
-            
-            PreparedStatement ps = connection.prepareStatement(AGREGAR_EMPLEADO);
-            ps.setString(1, usuario.getDpi());
-            ps.executeUpdate();
-            
-            contratarUsuario(connection, usuario);
-            
-            connection.commit();
-        } catch (SQLException | AccesoALaDataException e) {
+            Connection connection = DBConnectionSingleton.getInstancia().getConnection();
             try {
-                connection.rollback();
-            } catch (SQLException ex) {
-                throw new AccesoALaDataException("Error al realizar un rollback al agregar un usuario de tipo " + usuario.getRol().name() + ": " + ex.getMessage() 
-                        + "\nError Inicial " + e.getMessage());
+                connection.setAutoCommit(false);
+
+                usuariodao.agregarUsuario(connection, usuario);
+
+                PreparedStatement ps = connection.prepareStatement(AGREGAR_EMPLEADO);
+                ps.setString(1, usuario.getDpi());
+                ps.executeUpdate();
+
+                contratarUsuario(connection, usuario);
+
+                connection.commit();
+            } catch (SQLException | AccesoALaDataException e) {
+                try {
+                    connection.rollback();
+                } catch (SQLException ex) {
+                    throw new AccesoALaDataException("Error al realizar un rollback al agregar un usuario de tipo " + usuario.getRol().name() + ": " + ex.getMessage() 
+                            + "\nError Inicial " + e.getMessage());
+                }
+                throw new AccesoALaDataException("Error al agregar un usuario de tipo " + usuario.getRol().name() + ": " + e.getMessage());
+            } finally {
+                try {
+                    connection.setAutoCommit(true);
+                } catch (SQLException ex) {
+                    throw new AccesoALaDataException("Error al restarurar el autocommit de la creacion de un usuario " + ex.getMessage());
+                }
             }
-            throw new AccesoALaDataException("Error al agregar un usuario de tipo " + usuario.getRol().name() + ": " + e.getMessage());
-        } finally {
-            try {
-                connection.setAutoCommit(true);
-            } catch (SQLException ex) {
-                throw new AccesoALaDataException("Error al restarurar el autocommit de la creacion de un usuario " + ex.getMessage());
-            }
+        } catch (SQLException e) {
+            throw new AccesoALaDataException("Error al cerrar la conexion al agregar un empleado: " + e.getMessage());
         }
     }
     
     public boolean existeContrato(String dpiEmpleado) throws AccesoALaDataException {
         int añoActivo = ciclo.getAñoActivo();
-        Connection connection = DBConnectionSingleton.getInstancia().getConnection();
-        try {
-            PreparedStatement ps = connection.prepareStatement(EXISTE_CONTRATO);
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement ps = connection.prepareStatement(EXISTE_CONTRATO)) {
             ps.setString(1, dpiEmpleado);
             ps.setInt(2, añoActivo);
             ResultSet rs = ps.executeQuery();
@@ -97,34 +100,33 @@ public class EmpleadoDAO {
     }
     
     public void contratarUsurario(UsuarioRequest usuario) throws AccesoALaDataException {
-        Connection connection = DBConnectionSingleton.getInstancia().getConnection();
-        contratarUsuario(connection, usuario);
-    }
-    
-    private void contratarUsuario(Connection connection, UsuarioRequest usuario) throws AccesoALaDataException {
-        int añoActivo = ciclo.getAñoActivo();
-        try {
-            PreparedStatement ps = connection.prepareStatement(CREAR_CONTRATO_EMPLEADO);
-            ps.setString(1, usuario.getDpi());
-            ps.setInt(2, añoActivo);
-            ps.setDouble(3, usuario.getSalario());
-            ps.executeUpdate();
-        } catch (SQLException e) {
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection()) {
+            contratarUsuario(connection, usuario);
+        } catch (SQLException | AccesoALaDataException e) {
             throw new AccesoALaDataException("Error al generan un contrato " + e.getMessage());
         }
     }
     
+    private void contratarUsuario(Connection connection, UsuarioRequest usuario) throws SQLException, AccesoALaDataException {
+        int añoActivo = ciclo.getAñoActivo();
+        try (PreparedStatement ps = connection.prepareStatement(CREAR_CONTRATO_EMPLEADO)) {
+            ps.setString(1, usuario.getDpi());
+            ps.setInt(2, añoActivo);
+            ps.setDouble(3, usuario.getSalario());
+            ps.executeUpdate();
+        }
+    }
+    
     public EmpleadoDB getEmpleadoPorID(String dpiEmpleado) throws AccesoALaDataException {
-        Connection connection = DBConnectionSingleton.getInstancia().getConnection();
         int año = ciclo.getAñoActivo();
-        try {
-            PreparedStatement ps = connection.prepareStatement(GET_EMPLEADO_POR_DPI);
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement ps = connection.prepareStatement(GET_EMPLEADO_POR_DPI)) {
             ps.setInt(1, año);
             ps.setString(2, dpiEmpleado);
-            ResultSet rs = ps.executeQuery();
-            
-            if (rs.next()) {
-                return armarEmpleado(rs);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return armarEmpleado(rs);
+                }
             }
         } catch (SQLException e) {
             throw new AccesoALaDataException("Error al buscar a un empleado por id " + e.getMessage());
@@ -134,18 +136,18 @@ public class EmpleadoDAO {
     
     public List<EmpleadoDB> getEmpleadosPorRol(String rol, int numeroPagina) throws AccesoALaDataException {
         List<EmpleadoDB> empleados = new ArrayList<>();
-        Connection connection = DBConnectionSingleton.getInstancia().getConnection();
         int año = ciclo.getAñoActivo();
         int paginacion = (numeroPagina - 1) * LimitePagina.LIMITE;
-        try {
-            PreparedStatement ps = connection.prepareStatement(GET_EMPLEADOS_POR_ROL);
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement ps = connection.prepareStatement(GET_EMPLEADOS_POR_ROL)) {
             ps.setInt(1, año);
             ps.setString(2, rol);
             ps.setInt(3, paginacion);
             ps.setInt(4, LimitePagina.LIMITE);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                empleados.add(armarEmpleado(rs));
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    empleados.add(armarEmpleado(rs));
+                }
             }
         } catch (SQLException e) {
             throw new AccesoALaDataException("Error al buscar a los empleados del rol " + rol + ": " + e.getMessage());
