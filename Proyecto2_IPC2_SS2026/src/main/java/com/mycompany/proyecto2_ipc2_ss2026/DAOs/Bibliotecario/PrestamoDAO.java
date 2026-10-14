@@ -239,7 +239,7 @@ public class PrestamoDAO {
         return prestamos;
     }
     
-    private PrestamoDB armarPrestamo(List<LibroPrestamoDB> libros, ResultSet rs) throws SQLException, AccesoALaDataException {
+    public PrestamoDB armarPrestamo(List<LibroPrestamoDB> libros, ResultSet rs) throws SQLException, AccesoALaDataException {
         String fechaCompletada = rs.getString("fecha_devolucion_completada");
         
         boolean estado = fechaCompletada != null;
@@ -254,7 +254,7 @@ public class PrestamoDAO {
                 libros);
     }
     
-    private List<LibroPrestamoDB> getLibrosPrestamo(Connection connection, int idPrestamo) throws AccesoALaDataException {
+    public List<LibroPrestamoDB> getLibrosPrestamo(Connection connection, int idPrestamo) throws AccesoALaDataException {
         List<LibroPrestamoDB> libros = new ArrayList<>();
         
         try {

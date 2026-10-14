@@ -10,9 +10,11 @@ import com.mycompany.proyecto2_ipc2_ss2026.Exceptions.AccesoALaDataException;
 import com.mycompany.proyecto2_ipc2_ss2026.ModelosDB.MultaDB;
 import com.mycompany.proyecto2_ipc2_ss2026.ModelosRequest.MultaRequest;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -110,12 +112,18 @@ public class MultaDAO {
         return multas;
     }
     
-    private MultaDB armarMulta(ResultSet rs) throws SQLException {
+    public MultaDB armarMulta(ResultSet rs) throws SQLException {
+        LocalDate fecha = null;
+        Date date = rs.getDate("fecha_pago");
+        if (date != null) {
+            date.toLocalDate();
+        }
+        
         return new MultaDB(
                 rs.getInt("id"), 
                 rs.getDouble("monto"), 
                 rs.getBoolean("estado"), 
-                rs.getDate("fecha_pago").toLocalDate(), 
+                fecha, 
                 rs.getInt("prestamo_id"));
     }
     

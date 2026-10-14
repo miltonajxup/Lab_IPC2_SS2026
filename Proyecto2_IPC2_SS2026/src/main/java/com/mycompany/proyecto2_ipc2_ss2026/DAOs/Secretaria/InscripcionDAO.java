@@ -29,6 +29,7 @@ public class InscripcionDAO {
     private final String REVISAR_INSCRIPCION = "SELECT * FROM inscripcion WHERE estudiante = ?";
     private final String ESTUDIANTE_INSCRITO = "SELECT * FROM inscripcion WHERE estudiante = ? AND grupo_id = ?";
     private final String AGREGAR_ESTUDIANTE = "INSERT INTO estudiante (dpi_estudiante, numero_encargado, numero_estudiante) VALUES (?,?,?)";
+    private final String AGREGAR_INFO = "INSERT INTO informacion_medica (dpi_estudiante) VALUES (?)";
     private final String GENERAR_INSCRIPCION = "INSERT INTO inscripcion (estudiante, grupo_id) VALUES (?,?)";
     private final String ULTIMA_INSCRIPCION = "SELECT * FROM inscripcion ORDER BY id DESC LIMIT 1";
     private final String GENERAR_BOLETA_PAGO = "INSERT INTO boleta_pago (monto, tipo_pago, ciclo_escolar_id, estudiante_dpi) VALUES (?,?,?,?)";
@@ -186,14 +187,17 @@ public class InscripcionDAO {
     }
     
     private void agregarEstudiante(Connection connection, UsuarioRequest request) throws AccesoALaDataException {
-        try {
+        try (PreparedStatement ps = connection.prepareStatement(AGREGAR_ESTUDIANTE);
+                PreparedStatement psInfo = connection.prepareStatement(AGREGAR_INFO)) {
             usuariodao.agregarUsuario(connection, request);
-
-            PreparedStatement ps = connection.prepareStatement(AGREGAR_ESTUDIANTE);
+            
             ps.setString(1, request.getDpi());
             ps.setString(2, request.getNumeroEncargado());
             ps.setString(3, request.getNumeroEstudiante());
             ps.executeUpdate();
+            
+            psInfo.setString(1, request.getDpi());
+            psInfo.executeUpdate();
         } catch (SQLException e) {
             throw new AccesoALaDataException("Error al agregar un estudiante: " + e.getMessage());
         }
