@@ -93,14 +93,14 @@ public class ServicioMaestro {
             throw new ValorInvalidoException("La nota minima permitida es: " + Nota.MINIMO.getValor());
         }
         if (nota.getNotaZona() > Nota.MAXIMO_ZONA.getValor()) {
-            throw new ValorInvalidoException("La nota maxima para la zona es: " + Nota.MAXIMO_ZONA);
+            throw new ValorInvalidoException("La nota maxima para la zona es: " + Nota.MAXIMO_ZONA.getValor());
         }
         return maestrodao.modificarZona(nota.getNotaZona(), id);
     }
     
     public NotaDB modificarExamen(NotaRequest nota, int id) throws AccesoALaDataException, ValorInvalidoException {
         if (nota.getExamenFinal() < Nota.MINIMO.getValor()) {
-            throw new ValorInvalidoException("La nota minima permitida es: " + Nota.MINIMO);
+            throw new ValorInvalidoException("La nota minima permitida es: " + Nota.MINIMO.getValor());
         }
         if (nota.getExamenFinal() > Nota.MAXIMO_FINAL.getValor()) {
             throw new ValorInvalidoException("La nota maxima para el examen final es: " + Nota.MAXIMO_FINAL.getValor());

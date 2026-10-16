@@ -35,6 +35,13 @@ public class EmpleadoDAO {
             JOIN empleado AS emp ON usu.dpi = emp.dpi_empleado 
             JOIN contrato_empleado AS con ON emp.dpi_empleado = con.empleado_dpi 
             WHERE con.ciclo_escolar_id = ? AND usu.dpi = ? """;
+    private final String GET_EMPLEADO_SIN_CONTRATO = 
+            """
+            SELECT usu.*, emp.*, con.salario, con.fecha_contratacion 
+            FROM usuario AS usu 
+            JOIN empleado AS emp ON usu.dpi = emp.dpi_empleado 
+            LEFT JOIN contrato_empleado AS con ON emp.dpi_empleado = con.empleado_dpi 
+            WHERE usu.dpi = ? """;
     private final String GET_EMPLEADOS_POR_ROL = 
             """
             SELECT usu.*, emp.*, con.salario, con.fecha_contratacion 
@@ -130,6 +137,21 @@ public class EmpleadoDAO {
             }
         } catch (SQLException e) {
             throw new AccesoALaDataException("Error al buscar a un empleado por id " + e.getMessage());
+        }
+        return null;
+    }
+    
+    public EmpleadoDB getEmpleadoSinContrato(String dpiEmpleado) throws AccesoALaDataException {
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement ps = connection.prepareStatement(GET_EMPLEADO_SIN_CONTRATO)) {
+            ps.setString(1, dpiEmpleado);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return armarEmpleado(rs);
+                }
+            }
+        } catch (SQLException e) {
+            throw new AccesoALaDataException("Error al buscar un usuario sin un contrato: " + e.getMessage());
         }
         return null;
     }

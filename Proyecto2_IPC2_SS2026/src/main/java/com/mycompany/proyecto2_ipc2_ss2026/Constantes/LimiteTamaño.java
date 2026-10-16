@@ -17,6 +17,7 @@ public enum LimiteTamaño {
     CODIGO(20),
     SECCION(1), 
     DESCRIPCION(300), 
+    MINIMO_CONTRASEÑA(4)
     
     
     ;
