@@ -37,6 +37,7 @@ public class ServicioEmpleado {
             throw new ValorInvalidoException("No se pudo crear el usuario de empleado por falta de valores de creacion");
         }
         revisarTamaños(usuario);
+        revisarSalario(usuario.getSalario());
         if (usuariodao.existeUsuarioPorDpi(usuario.getDpi())) {
             throw new DataExistenteException("Ya existe un usuario con el DPI " + usuario.getDpi() + " registrado en el sistema");
         }

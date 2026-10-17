@@ -33,7 +33,7 @@ public class AdministradorDAO {
             SELECT ins.*, grad.costo_colegiatura FROM inscripcion AS ins 
             JOIN grupo_ciclo_escolar AS grup ON ins.grupo_id = grup.id 
             JOIN grado AS grad ON grup.grado_id = grad.id 
-            WHERE ins.estado = TRUE AND grup.ciclo_escolar_id = ?""";
+            WHERE ins.estado = 'ACTIVO' AND grup.ciclo_escolar_id = ?""";
     private final String BOLETA_GENERADA = "SELECT * FROM boleta_pago WHERE ciclo_escolar_id = ? AND estudiante_dpi = ? AND mes_pago = ? AND tipo_pago = ?";
     private final String GENERAR_BOLETAS_PAGO = "INSERT INTO boleta_pago (monto, tipo_pago, mes_pago, ciclo_escolar_id, estudiante_dpi) VALUES (?,?,?,?,?)";
     private final String GET_BOLETAS_GENERERADAS = "SELECT bol.*, usu.nombre AS nombre_estudiante FROM boleta_pago AS bol JOIN usuario AS usu ON bol.estudiante_dpi = usu.dpi WHERE ciclo_escolar_id = ? AND mes_pago = ? LIMIT ?, ?";
