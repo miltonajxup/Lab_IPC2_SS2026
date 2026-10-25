@@ -40,11 +40,14 @@ public class ServicioCarrera {
             throw new ValorInvalidoException("El codigo no puede tener mas de " + LimiteTamaño.CODIGO.getLimite() + " caracteres");
         }
         revisarTamaño(carrera.getNombre());
+        if (carreradao.existeCodigoCarrera(carrera.getCodigo())) {
+            throw new DataExistenteException("El codigo de la carrera ya esta sientdo utilizado");
+        }
         if (carreradao.existeNombreCarrera(carrera.getNombre()) ) {
             throw new DataExistenteException("Ya existe registrado una carrera llamada " + carrera.getNombre());
         }
         
-        revisarCodigosGrado(carrera.getGrados());
+        revisarCodigosGrado(carrera.getGradosId());
         
         return carreradao.crearCarrera(carrera);
     }

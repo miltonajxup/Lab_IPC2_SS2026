@@ -28,13 +28,13 @@ public class ServicioSuperAdmin {
     }
     
     public List<AñoLectivoDB> crearAñoLectivo(AñoLectivoRequest añoLectivo) throws AccesoALaDataException, ValorInvalidoException, DataExistenteException {
-        if (añoLectivo == null || añoLectivo.getAño() == 0 || añoLectivo.getFechaInicio() == null || añoLectivo.getFechaFin() == null) {
+        if (añoLectivo == null || añoLectivo.getAnio() == 0 || añoLectivo.getFechaInicio() == null || añoLectivo.getFechaFin() == null) {
             throw new ValorInvalidoException("Falta especificar los valores para la creacion de un nuevo año lectivo");
         }
         
         revisarFecha(añoLectivo.getFechaInicio(), añoLectivo.getFechaFin());
         
-        if (superdao.existeAñoLectivo(añoLectivo.getAño())) {
+        if (superdao.existeAñoLectivo(añoLectivo.getAnio())) {
             throw new DataExistenteException("El año que se quiere agregar ya existe en los registros del colegio");
         }
         return superdao.crearAñoLectivo(añoLectivo);
@@ -54,10 +54,16 @@ public class ServicioSuperAdmin {
     }
     
     public List<AñoLectivoDB> activarAñoLectivo(int año) throws AccesoALaDataException, DataInexistenteException {
-        if (!superdao.existeAñoLectivo(año)) {
+        AñoLectivoDB añodb = superdao.getAñoPorId(año);
+        if (añodb == null) {
             throw new DataInexistenteException("El año que se quiere activar no existe");
         }
-        return superdao.modificarEstadoAñoLectivo(año);
+        if (añodb.isEstado()) {
+            superdao.modificarUnEstado(año, !añodb.isEstado());
+        } else {
+            superdao.modificarEstadoAñoLectivo(año);
+        }
+        return superdao.getAñosLectivos();
     }
     
     private void revisarFecha(LocalDate fechaInicio, LocalDate fechaFin) throws ValorInvalidoException {

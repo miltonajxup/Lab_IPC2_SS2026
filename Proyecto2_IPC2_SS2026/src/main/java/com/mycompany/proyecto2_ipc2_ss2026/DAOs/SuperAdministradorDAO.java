@@ -23,12 +23,12 @@ import java.util.List;
  */
 public class SuperAdministradorDAO {
     
-    private final String GET_AÑOS_LECTIVOS = "SELECT * FROM ciclo_escolar";
+    private final String GET_AÑOS_LECTIVOS = "SELECT * FROM ciclo_escolar ORDER BY anio DESC";
     private final String GET_AÑO_POR_ID = "SELECT * FROM ciclo_escolar WHERE anio = ?";
     private final String CREAR_NUEVO_AÑO_LECTIVO = "INSERT INTO ciclo_escolar (anio, fecha_inicio, fecha_fin) VALUES (?,?,?)";
     private final String MODIFICAR_AÑO_LECTIVO = "UPDATE ciclo_escolar SET fecha_inicio = ?, fecha_fin = ? WHERE anio = ?";
     private final String DESACTIVAR_CICLOS_ACTIVOS = "UPDATE ciclo_escolar SET estado = FALSE WHERE estado = TRUE";
-    private final String ACTIVAR_CICLO_ESCOLAR_ACTUAL = "UPDATE ciclo_escolar SET estado = TRUE WHERE anio = ?";
+    private final String MODIFICAR_ESTADO_CICLO_ESCOLAR = "UPDATE ciclo_escolar SET estado = ? WHERE anio = ?";
     private final String MODIFICAR_SALARIO = "UPDATE empleado SET salario = ? WHERE dpi = ?";
     private final String MODIFICAR_COSTO_COLEGIATURA = "UPDATE grado SET costo_colegiatura = ? WHERE id = ?";
     private final String MODIFICAR_COSTO_INSCRIPCION = "UPDATE grado SET costo_inscripcion = ? WHERE id = ?";
@@ -79,7 +79,7 @@ public class SuperAdministradorDAO {
     public List<AñoLectivoDB> crearAñoLectivo(AñoLectivoRequest request) throws AccesoALaDataException {
         try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
                 PreparedStatement ps = connection.prepareStatement(CREAR_NUEVO_AÑO_LECTIVO);) {
-            ps.setInt(1, request.getAño());
+            ps.setInt(1, request.getAnio());
             Date dateInicio = Date.valueOf(request.getFechaInicio());
             Date dateFin = Date.valueOf(request.getFechaFin());
             ps.setDate(2, dateInicio);
@@ -107,18 +107,29 @@ public class SuperAdministradorDAO {
         return getAñoPorId(año);
     }
     
-    public List<AñoLectivoDB> modificarEstadoAñoLectivo(int año) throws AccesoALaDataException {
+    public void modificarEstadoAñoLectivo(int año) throws AccesoALaDataException {
         try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
                 PreparedStatement ps1 = connection.prepareStatement(DESACTIVAR_CICLOS_ACTIVOS)) {
             ps1.executeUpdate();
             
-            PreparedStatement ps2 = connection.prepareStatement(ACTIVAR_CICLO_ESCOLAR_ACTUAL);
-            ps2.setInt(1, año);
+            PreparedStatement ps2 = connection.prepareStatement(MODIFICAR_ESTADO_CICLO_ESCOLAR);
+            ps2.setBoolean(1, true);
+            ps2.setInt(2, año);
             ps2.executeUpdate();
         } catch (SQLException e) {
             throw new AccesoALaDataException("Error al activar un año lectivo: " + e.getMessage());
         }
-        return getAñosLectivos();
+    }
+    
+    public void modificarUnEstado(int año, boolean estado) throws AccesoALaDataException {
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement ps = connection.prepareCall(MODIFICAR_ESTADO_CICLO_ESCOLAR)) {
+            ps.setBoolean(1, estado);
+            ps.setInt(2, año);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new AccesoALaDataException("Error al modificar el estado de un año lectivo: " + e.getMessage());
+        }
     }
     
     public void modificarSalario(double salarioActual, String dpiUsuario) throws AccesoALaDataException {

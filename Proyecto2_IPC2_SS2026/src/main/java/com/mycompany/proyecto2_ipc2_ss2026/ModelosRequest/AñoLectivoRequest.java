@@ -12,16 +12,16 @@ import java.time.LocalDate;
  */
 public class AñoLectivoRequest {
     
-    private int año;
+    private int anio;
     private LocalDate fechaInicio;
     private LocalDate fechaFin;
 
-    public int getAño() {
-        return año;
+    public int getAnio() {
+        return anio;
     }
 
-    public void setAño(int año) {
-        this.año = año;
+    public void setAnio(int anio) {
+        this.anio = anio;
     }
 
     public LocalDate getFechaInicio() {

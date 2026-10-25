@@ -23,6 +23,7 @@ import java.util.List;
  */
 public class CarreraDAO {
     
+    private final String EXISTE_CODIGO_CARRERA = "SELECT * FROM carrera WHERE codigo = ?";
     private final String EXISTE_CARRERA = "SELECT * FROM carrera WHERE nombre = ?";
     private final String CREAR_CARRERA = "INSERT INTO carrera (codigo, nombre) VALUES (?,?)";
     private final String AGREGAR_GRADO_CARRERA = "INSERT INTO grado_carrera (carrera_id, grado_id) VALUES (?,?)";
@@ -38,6 +39,18 @@ public class CarreraDAO {
             JOIN grado_carrera AS grca ON gra.id = grca.grado_id 
             JOIN carrera AS carr ON grca.carrera_id = carr.codigo 
             WHERE carr.codigo = ?""";
+    
+    public boolean existeCodigoCarrera(String codigo) throws AccesoALaDataException {
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement ps = connection.prepareCall(EXISTE_CODIGO_CARRERA)) {
+            ps.setString(1, codigo);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
+        } catch (SQLException e) {
+            throw new AccesoALaDataException("Error al revisar si ya esta siendo utilizado el codigo de una carrera: " + e.getMessage());
+        }
+    }
     
     public boolean existeNombreCarrera(String nombre) throws AccesoALaDataException {
         try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
@@ -61,7 +74,7 @@ public class CarreraDAO {
                 }
 
                 try (PreparedStatement psGrado = connection.prepareStatement(AGREGAR_GRADO_CARRERA)) {
-                    for (Integer codigo : carrera.getGrados()) {
+                    for (Integer codigo : carrera.getGradosId()) {
                         psGrado.setString(1, carrera.getCodigo());
                         psGrado.setInt(2, codigo);
                         psGrado.executeUpdate();

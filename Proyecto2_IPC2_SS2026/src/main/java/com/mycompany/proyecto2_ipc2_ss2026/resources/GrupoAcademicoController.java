@@ -6,6 +6,7 @@ package com.mycompany.proyecto2_ipc2_ss2026.resources;
 
 import com.mycompany.proyecto2_ipc2_ss2026.Exceptions.AccesoALaDataException;
 import com.mycompany.proyecto2_ipc2_ss2026.Exceptions.DataExistenteException;
+import com.mycompany.proyecto2_ipc2_ss2026.Exceptions.DataInexistenteException;
 import com.mycompany.proyecto2_ipc2_ss2026.Exceptions.ValorInvalidoException;
 import com.mycompany.proyecto2_ipc2_ss2026.ModelosRequest.CurriculoRequest;
 import com.mycompany.proyecto2_ipc2_ss2026.ModelosRequest.GrupoAcademicoRequest;
@@ -34,7 +35,20 @@ public class GrupoAcademicoController {
     }
     
     @GET
-    @Path("grupos-año/{año}/{pagina}")
+    @Path("grupos-anio-actual/{pagina}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getGruposDelAño(@PathParam("pagina") int pagina) {
+        try {
+            return Response.ok(servicio.getGruposDelAño(pagina)).build();
+        } catch (AccesoALaDataException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        } catch (ValorInvalidoException e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+        }
+    }
+    
+    @GET
+    @Path("grupos-anio/{año}/{pagina}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getGruposPorAño(@PathParam("año") int año, @PathParam("pagina") int pagina) {
         try {
@@ -79,14 +93,30 @@ public class GrupoAcademicoController {
     }
     
     @GET
-    @Path("cursos-grado")
+    @Path("cursos-curriculo-grado/{grado}")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response getCursosGrado(CurriculoRequest curriculo) {
+    public Response getCursosCurriculoGrado(@PathParam("grado") int idGrado) {
         try {
-            return Response.ok(servicio.getCursosGradoCarrera(curriculo)).build();
+            return Response.ok(servicio.getCursosCurriculoGrado(idGrado)).build();
         } catch (AccesoALaDataException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        } catch (DataInexistenteException e) {
+            return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
+        }
+    }
+    
+    @GET
+    @Path("cursos-curriculo-carrera/{carrera}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response getCursosCurriculoCarrera(@PathParam("carrera") String codigoCarrera) {
+        try {
+            return Response.ok(servicio.getCursosCurriculoCarrera(codigoCarrera)).build();
+        } catch (AccesoALaDataException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        } catch (DataInexistenteException e) {
+            return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
         }
     }
     
@@ -96,7 +126,8 @@ public class GrupoAcademicoController {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response agregarCurriculoGrado(CurriculoRequest curriculo) {
         try {
-            return Response.status(Response.Status.CREATED).entity(servicio.agregarCursoCurriculoGrado(curriculo)).build();
+            servicio.agregarCursoCurriculoGrado(curriculo);
+            return Response.status(Response.Status.CREATED).build();
         } catch (AccesoALaDataException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         } catch (DataExistenteException e) {
@@ -107,12 +138,13 @@ public class GrupoAcademicoController {
     }
     
     @POST
-        @Path("agregar-curriculo-carrera")
+    @Path("agregar-curriculo-carrera")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response agregarCurriculoCarrera(CurriculoRequest curriculo) {
         try {
-            return Response.status(Response.Status.CREATED).entity(servicio.agregarCursoCurriculoCarrera(curriculo)).build();
+            servicio.agregarCursoCurriculoCarrera(curriculo);
+            return Response.status(Response.Status.CREATED).build();
         } catch (AccesoALaDataException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         } catch (DataExistenteException e) {

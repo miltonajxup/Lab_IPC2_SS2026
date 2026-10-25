@@ -8,6 +8,7 @@ import com.mycompany.proyecto2_ipc2_ss2026.Constantes.Mes;
 import com.mycompany.proyecto2_ipc2_ss2026.Exceptions.AccesoALaDataException;
 import com.mycompany.proyecto2_ipc2_ss2026.Exceptions.DataInexistenteException;
 import com.mycompany.proyecto2_ipc2_ss2026.Exceptions.ValorInvalidoException;
+import com.mycompany.proyecto2_ipc2_ss2026.ModelosDB.Respuesta;
 import com.mycompany.proyecto2_ipc2_ss2026.ModelosRequest.CursoMaestroRequest;
 import com.mycompany.proyecto2_ipc2_ss2026.Servicios.ServicioAdministrador;
 import jakarta.ws.rs.Consumes;
@@ -83,7 +84,9 @@ public class AdministradorController {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response asignarMaestroCurso(CursoMaestroRequest cursoMaestro) {
         try {
-            return Response.status(Response.Status.CREATED).entity(servicio.asignarCursoMaestro(cursoMaestro)).build();
+            String mensaje = servicio.asignarCursoMaestro(cursoMaestro);
+            Respuesta respuesta = new Respuesta(mensaje);
+            return Response.status(Response.Status.CREATED).entity(respuesta).build();
         } catch (AccesoALaDataException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         } catch (DataInexistenteException e) {

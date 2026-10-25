@@ -5,13 +5,16 @@
 package com.mycompany.proyecto2_ipc2_ss2026.Servicios;
 
 import com.mycompany.proyecto2_ipc2_ss2026.Constantes.LimitePagina;
+import com.mycompany.proyecto2_ipc2_ss2026.DAOs.Administrador.CarreraDAO;
 import com.mycompany.proyecto2_ipc2_ss2026.DAOs.Administrador.GrupoAcademicoDAO;
 import com.mycompany.proyecto2_ipc2_ss2026.DAOs.CicloEscolar;
 import com.mycompany.proyecto2_ipc2_ss2026.DAOs.GradoDAO;
 import com.mycompany.proyecto2_ipc2_ss2026.Exceptions.AccesoALaDataException;
 import com.mycompany.proyecto2_ipc2_ss2026.Exceptions.DataExistenteException;
+import com.mycompany.proyecto2_ipc2_ss2026.Exceptions.DataInexistenteException;
 import com.mycompany.proyecto2_ipc2_ss2026.Exceptions.ValorInvalidoException;
 import com.mycompany.proyecto2_ipc2_ss2026.ModelosDB.CurriculoDB;
+import com.mycompany.proyecto2_ipc2_ss2026.ModelosDB.CursoDB;
 import com.mycompany.proyecto2_ipc2_ss2026.ModelosDB.GradoDB;
 import com.mycompany.proyecto2_ipc2_ss2026.ModelosDB.GrupoAcademicoDB;
 import com.mycompany.proyecto2_ipc2_ss2026.ModelosRequest.CurriculoRequest;
@@ -26,11 +29,13 @@ public class ServicioGrupoAcademico {
     
     private final GrupoAcademicoDAO grupodao;
     private final GradoDAO gradodao;
+    private final CarreraDAO carreradao;
     private final CicloEscolar ciclo;
     
     public ServicioGrupoAcademico() {
         grupodao = new GrupoAcademicoDAO();
         gradodao = new GradoDAO();
+        carreradao = new CarreraDAO();
         ciclo = new CicloEscolar();
     }
     
@@ -69,6 +74,13 @@ public class ServicioGrupoAcademico {
         return grupodao.crearGrupoAcademicoCarrera(grupo);
     }
     
+    public List<GrupoAcademicoDB> getGruposDelAño(int pagina) throws AccesoALaDataException, ValorInvalidoException {
+        if (pagina < LimitePagina.PAGINA_MINIMA) {
+            throw new ValorInvalidoException("La pagina minima para buscar es: " + LimitePagina.PAGINA_MINIMA);
+        }
+        return grupodao.getGruposDelAño(pagina);
+    }
+    
     public List<GrupoAcademicoDB> getGruposPorAño(int año, int pagina) throws AccesoALaDataException, ValorInvalidoException {
         if (pagina < LimitePagina.PAGINA_MINIMA) {
             throw new ValorInvalidoException("La pagina minima para buscar es: " + LimitePagina.PAGINA_MINIMA);
@@ -76,15 +88,21 @@ public class ServicioGrupoAcademico {
         return grupodao.getGruposPorAño(año, pagina);
     }
     
-    public List<CurriculoDB> getCursosGradoCarrera(CurriculoRequest curriculo) throws AccesoALaDataException {
-        if (curriculo.getCarreraId() != null) {
-            return grupodao.getCurriculosCarrera(curriculo);
-        } else {
-            return grupodao.getCurriculosGrado(curriculo);
+    public List<CurriculoDB> getCursosCurriculoGrado(int idGrado) throws AccesoALaDataException, DataInexistenteException {
+        if (!gradodao.existeGrado(idGrado)) {
+            throw new DataInexistenteException("El grado seleccionado no se pudo encontrar");
         }
+        return grupodao.getCurriculosGrado(idGrado);
     }
     
-    public List<CurriculoDB> agregarCursoCurriculoGrado(CurriculoRequest curriculo) throws AccesoALaDataException, DataExistenteException, ValorInvalidoException {
+    public List<CurriculoDB> getCursosCurriculoCarrera(String idCarrera) throws AccesoALaDataException, DataInexistenteException {
+        if (!carreradao.existeCodigoCarrera(idCarrera)) {
+            throw new DataInexistenteException("El grado seleccionado no se pudo encontrar");
+        }
+        return grupodao.getCurriculosCarrera(idCarrera);
+    }
+    
+    public void agregarCursoCurriculoGrado(CurriculoRequest curriculo) throws AccesoALaDataException, DataExistenteException, ValorInvalidoException {
         if (curriculo == null) {
             throw new ValorInvalidoException("No se ha mandado ningun valor para el Curriculo");
         }
@@ -95,10 +113,10 @@ public class ServicioGrupoAcademico {
         if (grupodao.existeCurriculoGrado(curriculo)) {
             throw new DataExistenteException("Ya se encuentra registrado el curso para el grado");
         }
-        return grupodao.crearCurriculoParaGrado(curriculo);
+        grupodao.crearCurriculoParaGrado(curriculo);
     }
     
-    public List<CurriculoDB> agregarCursoCurriculoCarrera(CurriculoRequest curriculo) throws AccesoALaDataException, DataExistenteException, ValorInvalidoException {
+    public void agregarCursoCurriculoCarrera(CurriculoRequest curriculo) throws AccesoALaDataException, DataExistenteException, ValorInvalidoException {
         if (curriculo == null || curriculo.getCarreraId() == null || curriculo.getCarreraId().isEmpty()) {
             throw new ValorInvalidoException("Hacen falta valores para el curriculo");
         }
@@ -109,7 +127,7 @@ public class ServicioGrupoAcademico {
         List<GradoDB> grados = gradodao.getGradosCarrera();
         revisarGrado(grados, curriculo.getGradoId());
         
-        return grupodao.crearCurriculoParaCarrera(curriculo);
+        grupodao.crearCurriculoParaCarrera(curriculo);
     }
     
     public void eliminarCurriculo(int idCurriculo) throws AccesoALaDataException, ValorInvalidoException {

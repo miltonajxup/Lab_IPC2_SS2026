@@ -20,9 +20,22 @@ import java.util.List;
  */
 public class GradoDAO {
     
+    private final String EXISTE_GRADO = "SELECT * FROM grado WHERE id = ?";
     private final String GRADOS_CARRERA = "SELECT gra.*, niv.nombre AS nombre_nivel FROM grado AS gra JOIN nivel_academico AS niv ON gra.nivel_id = niv.id WHERE nivel_id = 4";
     private final String GRADOS_NORMALES = "SELECT gra.*, niv.nombre AS nombre_nivel FROM grado AS gra JOIN nivel_academico AS niv ON gra.nivel_id = niv.id WHERE nivel_id != 4";
     private final String TODOS_LOS_GRADOS = "SELECT gra.*, niv.nombre AS nombre_nivel FROM grado AS gra JOIN nivel_academico AS niv ON gra.nivel_id = niv.id ";
+    
+    public boolean existeGrado(int idGrado) throws AccesoALaDataException {
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement ps = connection.prepareStatement(EXISTE_GRADO)) {
+            ps.setInt(1, idGrado);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
+        } catch (SQLException e) {
+            throw new AccesoALaDataException("Error al revisar si una carrera existe: " + e.getMessage());
+        }
+    }
     
     public List<GradoDB> getGradosCarrera() throws AccesoALaDataException {
         List<GradoDB> grados = new ArrayList<>();

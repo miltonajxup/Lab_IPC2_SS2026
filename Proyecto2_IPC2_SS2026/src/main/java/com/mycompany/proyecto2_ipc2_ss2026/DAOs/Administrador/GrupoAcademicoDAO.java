@@ -6,6 +6,7 @@ package com.mycompany.proyecto2_ipc2_ss2026.DAOs.Administrador;
 
 import com.mycompany.proyecto2_ipc2_ss2026.Connection.DBConnectionSingleton;
 import com.mycompany.proyecto2_ipc2_ss2026.Constantes.LimitePagina;
+import com.mycompany.proyecto2_ipc2_ss2026.DAOs.CicloEscolar;
 import com.mycompany.proyecto2_ipc2_ss2026.Exceptions.AccesoALaDataException;
 import com.mycompany.proyecto2_ipc2_ss2026.ModelosDB.CurriculoDB;
 import com.mycompany.proyecto2_ipc2_ss2026.ModelosDB.GrupoAcademicoDB;
@@ -114,6 +115,27 @@ public class GrupoAcademicoDAO {
         }
     }
     
+    public List<GrupoAcademicoDB> getGruposDelAño(int pagina) throws AccesoALaDataException {
+        CicloEscolar ciclo = new CicloEscolar();
+        int paginacion = (pagina - 1) * LimitePagina.LIMITE;
+        int año = ciclo.getAñoActivo();
+        List<GrupoAcademicoDB> grupos = new ArrayList<>();
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement ps = connection.prepareStatement(GET_CRUPOS_POR_AÑO)) {
+            ps.setInt(1, año);
+            ps.setInt(2, paginacion);
+            ps.setInt(3, LimitePagina.LIMITE);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    grupos.add(armarGrupoAcademico(rs));
+                }
+            }
+        } catch (SQLException e) {
+            throw new AccesoALaDataException("Error al buscar los grupos academicos por año: " + e.getMessage());
+        }
+        return grupos;
+    }
+    
     public List<GrupoAcademicoDB> getGruposPorAño(int año, int pagina) throws AccesoALaDataException {
         int paginacion = (pagina - 1) * LimitePagina.LIMITE;
         List<GrupoAcademicoDB> grupos = new ArrayList<>();
@@ -145,11 +167,11 @@ public class GrupoAcademicoDAO {
                 rs.getString("seccion_id"));
     }
     
-    public List<CurriculoDB> getCurriculosGrado(CurriculoRequest curriculo) throws AccesoALaDataException {
+    public List<CurriculoDB> getCurriculosGrado(int idGrado) throws AccesoALaDataException {
         List<CurriculoDB> curriculos = new ArrayList<>();
         try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
                 PreparedStatement ps = connection.prepareStatement(GET_CURRICULOS_GRADO)) {
-            ps.setInt(1, curriculo.getGradoId());
+            ps.setInt(1, idGrado);
             
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
@@ -162,11 +184,11 @@ public class GrupoAcademicoDAO {
         return curriculos;
     }
     
-    public List<CurriculoDB> getCurriculosCarrera(CurriculoRequest curriculo) throws AccesoALaDataException {
+    public List<CurriculoDB> getCurriculosCarrera(String idCarrera) throws AccesoALaDataException {
         List<CurriculoDB> curriculos = new ArrayList<>();
         try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
                 PreparedStatement ps = connection.prepareStatement(GET_CURRICULOS_CARRERA)) {
-            ps.setString(1, curriculo.getCarreraId());
+            ps.setString(1, idCarrera);
             
             try(ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
@@ -214,20 +236,19 @@ public class GrupoAcademicoDAO {
         }
     }
     
-    public List<CurriculoDB> crearCurriculoParaGrado(CurriculoRequest request) throws AccesoALaDataException {
+    public void crearCurriculoParaGrado(CurriculoRequest request) throws AccesoALaDataException {
         try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
                 PreparedStatement ps = connection.prepareStatement(CREAR_CURRICULO_PARA_GRADO)) {
             ps.setInt(1, request.getCursoId());
             ps.setInt(2, request.getGradoId());
             ps.executeUpdate();
             
-            return getCurriculosGrado(request);
         } catch (SQLException e) {
             throw new AccesoALaDataException("Error al crear un curriculo para un grado " + e.getMessage());
         }
     }
     
-    public List<CurriculoDB> crearCurriculoParaCarrera(CurriculoRequest request) throws AccesoALaDataException {
+    public void crearCurriculoParaCarrera(CurriculoRequest request) throws AccesoALaDataException {
         try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
                 PreparedStatement ps = connection.prepareStatement(CREAR_CURRICULO_PARA_CARRERA)) {
             ps.setInt(1, request.getCursoId());
@@ -235,7 +256,6 @@ public class GrupoAcademicoDAO {
             ps.setString(3, request.getCarreraId());
             ps.executeUpdate();
             
-            return getCurriculosCarrera(request);
         } catch (SQLException e) {
             throw new AccesoALaDataException("Error al crear un curriculo para carrera: " + e.getMessage());
         }

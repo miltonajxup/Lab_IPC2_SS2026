@@ -11,7 +11,7 @@ package com.mycompany.proyecto2_ipc2_ss2026.ModelosDB;
 public class CurriculoDB {
     
     private final int id;
-    private final int idCurso;
+    private final int cursoId;
     private final String curso;
     private final String grado;
     private final String nivel;
@@ -19,7 +19,7 @@ public class CurriculoDB {
 
     public CurriculoDB(int id, int idCurso, String curso, String grado, String nivel, String carrera) {
         this.id = id;
-        this.idCurso = idCurso;
+        this.cursoId = idCurso;
         this.curso = curso;
         this.grado = grado;
         this.nivel = nivel;
@@ -30,8 +30,8 @@ public class CurriculoDB {
         return id;
     }
     
-    public int getIdCurso() {
-        return idCurso;
+    public int getCursoId() {
+        return cursoId;
     }
 
     public String getCurso() {

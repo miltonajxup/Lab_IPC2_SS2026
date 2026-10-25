@@ -189,8 +189,8 @@ public class AdministradorDAO {
     public boolean cursoTieneMaestro(int curso, int idGrupo) throws AccesoALaDataException {
         try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
                 PreparedStatement ps = connection.prepareStatement(CURSO_ASIGNADO)) {
-            ps.setInt(2, curso);
-            ps.setInt(1, idGrupo);
+            ps.setInt(1, curso);
+            ps.setInt(2, idGrupo);
             ResultSet rs = ps.executeQuery();
             return rs.next();
         } catch (SQLException e) {

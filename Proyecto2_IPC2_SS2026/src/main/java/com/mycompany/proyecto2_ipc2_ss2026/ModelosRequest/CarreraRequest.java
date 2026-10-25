@@ -15,7 +15,7 @@ public class CarreraRequest {
     private String codigo;
     private String nombre;
     private boolean estado;
-    private List<Integer> grados;
+    private List<Integer> gradosId;
 
     public String getCodigo() {
         return codigo;
@@ -41,12 +41,12 @@ public class CarreraRequest {
         this.estado = estado;
     }
 
-    public List<Integer> getGrados() {
-        return grados;
+    public List<Integer> getGradosId() {
+        return gradosId;
     }
 
-    public void setGrados(List<Integer> grados) {
-        this.grados = grados;
+    public void setGradosId(List<Integer> gradosId) {
+        this.gradosId = gradosId;
     }
     
 }
