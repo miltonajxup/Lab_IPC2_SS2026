@@ -1,0 +1,34 @@
+/* You can add global styles to this file, and also import other style files */
+.titulo {
+    background-color: rgb(60, 129, 220);
+    margin-bottom: 50px;
+    color: white;
+}
+
+.t25 {
+    font-size: 25px;
+}
+
+.t20 {
+    font-size: 20px !important;
+}
+
+.activo {
+    background-color: rgb(62, 220, 67) !important;
+    color: black !important;
+    font-size: 20px !important;
+}
+
+.desactivado {
+    background-color: rgb(221, 67, 15) !important;
+    font-size: 20px !important;
+}
+
+input {
+    display: block;
+}
+
+.eleccion {
+    background-color: #0099ff !important;
+    color: white !important;
+}

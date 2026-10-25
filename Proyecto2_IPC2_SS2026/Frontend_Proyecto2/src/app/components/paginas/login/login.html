@@ -1,0 +1,43 @@
+<div class="container-fluid min-vh-100">
+  
+  <div class="row p-5 text-center titulo">
+    <div class="">
+      <h1>Sistema de Gestión Escolar</h1>
+      <p>Proyecto 2  IPC2</p>
+    </div>
+  </div>
+  
+  @if (mensaje()) {
+    <div class="text-danger text-center mb-5"> {{mensaje()}} </div>
+  }
+
+  <!-- Panel de login -->
+  <div class="card shadow p-5 w-25 h-25 mx-auto">
+    <h2 class="text-center mb-4">Iniciar sesión</h2>
+    
+    <form [formGroup]="formLogin" (submit)="sumbit()" >
+      <div class="mb-3">
+        <label class="form-label">Nombre de Usuario</label>
+        <input class="form-control" formControlName="nombre" >
+      </div>
+        
+      <div class="mb-5">
+        <label class="form-label">Contraseña</label>
+        <input type="password" class="form-control" formControlName="contrasenia" >
+      </div>
+      
+      <button class="btn btn-primary w-100" [disabled]="formLogin.invalid">
+        Ingresar
+      </button>
+    </form>
+  </div>
+
+  <div class="w-25 p-5 mx-auto align-items-start row g-3">
+    <a class="btn btn-secondary">Ingresar por Primera vez</a>
+    <a class="btn btn-secondary">Recuperar Contraseña</a>
+
+    <a class="btn btn-secondary" routerLink="/super-admin">Super Administrador</a>
+    <a class="btn btn-secondary" routerLink="/admin">Administrador</a>
+  </div>
+
+</div>
