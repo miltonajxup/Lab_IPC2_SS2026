@@ -1,0 +1,26 @@
+<div class="row justify-content-center">
+    <div class="text-center t20 mb-4">
+        @if (mensajeError()) {
+            <div class="text-danger ">{{mensajeError()}}</div>
+        }
+        @if (operacionCompletada()) {
+            <div class="text-success"> La Tarea fué completada con éxito </div>
+        }
+    </div>
+    <form [formGroup]="cursoForm" class=" card shadow w-25 h-100" (submit)="submit()">
+        @if (isEditMode) {
+            <label class="form-label p-3">
+                Id de Curso: {{cursoParaEditar.idCurso}}
+            </label>
+        }
+        <label class="form-label p-3">
+            Nombre:
+            <input class="form-control" type="text" formControlName="nombre" >
+        </label>
+        <label class="form-label p-3">
+            Decripcion:
+            <input class="form-control" type="text" formControlName="descripcion" >
+        </label>
+        <button class="btn btn-primary m-5 w-25 mx-auto" [disabled]="cursoForm.invalid" >Guardar</button>
+    </form>
+</div>
