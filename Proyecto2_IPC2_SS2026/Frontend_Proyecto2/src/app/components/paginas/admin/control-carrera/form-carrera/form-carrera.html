@@ -1,0 +1,44 @@
+<div class="row justify-content-center">
+    <div class="text-center t20 mb-4">
+        @if (mensajeError()) {
+            <div class="text-danger ">{{mensajeError()}}</div>
+        }
+        @if (operacionCompletada()) {
+            <div class="text-success"> La Tarea fué completada con éxito </div>
+        }
+    </div>
+    <form [formGroup]="carreraForm" class=" card shadow w-25 h-100" (submit)="submit()">
+        @if (isEditMode) {
+            <label class="form-label p-3">
+                Codigo: {{carreraParaEditar.codigo}}
+                <input type="hidden" [value]="carreraParaEditar.codigo" readonly>
+            </label>
+        } @else {
+            <label class="form-label p-3">
+                Codigo:
+                <input class="form-control" type="text" formControlName="codigo" >
+            </label>
+        }
+        <label class="form-label p-3">
+            Nombre:
+            <input class="form-control" type="text" formControlName="nombre" >
+        </label>
+        @for (grado of grados(); track grado.id) {
+            <div 
+            class="btn m-1"
+            (click)="marcarGradoo(grado.id)"
+            [class.eleccion]="seleccionado(grado.id)">
+                {{grado.nombre}} {{grado.nombreNivel}}
+            </div>
+        }
+        <button class="btn btn-primary m-5 w-25 mx-auto" [disabled]="carreraForm.invalid" >Guardar</button>
+        @if (isEditMode) {
+            @if (estadoCarrera()) {
+                <button class="btn activo w-75 mx-auto mb-3" type="button" (click)="cambiarEstado()">Desactivar</button>
+            } @else {
+                <button class="btn desactivado w-75 mx-auto mb-3" type="button" (click)="cambiarEstado()">Activar</button>
+            }
+        }
+    </form>
+</div>
+
