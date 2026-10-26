@@ -4,6 +4,7 @@
  */
 package com.mycompany.proyecto2_ipc2_ss2026.resources;
 
+import com.mycompany.proyecto2_ipc2_ss2026.DAOs.GradoDAO;
 import com.mycompany.proyecto2_ipc2_ss2026.Exceptions.AccesoALaDataException;
 import com.mycompany.proyecto2_ipc2_ss2026.Exceptions.DataExistenteException;
 import com.mycompany.proyecto2_ipc2_ss2026.Exceptions.DataInexistenteException;
@@ -32,6 +33,18 @@ public class GrupoAcademicoController {
     
     public GrupoAcademicoController() {
         servicio = new ServicioGrupoAcademico();
+    }
+    
+    @GET
+    @Path("grados")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getGrados() {
+        try {
+            GradoDAO gradodao = new GradoDAO();
+            return Response.ok(gradodao.getGradosNormales()).build();
+        } catch (AccesoALaDataException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        }
     }
     
     @GET
@@ -107,12 +120,12 @@ public class GrupoAcademicoController {
     }
     
     @GET
-    @Path("cursos-curriculo-carrera/{carrera}")
+    @Path("cursos-curriculo-carrera/{carrera}/{grado}")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response getCursosCurriculoCarrera(@PathParam("carrera") String codigoCarrera) {
+    public Response getCursosCurriculoCarrera(@PathParam("carrera") String codigoCarrera, @PathParam("grado") int idGrado) {
         try {
-            return Response.ok(servicio.getCursosCurriculoCarrera(codigoCarrera)).build();
+            return Response.ok(servicio.getCursosCurriculoCarrera(codigoCarrera, idGrado)).build();
         } catch (AccesoALaDataException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         } catch (DataInexistenteException e) {

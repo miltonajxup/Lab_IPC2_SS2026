@@ -70,14 +70,22 @@ public class ServicioCarrera {
         return carreradao.modificarCarrera(carrera, codigoCarrera);
     }
     
-    public CarreraDB modificarEstadoCarrera(CarreraRequest carrera, String codigoCarrera) throws AccesoALaDataException, DataInexistenteException, ValorInvalidoException {
-        if (carrera == null || codigoCarrera == null) {
+    public CarreraDB modificarEstadoCarrera(String codigoCarrera) throws AccesoALaDataException, DataInexistenteException, ValorInvalidoException {
+        if (codigoCarrera == null) {
             throw new ValorInvalidoException("Hacen falta valores para modificar la carrera");
         }
-        if (carreradao.getCarreraPorId(codigoCarrera) == null) {
+        CarreraDB carreradb = carreradao.getCarreraPorId(codigoCarrera);
+        if (carreradb == null) {
             throw new DataInexistenteException("No se pudo encontrar la carrera con el codigo " + codigoCarrera);
         }
-        return carreradao.modificarEstadoCarrera(carrera.isEstado(), codigoCarrera);
+        return carreradao.modificarEstadoCarrera(!carreradb.isEstado(), codigoCarrera);
+    }
+    
+    public List<CarreraDB> buscarTodasLasCarreras(int pagina) throws AccesoALaDataException, ValorInvalidoException {
+        if (pagina < LimitePagina.PAGINA_MINIMA) {
+            throw new ValorInvalidoException("La pagina minima para buscar es: " + LimitePagina.PAGINA_MINIMA);
+        }
+        return carreradao.getTodasLasCarreras(pagina);
     }
     
     public List<CarreraDB> buscarCarrerasActivas(int pagina) throws AccesoALaDataException, ValorInvalidoException {

@@ -28,7 +28,13 @@ public class CarreraDAO {
     private final String CREAR_CARRERA = "INSERT INTO carrera (codigo, nombre) VALUES (?,?)";
     private final String AGREGAR_GRADO_CARRERA = "INSERT INTO grado_carrera (carrera_id, grado_id) VALUES (?,?)";
     private final String MODIFICAR_CARRERA = "UPDATE carrera SET nombre = ? WHERE codigo = ?";
+    private final String GET_GRADOS_CARRERA_IDS = "SELECT * FROM grado_carrera WHERE carrera_id = ?";
+    private final String ELIMINAR_GRADO_CARRERA = "DELETE FROM grado_carrera WHERE carrera_id = ? AND grado_id = ?";
+    private final String GRADO_CARRERA = "SELECT * FROM grado_carrera WHERE carrera_id = ? AND grado_id = ?";
+    private final String PUEDE_ELIMINAR_GRADO = "SELECT * FROM grupo_ciclo_escolar WHERE carrera_id = ?";
+    
     private final String MODIFICAR_ESTADO_CARRERA = "UPDATE carrera SET estado = ? WHERE codigo = ?";
+    private final String GET_TODAS_LAS_CARRERAS = "SELECT * FROM carrera LIMIT ?, ?";
     private final String GET_CARRERAS_ACTIVAS = "SELECT * FROM carrera WHERE estado = TRUE LIMIT ?, ?";
     private final String GET_CARRERA_POR_ID = "SELECT * FROM carrera WHERE codigo = ?";
     private final String GET_CARRERAS_POR_GRADO = "SELECT carr.* FROM carrera AS carr JOIN grado_carrera AS cagr ON carr.codigo = cagr.carrera_id WHERE cagr.grado_id = ?";
@@ -103,16 +109,68 @@ public class CarreraDAO {
     }
     
     public CarreraDB modificarCarrera(CarreraRequest carrera, String codigoCarrera) throws AccesoALaDataException {
-        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
-                PreparedStatement ps = connection.prepareStatement(MODIFICAR_CARRERA)) {
-            ps.setString(1, carrera.getNombre());
-            ps.setString(2, codigoCarrera);
-            ps.executeUpdate();
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection()) {
+            connection.setAutoCommit(false);
             
-            return getCarreraPorId(codigoCarrera);
+            try (PreparedStatement ps = connection.prepareStatement(MODIFICAR_CARRERA);
+                    PreparedStatement psG = connection.prepareStatement(GET_GRADOS_CARRERA_IDS);
+                    PreparedStatement psE = connection.prepareStatement(ELIMINAR_GRADO_CARRERA);
+                    PreparedStatement psEx = connection.prepareStatement(GRADO_CARRERA);
+                    PreparedStatement psAg = connection.prepareStatement(AGREGAR_GRADO_CARRERA);
+                    PreparedStatement psEG = connection.prepareStatement(PUEDE_ELIMINAR_GRADO)) {
+                
+                ps.setString(1, carrera.getNombre());
+                ps.setString(2, codigoCarrera);
+                ps.executeUpdate();
+                
+                psEG.setString(1, codigoCarrera);
+                ResultSet rsEG = psEG.executeQuery();
+                if (!rsEG.next()) {
+                    psG.setString(1, codigoCarrera);
+                    ResultSet rsG = psG.executeQuery();
+
+                    while (rsG.next()) {
+                        int gradoId = rsG.getInt("grado_id");
+                        for (Integer gradosId : carrera.getGradosId()) {
+                            if (gradosId != gradoId) {
+                                psE.setString(1, codigoCarrera);
+                                psE.setInt(2, gradoId);
+                                psE.executeUpdate();
+                            }
+                        }
+                    }
+
+                    for (Integer gradoId : carrera.getGradosId()) {
+                        psEx.setString(1, codigoCarrera);
+                        psEx.setInt(2, gradoId);
+                        ResultSet rsEx = psEx.executeQuery();
+                        if (!rsEx.next()) {
+                            psAg.setString(1, codigoCarrera);
+                            psAg.setInt(2, gradoId);
+                            psAg.executeUpdate();
+                        }
+                    }
+                }
+                
+                connection.commit();
+            } catch (SQLException e) {
+                try {
+                    connection.rollback();
+                } catch (SQLException ex) {
+                    throw new AccesoALaDataException("Error al hacer el rollback al fallar modificando una carrera: " + ex.getMessage() + " \nOrigen: " + e.getMessage());
+                }
+                throw new AccesoALaDataException("Error al modificar una carrera: " + e.getMessage());
+            } finally {
+                try {
+                    connection.setAutoCommit(true);
+                } catch (SQLException e) {
+                    throw new AccesoALaDataException("Error al devolver el auto commit al fallar creando una carrera: " + e.getMessage());
+                }
+            }
         } catch (SQLException e) {
-            throw new AccesoALaDataException("Error al modificar una carrera: " + e.getMessage());
+            throw new AccesoALaDataException("Error al cerrar la conexion al agregar una carrera: " + e.getMessage());
         }
+        return getCarreraPorId(codigoCarrera);
     }
     
     public CarreraDB modificarEstadoCarrera(boolean estado, String codigo) throws AccesoALaDataException {
@@ -126,6 +184,23 @@ public class CarreraDAO {
         } catch (SQLException e) {
             throw new AccesoALaDataException("Error al modificar el estado de una carrera " + e.getMessage());
         }
+    }
+    
+    public List<CarreraDB> getTodasLasCarreras(int pagina) throws AccesoALaDataException {
+        List<CarreraDB> carreras = new ArrayList<>();
+        int paginacion = (pagina - 1) * LimitePagina.LIMITE;
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement ps = connection.prepareStatement(GET_TODAS_LAS_CARRERAS)) {
+            ps.setInt(1, paginacion);
+            ps.setInt(2, LimitePagina.LIMITE);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                carreras.add(armarCarrera(connection, rs));
+            }
+        } catch (SQLException e) {
+            throw new AccesoALaDataException("Error al buscar las carreras " + e.getMessage());
+        }
+        return carreras;
     }
     
     public List<CarreraDB> getCarrerasActivas(int pagina) throws AccesoALaDataException {

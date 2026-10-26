@@ -39,6 +39,19 @@ public class SuperAdminController {
     }
     
     @GET
+    @Path("anios-utiles")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAñosUtiles() {
+        try {
+            List<AñoLectivoDB> años = superdao.getAñosUtiles();
+            return Response.ok(años).build();
+        } catch (AccesoALaDataException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+    
+    @GET
+    @Path("anios-lectivos")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAñosLectivos() {
         try {

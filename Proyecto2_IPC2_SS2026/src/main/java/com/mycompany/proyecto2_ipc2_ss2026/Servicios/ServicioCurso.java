@@ -34,6 +34,14 @@ public class ServicioCurso {
         return cursodao.getTodosLosCursos(pagina);
     }
     
+    public CursoDB getCursoPorId(int id) throws AccesoALaDataException, DataInexistenteException {
+        CursoDB curso = cursodao.getCursoId(id);
+        if (curso == null) {
+            throw new DataInexistenteException("No se pudo encontrar el curso");
+        }
+        return curso;
+    }
+    
     public List<CursoDB> crearCurso(CursoRequest curso) throws AccesoALaDataException, ValorInvalidoException, DataExistenteException {
         if (curso.getNombre() == null || curso.getNombre().isEmpty()) {
             throw new ValorInvalidoException("Falta especificar el nombre del curso");
@@ -67,7 +75,7 @@ public class ServicioCurso {
         if (curso.getNombre().length() > LimiteTamaño.NOMBRE.getLimite()) {
             throw new ValorInvalidoException("El nombre no puede tener mas de " + LimiteTamaño.NOMBRE.getLimite() + " caracteres");
         }
-        if (curso.getDescripcion().length() > LimiteTamaño.DESCRIPCION.getLimite()) {
+        if (curso.getDescripcion() != null && curso.getDescripcion().length() > LimiteTamaño.DESCRIPCION.getLimite()) {
             throw new ValorInvalidoException("La descripcion no puede tener mas de " + LimiteTamaño.DESCRIPCION.getLimite() + " caracteres");
         }
     }

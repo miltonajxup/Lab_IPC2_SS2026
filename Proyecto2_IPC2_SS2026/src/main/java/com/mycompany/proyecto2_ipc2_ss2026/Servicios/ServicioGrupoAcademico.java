@@ -14,7 +14,6 @@ import com.mycompany.proyecto2_ipc2_ss2026.Exceptions.DataExistenteException;
 import com.mycompany.proyecto2_ipc2_ss2026.Exceptions.DataInexistenteException;
 import com.mycompany.proyecto2_ipc2_ss2026.Exceptions.ValorInvalidoException;
 import com.mycompany.proyecto2_ipc2_ss2026.ModelosDB.CurriculoDB;
-import com.mycompany.proyecto2_ipc2_ss2026.ModelosDB.CursoDB;
 import com.mycompany.proyecto2_ipc2_ss2026.ModelosDB.GradoDB;
 import com.mycompany.proyecto2_ipc2_ss2026.ModelosDB.GrupoAcademicoDB;
 import com.mycompany.proyecto2_ipc2_ss2026.ModelosRequest.CurriculoRequest;
@@ -40,11 +39,11 @@ public class ServicioGrupoAcademico {
     }
     
     public List<GrupoAcademicoDB> crearGrupoAcademicoGrado(GrupoAcademicoRequest grupo) throws AccesoALaDataException, ValorInvalidoException, DataExistenteException {
-        if (grupo == null || grupo.getSeccion() == null || grupo.getSeccion().isEmpty()) {
+        if (grupo == null || grupo.getSeccion() == null ) {
             throw new ValorInvalidoException("Hacen falta valores para el grupo academico");
         }
         
-        revisarAño(grupo.getAñoLectivo()); 
+        revisarAño(grupo.getAnioLectivo()); 
         
         if (grupodao.existeGrupoGrado(grupo)) {
             throw new DataExistenteException("Ya existe un grupo academico de grado con estos valores registrado en el sistema");
@@ -57,12 +56,11 @@ public class ServicioGrupoAcademico {
     }
     
     public List<GrupoAcademicoDB> crearGrupoAcademicoCarrera(GrupoAcademicoRequest grupo) throws AccesoALaDataException, ValorInvalidoException, DataExistenteException {
-        if (grupo == null || grupo.getSeccion() == null || grupo.getCarrera() == null || 
-                grupo.getSeccion().isEmpty() || grupo.getCarrera().isEmpty()) {
+        if (grupo == null || grupo.getSeccion() == null || grupo.getCarrera() == null || grupo.getCarrera().isEmpty()) {
             throw new ValorInvalidoException("Hacen falta valores para crear un grupo Academico");
         }
         
-        revisarAño(grupo.getAñoLectivo());
+        revisarAño(grupo.getAnioLectivo());
         
         if (grupodao.existeGrupoCarrera(grupo)) {
             throw new DataExistenteException("Ya existe un grupo academico de carrera con estos valores registrados en el sistema");
@@ -95,11 +93,11 @@ public class ServicioGrupoAcademico {
         return grupodao.getCurriculosGrado(idGrado);
     }
     
-    public List<CurriculoDB> getCursosCurriculoCarrera(String idCarrera) throws AccesoALaDataException, DataInexistenteException {
+    public List<CurriculoDB> getCursosCurriculoCarrera(String idCarrera, int idGrado) throws AccesoALaDataException, DataInexistenteException {
         if (!carreradao.existeCodigoCarrera(idCarrera)) {
             throw new DataInexistenteException("El grado seleccionado no se pudo encontrar");
         }
-        return grupodao.getCurriculosCarrera(idCarrera);
+        return grupodao.getCurriculosCarrera(idCarrera, idGrado);
     }
     
     public void agregarCursoCurriculoGrado(CurriculoRequest curriculo) throws AccesoALaDataException, DataExistenteException, ValorInvalidoException {

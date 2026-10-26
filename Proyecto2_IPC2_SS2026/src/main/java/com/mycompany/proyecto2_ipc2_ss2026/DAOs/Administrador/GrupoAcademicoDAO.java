@@ -51,7 +51,7 @@ public class GrupoAcademicoDAO {
             JOIN nivel_academico AS niv ON gra.nivel_id = niv.id 
             LEFT JOIN carrera AS carr ON curr.carrera_id = carr.codigo """;
     private final String GET_CURRICULOS_GRADO = FORMATO_GET_CURRICULOS + " WHERE gra.id = ?";
-    private final String GET_CURRICULOS_CARRERA = FORMATO_GET_CURRICULOS + " WHERE carr.codigo = ?";
+    private final String GET_CURRICULOS_CARRERA = FORMATO_GET_CURRICULOS + " WHERE carr.codigo = ? AND gra.id = ?";
     
     private final String EXISTE_CURRICULO_GRADO = "SELECT * FROM curriculo WHERE curso_id = ? AND grado_id = ?";
     private final String EXISTE_CURRICULO_CARRERA = "SELECT * FROM curriculo WHERE curso_id = ? AND grado_id = ? AND carrera_id = ?";
@@ -62,9 +62,9 @@ public class GrupoAcademicoDAO {
     public boolean existeGrupoGrado(GrupoAcademicoRequest grupo) throws AccesoALaDataException {
         try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
                 PreparedStatement ps = connection.prepareStatement(GRUPO_ACADEMICO_POR_GRADO)) {
-            ps.setInt(1, grupo.getAñoLectivo());
+            ps.setInt(1, grupo.getAnioLectivo());
             ps.setInt(2, grupo.getGrado());
-            ps.setString(3, grupo.getSeccion());
+            ps.setString(3, grupo.getSeccion().name());
             ResultSet rs = ps.executeQuery();
             return rs.next();
         } catch (SQLException e) {
@@ -75,10 +75,10 @@ public class GrupoAcademicoDAO {
     public boolean existeGrupoCarrera(GrupoAcademicoRequest grupo) throws AccesoALaDataException {
         try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
                 PreparedStatement ps = connection.prepareStatement(GRUPO_ACADEMICO_POR_CARRERA)) {
-            ps.setInt(1, grupo.getAñoLectivo());
+            ps.setInt(1, grupo.getAnioLectivo());
             ps.setInt(2, grupo.getGrado());
             ps.setString(3, grupo.getCarrera());
-            ps.setString(4, grupo.getSeccion());
+            ps.setString(4, grupo.getSeccion().name());
             ResultSet rs = ps.executeQuery();
             return rs.next();
         } catch (SQLException e) {
@@ -89,12 +89,12 @@ public class GrupoAcademicoDAO {
     public List<GrupoAcademicoDB> crearGrupoAcademicoGrado(GrupoAcademicoRequest request) throws AccesoALaDataException {
         try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
                 PreparedStatement ps = connection.prepareStatement(CREAR_GRUPO_ACADEMICO_GRADO)) {
-            ps.setInt(1, request.getAñoLectivo());
+            ps.setInt(1, request.getAnioLectivo());
             ps.setInt(2, request.getGrado());
-            ps.setString(3, request.getSeccion());
+            ps.setString(3, request.getSeccion().name());
             ps.executeUpdate();
             
-            return getGruposPorAño(request.getAñoLectivo(), LimitePagina.PAGINA_MINIMA);
+            return getGruposPorAño(request.getAnioLectivo(), LimitePagina.PAGINA_MINIMA);
         } catch (SQLException e) {
             throw new AccesoALaDataException("Error al crear un grupo academico para un grado: " + e.getMessage());
         }
@@ -103,13 +103,13 @@ public class GrupoAcademicoDAO {
     public List<GrupoAcademicoDB> crearGrupoAcademicoCarrera(GrupoAcademicoRequest request) throws AccesoALaDataException {
         try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
                 PreparedStatement ps = connection.prepareStatement(CREAR_GRUPO_ACADEMICO_CARRERA)) {
-            ps.setInt(1, request.getAñoLectivo());
+            ps.setInt(1, request.getAnioLectivo());
             ps.setInt(2, request.getGrado());
             ps.setString(3, request.getCarrera());
-            ps.setString(4, request.getSeccion());
+            ps.setString(4, request.getSeccion().name());
             ps.executeUpdate();
             
-            return getGruposPorAño(request.getAñoLectivo(), LimitePagina.PAGINA_MINIMA);
+            return getGruposPorAño(request.getAnioLectivo(), LimitePagina.PAGINA_MINIMA);
         } catch (SQLException e) {
             throw new AccesoALaDataException("Error al crear un grupo academico para una carrera" + e.getMessage());
         }
@@ -184,11 +184,12 @@ public class GrupoAcademicoDAO {
         return curriculos;
     }
     
-    public List<CurriculoDB> getCurriculosCarrera(String idCarrera) throws AccesoALaDataException {
+    public List<CurriculoDB> getCurriculosCarrera(String idCarrera, int idGrado) throws AccesoALaDataException {
         List<CurriculoDB> curriculos = new ArrayList<>();
         try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
                 PreparedStatement ps = connection.prepareStatement(GET_CURRICULOS_CARRERA)) {
             ps.setString(1, idCarrera);
+            ps.setInt(2, idGrado);
             
             try(ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {

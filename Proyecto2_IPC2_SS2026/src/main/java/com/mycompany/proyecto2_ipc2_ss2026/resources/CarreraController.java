@@ -4,6 +4,7 @@
  */
 package com.mycompany.proyecto2_ipc2_ss2026.resources;
 
+import com.mycompany.proyecto2_ipc2_ss2026.DAOs.GradoDAO;
 import com.mycompany.proyecto2_ipc2_ss2026.Exceptions.AccesoALaDataException;
 import com.mycompany.proyecto2_ipc2_ss2026.Exceptions.DataExistenteException;
 import com.mycompany.proyecto2_ipc2_ss2026.Exceptions.DataInexistenteException;
@@ -34,7 +35,20 @@ public class CarreraController {
     }
     
     @GET
-    @Path("{pagina}")
+    @Path("todas/{pagina}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getTodasLasCarreras(@PathParam("pagina") int pagina) {
+        try {
+            return Response.ok(servicio.buscarTodasLasCarreras(pagina)).build();
+        } catch (AccesoALaDataException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        } catch (ValorInvalidoException e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+        }
+    }
+    
+    @GET
+    @Path("activas/{pagina}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getCarrerasActivas(@PathParam("pagina") int pagina) {
         try {
@@ -69,6 +83,18 @@ public class CarreraController {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         } catch (DataInexistenteException e) {
             return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
+        }
+    }
+    
+    @GET
+    @Path("grados-disponibles")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getGradosDisponibles() {
+        GradoDAO gradodao = new GradoDAO();
+        try {
+            return Response.ok(gradodao.getGradosCarrera()).build();
+        } catch (AccesoALaDataException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }
     }
     
@@ -107,11 +133,10 @@ public class CarreraController {
     
     @PUT
     @Path("estado/{codigo}")
-    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response modificarEstadoCarrera(@PathParam("codigo") String codigo, CarreraRequest carrera) {
+    public Response modificarEstadoCarrera(@PathParam("codigo") String codigo) {
         try {
-            return Response.ok(servicio.modificarEstadoCarrera(carrera, codigo)).build();
+            return Response.ok(servicio.modificarEstadoCarrera(codigo)).build();
         } catch (AccesoALaDataException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         } catch (DataInexistenteException e) {

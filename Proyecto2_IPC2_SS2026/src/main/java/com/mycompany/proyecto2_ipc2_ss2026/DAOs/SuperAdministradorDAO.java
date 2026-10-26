@@ -23,6 +23,8 @@ import java.util.List;
  */
 public class SuperAdministradorDAO {
     
+    private final String GET_AÑO_ACTIVO = "SELECT * FROM ciclo_escolar WHERE estado = TRUE";
+    private final String GET_AÑOS_UTILES = "SELECT * FROM ciclo_escolar WHERE anio >= ?";
     private final String GET_AÑOS_LECTIVOS = "SELECT * FROM ciclo_escolar ORDER BY anio DESC";
     private final String GET_AÑO_POR_ID = "SELECT * FROM ciclo_escolar WHERE anio = ?";
     private final String CREAR_NUEVO_AÑO_LECTIVO = "INSERT INTO ciclo_escolar (anio, fecha_inicio, fecha_fin) VALUES (?,?,?)";
@@ -32,6 +34,27 @@ public class SuperAdministradorDAO {
     private final String MODIFICAR_SALARIO = "UPDATE empleado SET salario = ? WHERE dpi = ?";
     private final String MODIFICAR_COSTO_COLEGIATURA = "UPDATE grado SET costo_colegiatura = ? WHERE id = ?";
     private final String MODIFICAR_COSTO_INSCRIPCION = "UPDATE grado SET costo_inscripcion = ? WHERE id = ?";
+    
+    public List<AñoLectivoDB> getAñosUtiles() throws AccesoALaDataException {
+        List<AñoLectivoDB> años = new ArrayList<>();
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement psAc = connection.prepareStatement(GET_AÑO_ACTIVO);
+                PreparedStatement psUt = connection.prepareStatement(GET_AÑOS_UTILES)) {
+            ResultSet rsAc = psAc.executeQuery();
+            if (!rsAc.next()) {
+                throw new AccesoALaDataException("No hay años Utiles");
+            }
+            int año = rsAc.getInt("anio");
+            psUt.setInt(1, año);
+            ResultSet rsUt = psUt.executeQuery();
+            while (rsUt.next()) {
+                años.add(armarAñoLectivo(rsUt));
+            }
+        } catch (SQLException e) {
+            throw new AccesoALaDataException("Error al buscar los años lectivos utiles: " + e.getMessage());
+        }
+        return años;
+    }
     
     public List<AñoLectivoDB> getAñosLectivos() throws AccesoALaDataException {
         List<AñoLectivoDB> años = new ArrayList<>();

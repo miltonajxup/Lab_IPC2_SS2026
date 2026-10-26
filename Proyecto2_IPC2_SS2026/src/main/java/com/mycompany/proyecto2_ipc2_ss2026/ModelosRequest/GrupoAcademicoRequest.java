@@ -4,23 +4,25 @@
  */
 package com.mycompany.proyecto2_ipc2_ss2026.ModelosRequest;
 
+import com.mycompany.proyecto2_ipc2_ss2026.Constantes.Seccion;
+
 /**
  *
  * @author milton
  */
 public class GrupoAcademicoRequest {
     
-    private int añoLectivo;
+    private int anioLectivo;
     private int grado;
     private String carrera;
-    private String seccion;
+    private Seccion seccion;
 
-    public int getAñoLectivo() {
-        return añoLectivo;
+    public int getAnioLectivo() {
+        return anioLectivo;
     }
 
-    public void setAñoLectivo(int añoLectivo) {
-        this.añoLectivo = añoLectivo;
+    public void setAnioLectivo(int anioLectivo) {
+        this.anioLectivo = anioLectivo;
     }
 
     public int getGrado() {
@@ -39,11 +41,11 @@ public class GrupoAcademicoRequest {
         this.carrera = carrera;
     }
 
-    public String getSeccion() {
+    public Seccion getSeccion() {
         return seccion;
     }
 
-    public void setSeccion(String seccion) {
+    public void setSeccion(Seccion seccion) {
         this.seccion = seccion;
     }
 

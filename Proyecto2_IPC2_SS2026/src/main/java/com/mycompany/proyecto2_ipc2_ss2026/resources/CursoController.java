@@ -49,6 +49,20 @@ public class CursoController {
         }
     }
     
+    @GET
+    @Path("unico/{idCurso}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getCursoPorId(@PathParam("idCurso") int idCurso) {
+        try {
+            CursoDB curso = servicio.getCursoPorId(idCurso);
+            return Response.ok(curso).build();
+        } catch (AccesoALaDataException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        } catch (DataInexistenteException e) {
+            return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
+        }
+    }
+    
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
