@@ -8,7 +8,6 @@ import com.mycompany.proyecto2_ipc2_ss2026.Exceptions.AccesoALaDataException;
 import com.mycompany.proyecto2_ipc2_ss2026.Exceptions.DataInexistenteException;
 import com.mycompany.proyecto2_ipc2_ss2026.Exceptions.ValorInvalidoException;
 import com.mycompany.proyecto2_ipc2_ss2026.ModelosRequest.AsistenciaDiaRequest;
-import com.mycompany.proyecto2_ipc2_ss2026.ModelosRequest.AsistenciaRequest;
 import com.mycompany.proyecto2_ipc2_ss2026.ModelosRequest.NotaRequest;
 import com.mycompany.proyecto2_ipc2_ss2026.Servicios.ServicioMaestro;
 import jakarta.ws.rs.Consumes;
@@ -46,6 +45,19 @@ public class MaestroController {
             return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
         } catch (ValorInvalidoException e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+        }
+    }
+    
+    @GET
+    @Path("curso-asignado/{id}/{dpiMaestro}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response buscarCursosMaestroPorId(@PathParam("id") int id, @PathParam("dpiMaestro") String dpiMaestro) {
+        try {
+            return Response.ok(servicio.buscarCursoMaestroPorId(id, dpiMaestro)).build();
+        } catch (AccesoALaDataException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        } catch (DataInexistenteException e) {
+            return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
         }
     }
     
@@ -94,16 +106,19 @@ public class MaestroController {
             return Response.status(Response.Status.CREATED).entity(servicio.generarAsistencias(asistencia)).build();
         } catch (AccesoALaDataException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        } catch (ValorInvalidoException e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
         }
     }
     
     @PUT
-    @Path("{id}")
+    @Path("asistencia/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response tomarAsistencia(AsistenciaRequest asistencia, @PathParam("id") int id) {
+    public Response tomarAsistencia(@PathParam("id") int id) {
         try {
-            return Response.ok(servicio.tomarAsistencia(asistencia, id)).build();
+            servicio.tomarAsistencia(id);
+            return Response.ok().build();
         } catch (AccesoALaDataException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }
@@ -117,6 +132,19 @@ public class MaestroController {
             return Response.ok(servicio.getNotasCurso(idGrupo, idCurso)).build();
         } catch (AccesoALaDataException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        }
+    }
+    
+    @GET
+    @Path("nota-unica/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response buscarNotaPorId(@PathParam("id") int id) {
+        try {
+            return Response.ok(servicio.getNotaCurso(id)).build();
+        } catch (AccesoALaDataException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        } catch (DataInexistenteException e) {
+            return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
         }
     }
     

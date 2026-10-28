@@ -5,6 +5,7 @@
 package com.mycompany.proyecto2_ipc2_ss2026.Servicios;
 
 import com.mycompany.proyecto2_ipc2_ss2026.Constantes.LimiteTamaño;
+import com.mycompany.proyecto2_ipc2_ss2026.Constantes.RolUsuario;
 import com.mycompany.proyecto2_ipc2_ss2026.DAOs.Administrador.GrupoAcademicoDAO;
 import com.mycompany.proyecto2_ipc2_ss2026.DAOs.CicloEscolar;
 import com.mycompany.proyecto2_ipc2_ss2026.DAOs.Secretaria.InscripcionDAO;
@@ -53,12 +54,13 @@ public class ServicioInscripcion {
         if (inscripcion == null || usuario == null) {
             throw new ValorInvalidoException("Hacen falta valores para la inscripcion");
         }
-        if (usuario.getDpi() == null || usuario.getNombre() == null || usuario.getRol() == null || 
+        if (usuario.getDpi() == null || usuario.getNombre() == null || 
                 usuario.getNumeroEstudiante() == null || usuario.getNumeroEncargado() == null || 
                 usuario.getDpi().isEmpty() || usuario.getNombre().isEmpty() ||
                 usuario.getNumeroEstudiante().isEmpty() || usuario.getNumeroEncargado().isEmpty()) {
             throw new ValorInvalidoException("Hacen falta valores del usuario para la inscripcion");
         }
+        inscripcion.getEstudiante().setRol(RolUsuario.ESTUDIANTE);
         
         revisarTamaños(usuario);
         if (usuariodao.existeUsuarioPorDpi(usuario.getDpi())) {

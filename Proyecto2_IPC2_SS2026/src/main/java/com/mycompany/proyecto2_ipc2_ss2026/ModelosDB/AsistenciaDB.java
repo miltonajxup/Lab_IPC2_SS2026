@@ -16,12 +16,14 @@ public class AsistenciaDB {
     private final int idCursoEstudiante;
     private final boolean estado;
     private final LocalDate fecha;
+    private final String nombre;
 
-    public AsistenciaDB(int id, int idCursoEstudiante, boolean estado, LocalDate fecha) {
+    public AsistenciaDB(int id, int idCursoEstudiante, boolean estado, LocalDate fecha, String nombre) {
         this.id = id;
         this.idCursoEstudiante = idCursoEstudiante;
         this.estado = estado;
         this.fecha = fecha;
+        this.nombre = nombre;
     }
 
     public int getId() {
@@ -38,6 +40,10 @@ public class AsistenciaDB {
 
     public LocalDate getFecha() {
         return fecha;
+    }
+    
+    public String getNombre() {
+        return nombre;
     }
     
 }

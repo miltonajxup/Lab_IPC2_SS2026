@@ -17,7 +17,6 @@ import com.mycompany.proyecto2_ipc2_ss2026.ModelosDB.EmpleadoDB;
 import com.mycompany.proyecto2_ipc2_ss2026.ModelosDB.EstudianteCurso;
 import com.mycompany.proyecto2_ipc2_ss2026.ModelosDB.NotaDB;
 import com.mycompany.proyecto2_ipc2_ss2026.ModelosRequest.AsistenciaDiaRequest;
-import com.mycompany.proyecto2_ipc2_ss2026.ModelosRequest.AsistenciaRequest;
 import com.mycompany.proyecto2_ipc2_ss2026.ModelosRequest.NotaRequest;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
@@ -52,6 +51,15 @@ public class ServicioMaestro {
         return cursos;
     }
     
+    public CursoMaestro buscarCursoMaestroPorId(int id, String idMaestro) throws AccesoALaDataException, DataInexistenteException {
+        CursoMaestro curso = maestrodao.getCursosMaestroPorId(id, idMaestro);
+        if (curso == null) {
+            throw new DataInexistenteException("No se pudo encontrar el curso asignado al maestro");
+        }
+        return curso;
+    }
+            
+    
     public List<EstudianteCurso> buscarEstudiantesCurso(int idGrupo, int curso) throws AccesoALaDataException {
         return maestrodao.getEstudiantesCurso(idGrupo, curso);
     }
@@ -63,9 +71,13 @@ public class ServicioMaestro {
     public List<AsistenciaDB> getAsistencias(int idGrupo, int idCurso, String fecha) throws AccesoALaDataException, ValorInvalidoException, DataInexistenteException {
         LocalDate date;
         try {
+            String[] partes = fecha.split(",");
+            if (partes.length == 3) {
+                fecha = partes[0] + "-" + partes[1] + "-" + partes[2];
+            } 
             date = LocalDate.parse(fecha);
         } catch (DateTimeParseException e) {
-            throw new ValorInvalidoException("La fecha debe tener el formato yyyy-MM-dd");
+            throw new ValorInvalidoException("La fecha debe tener el formato yyyy-MM-dd y es: " + fecha);
         }
         if (!maestrodao.asistenciaTomadaDia(idGrupo, idCurso, date)) {
             throw new DataInexistenteException("No hay registros de asistencia para la fecha: " + fecha);
@@ -73,29 +85,40 @@ public class ServicioMaestro {
         return maestrodao.getAsistenciasDelDia(idGrupo, idCurso, date);
     }
     
-    public List<AsistenciaDB> generarAsistencias(AsistenciaDiaRequest asistencia) throws AccesoALaDataException {
+    public List<AsistenciaDB> generarAsistencias(AsistenciaDiaRequest asistencia) throws AccesoALaDataException, ValorInvalidoException {
+        if (asistencia == null || asistencia.getFecha() == null) {
+            throw new ValorInvalidoException("Falta incluir la fecha");
+        }
         if (maestrodao.asistenciaTomadaDia(asistencia.getIdGrupoEstudiantes(), asistencia.getIdCurso(), asistencia.getFecha())) {
             return maestrodao.getAsistenciasDelDia(asistencia.getIdGrupoEstudiantes(), asistencia.getIdCurso(), asistencia.getFecha());
         }
         return maestrodao.generarAsistencias(asistencia);
     }
     
-    public AsistenciaDB tomarAsistencia(AsistenciaRequest asistencia, int id) throws AccesoALaDataException {
-        return maestrodao.tomarAsistencia(asistencia, id);
+    public void tomarAsistencia(int id) throws AccesoALaDataException {
+        maestrodao.tomarAsistencia(id);
     }
     
     public List<NotaDB> getNotasCurso(int idGrupo, int idCurso) throws AccesoALaDataException {
         return maestrodao.getNotasCurso(idGrupo, idCurso);
     }
     
+    public NotaDB getNotaCurso(int id) throws AccesoALaDataException, DataInexistenteException {
+        NotaDB nota = maestrodao.getNotaPorId(id);
+        if (nota == null) {
+            throw new DataInexistenteException("No se pudo encontrar la nota");
+        }
+        return nota;
+    }
+    
     public NotaDB modificarZona(NotaRequest nota, int id) throws AccesoALaDataException, ValorInvalidoException {
-        if (nota.getNotaZona() < Nota.MINIMO.getValor()) {
+        if (nota.getZona() < Nota.MINIMO.getValor()) {
             throw new ValorInvalidoException("La nota minima permitida es: " + Nota.MINIMO.getValor());
         }
-        if (nota.getNotaZona() > Nota.MAXIMO_ZONA.getValor()) {
+        if (nota.getZona() > Nota.MAXIMO_ZONA.getValor()) {
             throw new ValorInvalidoException("La nota maxima para la zona es: " + Nota.MAXIMO_ZONA.getValor());
         }
-        return maestrodao.modificarZona(nota.getNotaZona(), id);
+        return maestrodao.modificarZona(nota.getZona(), id);
     }
     
     public NotaDB modificarExamen(NotaRequest nota, int id) throws AccesoALaDataException, ValorInvalidoException {

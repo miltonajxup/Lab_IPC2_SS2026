@@ -74,7 +74,8 @@ public class InscripcionController {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response inscripcionPrimerIngreso(InscripcionRequest inscripcion) {
         try {
-            return Response.status(Response.Status.CREATED).entity(servicio.incribirPrimerIngreso(inscripcion)).build();
+            servicio.incribirPrimerIngreso(inscripcion);
+            return Response.status(Response.Status.CREATED).build();
         } catch (AccesoALaDataException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         } catch (DataExistenteException e) {
@@ -102,7 +103,8 @@ public class InscripcionController {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response inscripcionRengreso(InscripcionRequest inscripcion) {
         try {
-            return Response.status(Response.Status.CREATED).entity(servicio.inscripcionReingreso(inscripcion)).build();
+            servicio.inscripcionReingreso(inscripcion);
+            return Response.status(Response.Status.CREATED).build();
         } catch (AccesoALaDataException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         } catch (DataInexistenteException e) {

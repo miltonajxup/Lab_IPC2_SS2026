@@ -10,15 +10,15 @@ package com.mycompany.proyecto2_ipc2_ss2026.ModelosRequest;
  */
 public class NotaRequest {
     
-    private int notaZona;
+    private int zona;
     private int examenFinal;
 
-    public int getNotaZona() {
-        return notaZona;
+    public int getZona() {
+        return zona;
     }
 
-    public void setNotaZona(int notaZona) {
-        this.notaZona = notaZona;
+    public void setZona(int zona) {
+        this.zona = zona;
     }
 
     public int getExamenFinal() {

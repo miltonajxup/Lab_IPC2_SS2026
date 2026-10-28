@@ -4,6 +4,8 @@
  */
 package com.mycompany.proyecto2_ipc2_ss2026.ModelosDB;
 
+import java.util.List;
+
 /**
  *
  * @author milton
@@ -15,17 +17,15 @@ public class SolvenciaEstudiante {
     private final String nombreGrado;
     private final String nombreNivel;
     private final String seccion;
-    private final int idBoleta;
-    private final String tipoPago;
+    private final List<BoletaPagoDB> boletas;
 
-    public SolvenciaEstudiante(String dpi, String nombre, String nombreGrado, String nombreNivel, String seccion, int idBoleta, String tipoPago) {
+    public SolvenciaEstudiante(String dpi, String nombre, String nombreGrado, String nombreNivel, String seccion, List<BoletaPagoDB> boletas) {
         this.dpi = dpi;
         this.nombre = nombre;
         this.nombreGrado = nombreGrado;
         this.nombreNivel = nombreNivel;
         this.seccion = seccion;
-        this.idBoleta = idBoleta;
-        this.tipoPago = tipoPago;
+        this.boletas = boletas;
     }
 
     public String getDpi() {
@@ -48,12 +48,8 @@ public class SolvenciaEstudiante {
         return seccion;
     }
 
-    public int getIdBoleta() {
-        return idBoleta;
-    }
-
-    public String getTipoPago() {
-        return tipoPago;
+    public List<BoletaPagoDB> getBoletas() {
+        return boletas;
     }
     
 }
