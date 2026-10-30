@@ -6,7 +6,7 @@
 }
 
 .t25 {
-    font-size: 25px;
+    font-size: 25px !important;
 }
 
 .t20 {
@@ -31,4 +31,30 @@ input {
 .eleccion {
     background-color: #0099ff !important;
     color: white !important;
+}
+
+.btn-del {
+    display: inline;
+}
+
+.bg-gray {
+    background-color: rgb(168, 163, 163);
+}
+
+th {
+    padding: 5px;
+    border: 1px solid black !important;
+    background-color: rgb(193, 189, 189);
+}
+
+td {
+    padding: 5px;
+}
+
+td {
+    border: 1px solid black !important;
+}
+
+.fin {
+    margin-bottom: 150px;
 }

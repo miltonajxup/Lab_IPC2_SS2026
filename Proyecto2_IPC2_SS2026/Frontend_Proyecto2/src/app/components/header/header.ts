@@ -1,8 +1,9 @@
 import { Component, Input } from '@angular/core';
-import { required } from '@angular/forms/signals';
+import { RouterLink } from '@angular/router';
+import { SesionService } from '../../servicios/sesion-service';
 
 @Component({
-  imports: [],
+  imports: [RouterLink],
   selector: 'app-header',
   styles: ``,
   templateUrl: './header.html',
@@ -10,4 +11,10 @@ import { required } from '@angular/forms/signals';
 export class Header {
   @Input({required: true})
   rol!: string;
+
+  constructor(private sesionService: SesionService) {}
+
+  cerrarSesion(): void {
+    this.sesionService.cerrarSesion();
+  }
 }
