@@ -1,0 +1,102 @@
+<h3 class="text-center titulo p-3">Reporte de Estado de Cuenta por Estudiante</h3>
+
+@if (mensajeError()) {
+    <div class="text-danger text-center t20">{{mensajeError()}}</div>
+}
+<div class="d-flex justify-content-center flex-column t20">
+    <form [formGroup]="busquedaForm" (submit)="buscar()" class="card shadow p-4 w-25 mx-auto gap-2">
+        <label >
+            Nombre del estudiante
+            <input type="text" formControlName="idEstudiante">
+        </label>
+        <label >
+            Fecha Inicial (Opcional)
+            <input type="date" formControlName="fechaInicial">
+        </label>
+        <label >
+            Fecha Final (Opcional)
+            <input type="date" formControlName="fechaFin">
+        </label>
+        <button class="btn btn-primary w-50 mt-4">
+            Buscar
+        </button>
+    </form>
+
+    <div class="m-5">
+        @if (historial()) {
+            <a href="{{exportar()}}" target="_blank" class="btn btn-primary mb-3"> 
+                Exportar Reporte
+            </a>
+            <div class="d-flex gap-5 justify-content-center border p-2">
+                <button (click)="moverPagina(-1)"> < </button>
+                {{pagina()}}
+                <button (click)="moverPagina(1)"> > </button>
+            </div>
+
+            <h2 class="text-center ">Estado de Cuenta</h2>
+            <div class="text-center t25 m-5">
+                Total de Dinero Cancelado: {{historial()?.dineroIngresado}} <br>
+                Saldo Pendiente: {{historial()?.saldoPendiente}} <br>
+            </div>
+
+            <h2 class="text-center m-5">Historial de Pagos</h2>
+            <table>
+                <tr>
+                    <th> ID </th>
+                    <th> ID Boleta </th>
+                    <th> Monto </th>
+                    <th> Estado </th>
+                    <th> Tipo de Pago </th>
+                    <th> Año </th>
+                    <th> Nombre Estudiante </th>
+                    <th> Fecha de Pago </th>
+                    <th> Secretaria Recepcion </th>
+                </tr>
+                @for (pago of historial()?.historial; track pago.idPago) {
+                    <tr>
+                        <td> {{pago.idPago}} </td>
+                        <td> {{pago.idBoleta}} </td>
+                        <td> {{pago.monto}} </td>
+                        <td> {{pago.pagado}} </td>
+                        <td> {{pago.tipoPago}} </td>
+                        <td> {{pago.anio}} </td>
+                        <td> {{pago.nombreEstudiante}} </td>
+                        <td> {{pago.fechaPago}} </td>
+                        <td> {{pago.nombreSecretaria}} </td>
+                    </tr>
+                }
+            </table>
+
+            <h2 class="text-center m-5">Pagos Pendientes</h2>
+            <table>
+                <tr>
+                    <th> ID </th>
+                    <th> ID Boleta </th>
+                    <th> Monto </th>
+                    <th> Estado </th>
+                    <th> Tipo de Pago </th>
+                    <th> Año </th>
+                    <th> Nombre Estudiante </th>
+                    <th> Fecha de Pago </th>
+                    <th> Secretaria Recepcion </th>
+                </tr>
+                @for (pago of historial()?.pagosPendientes; track pago.idPago) {
+                    <tr>
+                        <td> {{pago.idPago}} </td>
+                        <td> {{pago.idBoleta}} </td>
+                        <td> {{pago.monto}} </td>
+                        <td> {{pago.pagado}} </td>
+                        <td> {{pago.tipoPago}} </td>
+                        <td> {{pago.anio}} </td>
+                        <td> {{pago.nombreEstudiante}} </td>
+                        <td> {{pago.fechaPago}} </td>
+                        <td> {{pago.nombreSecretaria}} </td>
+                    </tr>
+                }
+            </table>
+            @if (historial()?.pagosPendientes.length === 0) {
+                <h2 class="text-center m-5">No Tiene Pagos Pendientes</h2>
+            }
+        }
+    </div>
+</div>

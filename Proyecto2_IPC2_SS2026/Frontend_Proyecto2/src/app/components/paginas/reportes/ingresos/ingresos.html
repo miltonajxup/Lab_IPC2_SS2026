@@ -1,0 +1,36 @@
+<h3 class="text-center titulo p-3">Reporte de Solvencia de los estudiantes</h3>
+
+<div class="d-flex justify-content-center flex-column  t20">
+    <form [formGroup]="busquedaForm" (submit)="buscar()" class="card shadow p-4 w-25 mx-auto gap-2 mb-5">
+        <label >
+            Fecha Inicial (Opcional)
+            <input type="date" formControlName="fechaInicial">
+        </label>
+        <label >
+            Fecha Final (Opcional)
+            <input type="date" formControlName="fechaFin">
+        </label>
+        <button class="btn btn-primary w-50 mt-4">
+            Buscar
+        </button>
+    </form>
+    <div class="mx-auto">
+        @if (ingresos().length !== 0) {
+            <a href="{{exportar()}}" target="_blank" class="btn btn-primary mb-3"> 
+                Exportar Reporte
+            </a>
+            <table>
+                <tr>
+                    <th> Tipo </th>
+                    <th> Total de Ingreso </th>
+                </tr>
+                @for (ingreso of ingresos(); track $index) {
+                    <tr>
+                        <td> {{ingreso.tipoPago}} </td>
+                        <td> {{ingreso.totalIngreso}} </td>
+                    </tr>
+                }
+            </table>
+        }
+    </div>
+</div>

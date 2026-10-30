@@ -1,0 +1,66 @@
+<h3 class="text-center titulo p-3">Reporte de Solvencia de los estudiantes</h3>
+
+<div class="d-flex gap-3 justify-content-center m-3">
+    <button type="button" (click)="cambiarPagina(-1)" > < </button>
+    Pagina: {{pagina()}}
+    <button type="button" (click)="cambiarPagina(1)" > > </button>
+</div>
+
+@if (mensajeError()) {
+    <div class="text-center m-5 text-danger t20">
+        {{mensajeError()}}
+    </div>
+}
+
+<div class="d-flex flex-column mx-auto w-50 gap-3">
+    @for (grupo of gruposAnuales(); track grupo.id) {
+        <button class="btn card" 
+        (click)="buscar(grupo)">
+            {{grupo.nombreGrado}} {{grupo.nivelAcademico}} 
+            @if (grupo.nombreCarrera) {
+            {{grupo.nombreCarrera}}
+            }
+            {{grupo.seccion}}
+            {{grupo.cicloEscolarId}}
+        </button>
+    }
+</div>
+
+@if (mensaje()) {
+    <div class="text-center mt-5 t20">
+        <strong> {{mensaje()}} </strong>
+    </div>
+}
+
+@if (solvencias().length !== 0) {
+    <a href="{{exportar()}}" target="_blank" class="btn btn-primary mb-3"> 
+        Exportar Reporte
+    </a>
+    <div class="d-flex gap-3 justify-content-center m-3">
+        <button type="button" (click)="cambiarPaginaSolvencia(-1)" > < </button>
+        Pagina: {{paginaSolvencia()}}
+        <button type="button" (click)="cambiarPaginaSolvencia(1)" > > </button>
+    </div>
+    <div class="d-flex flex-column mx-auto w-75 gap-3 t20 mt-5">
+        <table>
+            <tr>
+                <th> Dpi  </th>
+                <th> Nombre </th>
+                <th> Total de Boletas </th>
+                <th> Boletas Pagadas </th>
+                <th> Boletas Pendientes </th>
+                <th> Estado </th>
+            </tr>
+        @for (solvencia of solvencias(); track $index) {
+            <tr>
+                <td> {{solvencia.dpi}} </td>
+                <td> {{solvencia.nombre}} </td>
+                <td> {{solvencia.totalBoletas}} </td>
+                <td> {{solvencia.pagadas}} </td>
+                <td> {{solvencia.pendientes}} </td>
+                <td> {{solvencia.estado}} </td>
+            </tr>
+        }
+        </table>
+    </div>
+}
