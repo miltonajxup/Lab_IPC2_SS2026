@@ -56,7 +56,7 @@ public class LoginController {
         try {
             RespuestaLog respuesta = servicio.colocarContraseña(usuario);
             if (respuesta.isAcceso()) {
-                return Response.ok(respuesta.getMensaje()).build();
+                return Response.ok().build();
             } else {
                 return Response.status(Response.Status.UNAUTHORIZED).entity(respuesta.getMensaje()).build();
             }
@@ -76,7 +76,7 @@ public class LoginController {
         try {
             RespuestaLog respuesta = servicio.modificarContraseña(usuario, idUsuario);
             if (respuesta.isAcceso()) {
-                return Response.ok(respuesta.getMensaje()).build();
+                return Response.ok().build();
             } else {
                 return Response.status(Response.Status.UNAUTHORIZED).entity(respuesta.getMensaje()).build();
             }
@@ -94,7 +94,7 @@ public class LoginController {
         try {
             RespuestaLog respuesta = servicio.accesoRecuperarContraseña(usuario);
             if (respuesta.isAcceso()) {
-                return Response.ok(respuesta.isAcceso()).build();
+                return Response.ok().build();
             } else {
                 return Response.status(Response.Status.UNAUTHORIZED).entity(respuesta.getMensaje()).build();
             }

@@ -49,6 +49,21 @@ public class MaestroController {
     }
     
     @GET
+    @Path("todos-cursos/{dpiMaestro}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response buscarTodosLosCursosMaestro(@PathParam("dpiMaestro") String dpiMaestro) {
+        try {
+            return Response.ok(servicio.buscarTodosLosCursosMaestro(dpiMaestro)).build();
+        } catch (AccesoALaDataException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        } catch (DataInexistenteException e) {
+            return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
+        } catch (ValorInvalidoException e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+        }
+    }
+    
+    @GET
     @Path("curso-asignado/{id}/{dpiMaestro}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response buscarCursosMaestroPorId(@PathParam("id") int id, @PathParam("dpiMaestro") String dpiMaestro) {

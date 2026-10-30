@@ -51,6 +51,21 @@ public class ServicioMaestro {
         return cursos;
     }
     
+    public List<CursoMaestro> buscarTodosLosCursosMaestro(String dpiMaestro) throws AccesoALaDataException, DataInexistenteException, ValorInvalidoException {
+        EmpleadoDB usuario = usuariodao.getEmpleadoPorID(dpiMaestro);
+        if (usuario == null) {
+            throw new DataInexistenteException("No se pudo encontrar el maestro para buscar sus cursos");
+        }
+        if (usuario.getRol() != RolUsuario.MAESTRO) {
+            throw new ValorInvalidoException("El empleado elegido no es un " + RolUsuario.MAESTRO);
+        }
+        List<CursoMaestro> cursos = maestrodao.getTodosLosCursosMaestro(dpiMaestro);
+        if (cursos.isEmpty()) {
+            throw new DataInexistenteException("El meastro no tiene cursos asigados");
+        }
+        return cursos;
+    }
+    
     public CursoMaestro buscarCursoMaestroPorId(int id, String idMaestro) throws AccesoALaDataException, DataInexistenteException {
         CursoMaestro curso = maestrodao.getCursosMaestroPorId(id, idMaestro);
         if (curso == null) {

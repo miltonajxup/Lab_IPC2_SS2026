@@ -14,11 +14,13 @@ public class EmpleadoDB extends UsuarioDB {
     
     private final double salario;
     private final String fechaContratacion;
+    private final boolean estado;
     
-    public EmpleadoDB(String dpi, String nombre, RolUsuario rol, double salario, String fechaContratacion) {
+    public EmpleadoDB(String dpi, String nombre, RolUsuario rol, double salario, String fechaContratacion, boolean estado) {
         super(dpi, nombre, rol);
         this.salario = salario;
         this.fechaContratacion = fechaContratacion;
+        this.estado = estado;
     }
 
     public double getSalario() {
@@ -27,6 +29,10 @@ public class EmpleadoDB extends UsuarioDB {
 
     public String getFechaContratacion() {
         return fechaContratacion;
+    }
+
+    public boolean isEstado() {
+        return estado;
     }
     
 }

@@ -16,14 +16,16 @@ public class GradoDB {
     private final double costoColegiatura;
     private final int nivelAcademicoId;
     private final String nombreNivel;
+    private final boolean estado;
 
-    public GradoDB(int id, String nombre, double costoInscripcion, double costoColegiatura, int nivelAcademicoId, String nombreNivel) {
+    public GradoDB(int id, String nombre, double costoInscripcion, double costoColegiatura, int nivelAcademicoId, String nombreNivel, boolean estado) {
         this.id = id;
         this.nombre = nombre;
         this.costoInscripcion = costoInscripcion;
         this.costoColegiatura = costoColegiatura;
         this.nivelAcademicoId = nivelAcademicoId;
         this.nombreNivel = nombreNivel;
+        this.estado = estado;
     }
 
     public int getId() {
@@ -48,6 +50,10 @@ public class GradoDB {
 
     public String getNombreNivel() {
         return nombreNivel;
+    }
+
+    public boolean isEstado() {
+        return estado;
     }
     
 }

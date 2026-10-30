@@ -68,7 +68,12 @@ public class ServicioEmpleado {
         if (pagina < LimitePagina.PAGINA_MINIMA) {
             throw new ValorInvalidoException("El valor de la pagina no puede ser menor que " + LimitePagina.PAGINA_MINIMA);
         }
-        return empleadodao.getEmpleadosPorRol(rol.name(), pagina);
+        return empleadodao.getAdmins(rol.name(), pagina);
+//        if (rol == RolUsuario.SUPER_ADMINISTRADOR || rol == RolUsuario.ADMINISTRADOR) {
+//            return empleadodao.getAdmins(rol.name(), pagina);
+//        } else {
+//            return empleadodao.getEmpleadosPorRol(rol.name(), pagina);
+//        }
     }
     
     public EmpleadoDB buscarEmpleadoPorDpi(String dpiEmpleado) throws AccesoALaDataException, DataInexistenteException {

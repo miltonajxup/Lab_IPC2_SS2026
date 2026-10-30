@@ -49,6 +49,13 @@ public class EmpleadoDAO {
             JOIN empleado AS emp ON usu.dpi = emp.dpi_empleado 
             JOIN contrato_empleado AS con ON emp.dpi_empleado = con.empleado_dpi 
             WHERE con.ciclo_escolar_id = ? AND usu.rol = ? LIMIT ?, ?""";
+    private final String GET_EMPLEADOS_ADMIN = 
+            """
+            SELECT usu.*, emp.*, con.salario, con.fecha_contratacion 
+            FROM usuario AS usu 
+            JOIN empleado AS emp ON usu.dpi = emp.dpi_empleado 
+            LEFT JOIN contrato_empleado AS con ON emp.dpi_empleado = con.empleado_dpi 
+            WHERE usu.rol = ? LIMIT ?, ?""";
     
     private final UsuarioDAO usuariodao;
     private final CicloEscolar ciclo;
@@ -177,13 +184,33 @@ public class EmpleadoDAO {
         return empleados;
     }
     
+    public List<EmpleadoDB> getAdmins(String rol, int numeroPagina) throws AccesoALaDataException {
+        List<EmpleadoDB> empleados = new ArrayList<>();
+        int paginacion = (numeroPagina - 1) * LimitePagina.LIMITE;
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement ps = connection.prepareStatement(GET_EMPLEADOS_ADMIN)) {
+            ps.setString(1, rol);
+            ps.setInt(2, paginacion);
+            ps.setInt(3, LimitePagina.LIMITE);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    empleados.add(armarEmpleado(rs));
+                }
+            }
+        } catch (SQLException e) {
+            throw new AccesoALaDataException("Error al buscar a los empleados del rol " + rol + ": " + e.getMessage());
+        }
+        return empleados;
+    }
+    
     private EmpleadoDB armarEmpleado(ResultSet rs) throws SQLException {
         return new EmpleadoDB(
                 rs.getString("dpi_empleado"), 
                 rs.getString("nombre"), 
                 RolUsuario.valueOf(rs.getString("rol")), 
                 rs.getDouble("salario"), 
-                rs.getString("fecha_contratacion"));
+                rs.getString("fecha_contratacion"), 
+                rs.getBoolean("estado"));
     }
     
 }

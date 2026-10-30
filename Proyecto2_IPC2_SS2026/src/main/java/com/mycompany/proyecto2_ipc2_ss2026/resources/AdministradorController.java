@@ -10,6 +10,7 @@ import com.mycompany.proyecto2_ipc2_ss2026.Exceptions.DataInexistenteException;
 import com.mycompany.proyecto2_ipc2_ss2026.Exceptions.ValorInvalidoException;
 import com.mycompany.proyecto2_ipc2_ss2026.ModelosDB.Respuesta;
 import com.mycompany.proyecto2_ipc2_ss2026.ModelosRequest.CursoMaestroRequest;
+import com.mycompany.proyecto2_ipc2_ss2026.ModelosRequest.MesBoleta;
 import com.mycompany.proyecto2_ipc2_ss2026.Servicios.ServicioAdministrador;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
@@ -60,10 +61,13 @@ public class AdministradorController {
     }
     
     @POST
-    @Path("generar-boletas/{mes}")
-    public Response generarBoletasDePago(@PathParam("mes") Mes mes) {
+    @Path("generar-boletas")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response generarBoletasDePago(MesBoleta mes) {
         try {
-            return Response.status(Response.Status.CREATED).entity(servicio.generarBoletasDePago(mes)).build();
+            String boletas = servicio.generarBoletasDePago(mes.getMes());
+            Respuesta respuesta = new Respuesta(boletas);
+            return Response.status(Response.Status.CREATED).entity(respuesta).build();
         } catch (AccesoALaDataException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }
@@ -73,7 +77,8 @@ public class AdministradorController {
     @Path("generar-pagos/{mes}")
     public Response generarPagos(@PathParam("mes") Mes mes) {
         try {
-            return Response.status(Response.Status.CREATED).entity(servicio.pagarEmpleados(mes)).build();
+            String pagos = servicio.pagarEmpleados(mes);
+            return Response.status(Response.Status.CREATED).entity(pagos).build();
         } catch (AccesoALaDataException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }

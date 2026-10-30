@@ -27,6 +27,14 @@ public class ServicioSuperAdmin {
         superdao = new SuperAdministradorDAO();
     }
     
+    public AñoLectivoDB buscarAñoActivo() throws AccesoALaDataException, DataInexistenteException {
+        AñoLectivoDB año = superdao.getAñoActivo();
+        if (año == null) {
+            throw new DataInexistenteException("No hay un año lectivo activado");
+        }
+        return año;
+    }
+    
     public List<AñoLectivoDB> crearAñoLectivo(AñoLectivoRequest añoLectivo) throws AccesoALaDataException, ValorInvalidoException, DataExistenteException {
         if (añoLectivo == null || añoLectivo.getAnio() == 0 || añoLectivo.getFechaInicio() == null || añoLectivo.getFechaFin() == null) {
             throw new ValorInvalidoException("Falta especificar los valores para la creacion de un nuevo año lectivo");

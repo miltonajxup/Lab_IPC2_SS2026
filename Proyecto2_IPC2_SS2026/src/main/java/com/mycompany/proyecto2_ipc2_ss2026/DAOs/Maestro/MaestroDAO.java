@@ -27,7 +27,7 @@ import java.util.List;
  */
 public class MaestroDAO {
     
-    private final String CONSULTAR_CURSOS_MAESTRO = 
+    private final String TODOS_LOS_CURSOS_MAESTRO = 
             """
             SELECT 
                 curmae.id AS id_curso_maestro, 
@@ -43,7 +43,8 @@ public class MaestroDAO {
             JOIN grupo_ciclo_escolar AS grup ON curmae.grupo_id = grup.id 
             JOIN grado AS gra ON grup.grado_id = gra.id 
             JOIN nivel_academico AS niv ON gra.nivel_id = niv.id 
-            WHERE grup.ciclo_escolar_id = ? AND curmae.maestro_id = ? """;
+            WHERE curmae.maestro_id = ? """;
+    private final String CONSULTAR_CURSOS_MAESTRO = TODOS_LOS_CURSOS_MAESTRO + " AND grup.ciclo_escolar_id = ?";
     private final String GET_CURSO_MAESTRO_POR_ID = 
             """
             SELECT 
@@ -115,8 +116,24 @@ public class MaestroDAO {
         
         try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
                 PreparedStatement ps = connection.prepareStatement(CONSULTAR_CURSOS_MAESTRO)) {
-            ps.setInt(1, año);
-            ps.setString(2, dpiMaestro);
+            ps.setString(1, dpiMaestro);
+            ps.setInt(2, año);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                cursos.add(armarCursoMaestro(rs));
+            }
+        } catch (SQLException e) {
+            throw new AccesoALaDataException("Error al buscar los cursos de que tiene asinado un maestro");
+        }
+        return cursos;
+    }
+    
+    public List<CursoMaestro> getTodosLosCursosMaestro(String dpiMaestro) throws AccesoALaDataException {
+        List<CursoMaestro> cursos = new ArrayList<>();
+        
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement ps = connection.prepareStatement(TODOS_LOS_CURSOS_MAESTRO)) {
+            ps.setString(1, dpiMaestro);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 cursos.add(armarCursoMaestro(rs));

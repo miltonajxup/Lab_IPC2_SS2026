@@ -6,6 +6,7 @@ package com.mycompany.proyecto2_ipc2_ss2026.DAOs.Administrador;
 
 import com.mycompany.proyecto2_ipc2_ss2026.Connection.DBConnectionSingleton;
 import com.mycompany.proyecto2_ipc2_ss2026.Constantes.LimitePagina;
+import com.mycompany.proyecto2_ipc2_ss2026.DAOs.ArmarGrado;
 import com.mycompany.proyecto2_ipc2_ss2026.Exceptions.AccesoALaDataException;
 import com.mycompany.proyecto2_ipc2_ss2026.ModelosDB.CarreraDB;
 import com.mycompany.proyecto2_ipc2_ss2026.ModelosDB.GradoDB;
@@ -45,6 +46,12 @@ public class CarreraDAO {
             JOIN grado_carrera AS grca ON gra.id = grca.grado_id 
             JOIN carrera AS carr ON grca.carrera_id = carr.codigo 
             WHERE carr.codigo = ?""";
+    
+    private final ArmarGrado armar;
+    
+    public CarreraDAO() {
+        armar = new ArmarGrado();
+    }
     
     public boolean existeCodigoCarrera(String codigo) throws AccesoALaDataException {
         try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
@@ -249,16 +256,6 @@ public class CarreraDAO {
         return carreras;
     }
     
-    private GradoDB armarGrado(ResultSet rs) throws SQLException {
-        return new GradoDB(
-                rs.getInt("id"), 
-                rs.getString("nombre"), 
-                rs.getDouble("costo_inscripcion"), 
-                rs.getDouble("costo_colegiatura"), 
-                rs.getInt("nivel_id"), 
-                rs.getString("nombre_nivel"));
-    }
-    
     private CarreraDB armarCarrera(Connection connection, ResultSet rs) throws SQLException {
         List<GradoDB> grados = new ArrayList<>();
         String codigoCarrera = rs.getString("codigo");
@@ -266,7 +263,7 @@ public class CarreraDAO {
         ps.setString(1, codigoCarrera);
         ResultSet rsGrado = ps.executeQuery();
         while (rsGrado.next()) {
-            grados.add(armarGrado(rsGrado));
+            grados.add(armar.armarGrado(rsGrado));
         }
         
         return new CarreraDB(

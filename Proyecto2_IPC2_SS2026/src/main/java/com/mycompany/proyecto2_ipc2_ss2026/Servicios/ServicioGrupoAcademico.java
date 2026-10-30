@@ -86,6 +86,13 @@ public class ServicioGrupoAcademico {
         return grupodao.getGruposPorAño(año, pagina);
     }
     
+    public List<GrupoAcademicoDB> getTodosLosGruposPorAño(int pagina) throws AccesoALaDataException, ValorInvalidoException {
+        if (pagina < LimitePagina.PAGINA_MINIMA) {
+            throw new ValorInvalidoException("La pagina minima para buscar es: " + LimitePagina.PAGINA_MINIMA);
+        }
+        return grupodao.getTodosLosGrupos(pagina);
+    }
+    
     public List<CurriculoDB> getCursosCurriculoGrado(int idGrado) throws AccesoALaDataException, DataInexistenteException {
         if (!gradodao.existeGrado(idGrado)) {
             throw new DataInexistenteException("El grado seleccionado no se pudo encontrar");

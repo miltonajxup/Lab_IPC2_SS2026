@@ -39,6 +39,20 @@ public class SuperAdminController {
     }
     
     @GET
+    @Path("anio-activo")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAñoActivo() {
+        try {
+            return Response.ok(servicio.buscarAñoActivo()).build();
+        } catch (AccesoALaDataException e) {
+            System.out.println(e.getMessage());
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        } catch (DataInexistenteException e) {
+            return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
+        }
+    }
+    
+    @GET
     @Path("anios-utiles")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAñosUtiles() {

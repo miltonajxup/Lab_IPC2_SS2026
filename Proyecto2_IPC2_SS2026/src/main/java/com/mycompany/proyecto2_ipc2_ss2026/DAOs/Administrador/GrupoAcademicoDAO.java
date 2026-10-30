@@ -29,15 +29,15 @@ public class GrupoAcademicoDAO {
     private final String GRUPO_ACADEMICO_POR_CARRERA = "SELECT * FROM grupo_ciclo_escolar WHERE ciclo_escolar_id = ? AND grado_id = ? AND carrera_id = ? AND seccion_id = ?";
     private final String CREAR_GRUPO_ACADEMICO_GRADO = "INSERT INTO grupo_ciclo_escolar (ciclo_escolar_id, grado_id, seccion_id) VALUES (?,?,?)";
     private final String CREAR_GRUPO_ACADEMICO_CARRERA = "INSERT INTO grupo_ciclo_escolar (ciclo_escolar_id, grado_id, carrera_id, seccion_id) VALUES (?,?,?,?)";
-    private final String GET_CRUPOS_POR_AÑO = 
+    private final String PLANTILLA_GRUPOS = 
             """
             SELECT grup.*, gra.nombre AS nombre_grado, niv.nombre AS nivel_academico, carr.nombre AS nombre_carrera 
             FROM grupo_ciclo_escolar AS grup 
                 JOIN grado AS gra ON grup.grado_id = gra.id 
                 LEFT JOIN carrera AS carr ON grup.carrera_id = carr.codigo 
-                JOIN nivel_academico AS niv ON gra.nivel_id = niv.id 
-            WHERE grup.ciclo_escolar_id = ? ORDER BY grup.grado_id LIMIT ?, ?""";
-    
+                JOIN nivel_academico AS niv ON gra.nivel_id = niv.id  """;
+    private final String GET_GRUPOS_POR_AÑO = PLANTILLA_GRUPOS + " WHERE grup.ciclo_escolar_id = ? ORDER BY grup.grado_id LIMIT ?, ?";
+    private final String GET_TODOS_LOS_GRUPOS = PLANTILLA_GRUPOS + " ORDER BY grup.ciclo_escolar_id DESC LIMIT ?, ?";
     private final String FORMATO_GET_CURRICULOS = 
             """
             SELECT 
@@ -121,7 +121,7 @@ public class GrupoAcademicoDAO {
         int año = ciclo.getAñoActivo();
         List<GrupoAcademicoDB> grupos = new ArrayList<>();
         try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
-                PreparedStatement ps = connection.prepareStatement(GET_CRUPOS_POR_AÑO)) {
+                PreparedStatement ps = connection.prepareStatement(GET_GRUPOS_POR_AÑO)) {
             ps.setInt(1, año);
             ps.setInt(2, paginacion);
             ps.setInt(3, LimitePagina.LIMITE);
@@ -140,7 +140,7 @@ public class GrupoAcademicoDAO {
         int paginacion = (pagina - 1) * LimitePagina.LIMITE;
         List<GrupoAcademicoDB> grupos = new ArrayList<>();
         try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
-                PreparedStatement ps = connection.prepareStatement(GET_CRUPOS_POR_AÑO)) {
+                PreparedStatement ps = connection.prepareStatement(GET_GRUPOS_POR_AÑO)) {
             ps.setInt(1, año);
             ps.setInt(2, paginacion);
             ps.setInt(3, LimitePagina.LIMITE);
@@ -151,6 +151,24 @@ public class GrupoAcademicoDAO {
             }
         } catch (SQLException e) {
             throw new AccesoALaDataException("Error al buscar los grupos academicos por año: " + e.getMessage());
+        }
+        return grupos;
+    }
+    
+    public List<GrupoAcademicoDB> getTodosLosGrupos(int pagina) throws AccesoALaDataException {
+        int paginacion = (pagina - 1) * LimitePagina.LIMITE;
+        List<GrupoAcademicoDB> grupos = new ArrayList<>();
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement ps = connection.prepareStatement(GET_TODOS_LOS_GRUPOS)) {
+            ps.setInt(1, paginacion);
+            ps.setInt(2, LimitePagina.LIMITE);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    grupos.add(armarGrupoAcademico(rs));
+                }
+            }
+        } catch (SQLException e) {
+            throw new AccesoALaDataException("Error al buscar todos los grupos academicos por año: " + e.getMessage());
         }
         return grupos;
     }

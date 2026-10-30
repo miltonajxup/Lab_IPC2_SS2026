@@ -35,6 +35,20 @@ public class SuperAdministradorDAO {
     private final String MODIFICAR_COSTO_COLEGIATURA = "UPDATE grado SET costo_colegiatura = ? WHERE id = ?";
     private final String MODIFICAR_COSTO_INSCRIPCION = "UPDATE grado SET costo_inscripcion = ? WHERE id = ?";
     
+    public AñoLectivoDB getAñoActivo() throws AccesoALaDataException {
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement ps = connection.prepareStatement(GET_AÑO_ACTIVO)) {
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return armarAñoLectivo(rs);
+                }
+            }
+        } catch (Exception e) {
+            throw new AccesoALaDataException("Error al buscar el año escolar activo: " + e.getMessage());
+        }
+        return null;
+    }
+    
     public List<AñoLectivoDB> getAñosUtiles() throws AccesoALaDataException {
         List<AñoLectivoDB> años = new ArrayList<>();
         try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();

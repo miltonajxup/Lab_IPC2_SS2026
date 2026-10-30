@@ -73,6 +73,19 @@ public class GrupoAcademicoController {
         }
     }
     
+    @GET
+    @Path("todos-los-grupos/{pagina}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getGruposPorAño(@PathParam("pagina") int pagina) {
+        try {
+            return Response.ok(servicio.getTodosLosGruposPorAño(pagina)).build();
+        } catch (AccesoALaDataException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        } catch (ValorInvalidoException e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+        }
+    }
+    
     @POST
     @Path("crear-grupo-grado")
     @Consumes(MediaType.APPLICATION_JSON)

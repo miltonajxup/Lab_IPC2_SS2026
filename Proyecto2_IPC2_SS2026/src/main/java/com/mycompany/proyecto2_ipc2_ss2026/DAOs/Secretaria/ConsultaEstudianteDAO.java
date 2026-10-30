@@ -8,6 +8,7 @@ import com.mycompany.proyecto2_ipc2_ss2026.Connection.DBConnectionSingleton;
 import com.mycompany.proyecto2_ipc2_ss2026.DAOs.ArmarEstudiante;
 import com.mycompany.proyecto2_ipc2_ss2026.Exceptions.AccesoALaDataException;
 import com.mycompany.proyecto2_ipc2_ss2026.ModelosDB.EstudianteDB;
+import com.mycompany.proyecto2_ipc2_ss2026.ModelosDB.ExpedienteEstudiante;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -40,6 +41,16 @@ public class ConsultaEstudianteDAO {
             SELECT usu.*, est.* FROM usuario AS usu 
             JOIN estudiante AS est ON usu.dpi = est.dpi_estudiante 
             WHERE usu.nombre LIKE CONCAT(?, '%')""";
+    private final String EXPEDIENTE_ESTUDIANTE = 
+            """
+            SELECT usu.*, est.estado, gra.nombre AS nombre_grado, niv.nombre AS nivel_academico 
+            FROM inscripcion AS ins 
+            JOIN grupo_ciclo_escolar AS grup ON ins.grupo_id = grup.id 
+            JOIN usuario AS usu ON ins.estudiante = usu.dpi 
+            JOIN grado AS gra ON grup.grado_id = gra.id 
+            JOIN nivel_academico AS niv ON gra.nivel_id = niv.id 
+            JOIN estudiante AS est ON usu.dpi = est.dpi_estudiante 
+            WHERE ins.estudiante = ? ORDER BY ins.id DESC""";
     
     private final ArmarEstudiante armar;
     
@@ -93,6 +104,25 @@ public class ConsultaEstudianteDAO {
             throw new AccesoALaDataException("Error al buscar estudiantes por nombre: " + e.getMessage());
         }
         return estudiantes;
+    }
+    
+    public ExpedienteEstudiante getExpediente(String idEstudiante) throws AccesoALaDataException {
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement ps = connection.prepareStatement(EXPEDIENTE_ESTUDIANTE)) {
+            ps.setString(1, idEstudiante);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return new ExpedienteEstudiante(
+                        rs.getString("dpi"), 
+                        rs.getString("nombre"), 
+                        rs.getString("rol"), 
+                        rs.getString("estado"), 
+                        rs.getString("nombre_grado") + "  " + rs.getString("nivel_academico"));
+            }
+        } catch (Exception e) {
+            throw new AccesoALaDataException("Error al buscar el expediente de un estudiante: " + e.getMessage());
+        }
+        return null;
     }
     
 }

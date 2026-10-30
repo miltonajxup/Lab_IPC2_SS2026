@@ -63,8 +63,8 @@ public class EmpleadoController {
     @Produces(MediaType.APPLICATION_JSON) 
     public Response crearYContratar(UsuarioRequest usuario) {
         try {
-            String mensaje = servicio.crearEmpleado(usuario);
-            return Response.status(Response.Status.CREATED).entity(mensaje).build();
+            servicio.crearEmpleado(usuario);
+            return Response.status(Response.Status.CREATED).build();
         } catch (AccesoALaDataException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         } catch (DataExistenteException e) {
@@ -79,8 +79,8 @@ public class EmpleadoController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response contratar(UsuarioRequest usuario) {
         try {
-            String mensaje = servicio.contratarEmpleado(usuario);
-            return Response.status(Response.Status.CREATED).entity(mensaje).build();
+            servicio.contratarEmpleado(usuario);
+            return Response.status(Response.Status.CREATED).build();
         } catch (AccesoALaDataException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         } catch (DataInexistenteException e) {

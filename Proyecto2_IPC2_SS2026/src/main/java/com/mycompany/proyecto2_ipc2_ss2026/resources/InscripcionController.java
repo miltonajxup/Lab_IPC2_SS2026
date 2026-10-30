@@ -57,18 +57,6 @@ public class InscripcionController {
         }
     }
     
-    @GET
-    @Path("todos-los-grados")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getGradosNomales() {
-        GradoDAO carreradao = new GradoDAO();
-        try {
-            return Response.ok(carreradao.getTodosLosGrados()).build();
-        } catch (AccesoALaDataException e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
-        }
-    }
-    
     @POST
     @Path("primer-ingreso")
     @Consumes(MediaType.APPLICATION_JSON)

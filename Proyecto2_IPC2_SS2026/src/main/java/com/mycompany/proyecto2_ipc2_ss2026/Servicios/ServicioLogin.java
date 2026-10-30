@@ -27,7 +27,6 @@ import java.util.List;
  */
 public class ServicioLogin {
     
-    private final String MENSAJE_NEGACION_CAMBIO_CONTRASEÑA = "No se pudo cambiar la contraseña";
     private final String MENSAJE_INGRESO = "No se pudo Acceder";
     
     private final LoginDAO logindao;
@@ -64,15 +63,23 @@ public class ServicioLogin {
         }
         
         if (usuarioCompleto.getRol() == RolUsuario.ESTUDIANTE) {
+//            return new RespuestaLog(true, estudiantedao.getEstudiantePorID(usuarioCompleto.getDpi()));
+//        } else if (usuarioCompleto.getRol() == RolUsuario.SUPER_ADMINISTRADOR) {
+//            return new RespuestaLog(true, empleadodao.getEmpleadoSinContrato(usuarioCompleto.getDpi()));
+//        } else {
+//            EmpleadoDB empleado = empleadodao.getEmpleadoPorID(usuarioCompleto.getDpi());
+//            if (empleado == null) {
+//                return new RespuestaLog(false, "El empleado " + usuarioCompleto.getNombre() + " no se encuentra contratado para el año vigente");
+//            } else {
+//                return new RespuestaLog(true, empleado);
+//            }
             return new RespuestaLog(true, estudiantedao.getEstudiantePorID(usuarioCompleto.getDpi()));
-        } else if (usuarioCompleto.getRol() == RolUsuario.SUPER_ADMINISTRADOR) {
-            return new RespuestaLog(true, empleadodao.getEmpleadoSinContrato(usuarioCompleto.getDpi()));
         } else {
-            EmpleadoDB empleado = empleadodao.getEmpleadoPorID(usuarioCompleto.getDpi());
-            if (empleado == null) {
-                return new RespuestaLog(false, "El empleado " + usuarioCompleto.getNombre() + " no se encuentra contratado para el año vigente");
-            } else {
+            EmpleadoDB empleado = empleadodao.getEmpleadoSinContrato(usuarioCompleto.getDpi());
+            if (empleado.isEstado()) {
                 return new RespuestaLog(true, empleado);
+            } else {
+                return new RespuestaLog(false, "No se pudo acceder porque el usuario ha sido bloqueado");
             }
         }
     }
@@ -95,14 +102,8 @@ public class ServicioLogin {
     }
     
     public RespuestaLog modificarContraseña(UsuarioRequest usuario, String idUsuario) throws AccesoALaDataException, ValorInvalidoException {
-        if (verificarValores(usuario)) {
-            return new RespuestaLog(false, MENSAJE_INGRESO);
-        }
-        
-        UsuarioCompleto usuarioCompleto = usuariodao.usuarioCompletoPorNombre(usuario.getNombre());
-        
-        if (usuarioCompleto == null) {
-            throw new ValorInvalidoException(MENSAJE_NEGACION_CAMBIO_CONTRASEÑA);
+        if (usuario.getContrasenia() == null) {
+            throw new ValorInvalidoException("No se ha agregado la contraseña");
         }
         
         if (usuario.getContrasenia().length() < LimiteTamaño.MINIMO_CONTRASEÑA.getLimite()) {
