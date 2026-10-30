@@ -18,7 +18,7 @@ public class PagoBoletaDB {
     private final boolean pagado;
     private final String tipoPago;
     private final String mesPago;
-    private final int año;
+    private final int anio;
     private final String dpiEstudiante;
     private final String nombreEstudiante;
     private final LocalDate fechaPago;
@@ -31,7 +31,7 @@ public class PagoBoletaDB {
         this.pagado = pagado;
         this.tipoPago = tipoPago;
         this.mesPago = mesPago;
-        this.año = año;
+        this.anio = año;
         this.dpiEstudiante = dpiEstudiante;
         this.nombreEstudiante = nombreEstudiante;
         this.fechaPago = fechaPago;
@@ -62,8 +62,8 @@ public class PagoBoletaDB {
         return mesPago;
     }
 
-    public int getAño() {
-        return año;
+    public int getAnio() {
+        return anio;
     }
 
     public String getDpiEstudiante() {
