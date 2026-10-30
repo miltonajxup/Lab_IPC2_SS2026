@@ -1,0 +1,57 @@
+<app-header [rol]="rol"></app-header>
+<div class="d-flex border-bottom">
+    <app-menu></app-menu>
+    <main class="content flex-grow-1 p-4 border-start">
+
+        <h3 class="text-center titulo p-3">Definir los Curriculos de Los Grados</h3>
+
+        <button class="btn btn-primary" routerLink="/curriculo">Regresar</button>
+
+        @if (mensajeError()) {
+            <div class="text-danger text-center t20">{{mensajeError()}}</div>
+        }
+        @if (operacionCompleatada()) {
+            <div class="text-success text-center t20">Se ha guardado el Curriculo</div>
+        }
+
+        <form [formGroup]="curriculoForm" (submit)="submit()" >
+            <div class="t25 d-flex flex-row justify-content-center gap-5">
+                <div class="column text-center">
+                    Grados
+                    @for (grado of grados(); track grado.id) {
+                        <button
+                        type="button" 
+                        class="card w-100 mx-auto mb-2 text-center" 
+                        [class.eleccion]="curriculoForm.value.gradoId == grado.id" 
+                        (click)="setGrado(grado.id)">
+                            {{grado.nombre}} {{grado.nombreNivel}}
+                        </button>
+                    }
+                </div>
+                <div class="column text-center">
+                    Cursos
+                    <div class="d-flex gap-3 justify-content-center m-3">
+                        <button type="button" (click)="avanzarPaginaCursos(-1)" > < </button>
+                        Pagina: {{paginaCursos()}}
+                        <button type="button" (click)="avanzarPaginaCursos(1)" > > </button>
+                    </div>
+                    @for (curso of cursos(); track curso.idCurso) {
+                        <button 
+                        type="button"
+                        class="card w-100 mx-auto mb-2"
+                        [class.eleccion]="curriculoForm.value.cursoId === curso.idCurso" 
+                        (click)="setCurso(curso.idCurso)">
+                            {{curso.nombre}}
+                        </button>
+                    }
+                </div>
+            </div>
+            <div class="mx-auto w-25 d-flex justify-content-center">
+                <button class="btn btn-primary" [disabled]="curriculoForm.invalid" >
+                    Guardar
+                </button>
+            </div>
+        </form>
+        
+    </main>
+</div>

@@ -24,8 +24,8 @@ export class FormCurso implements OnInit {
   ngOnInit(): void {
     this.cursoForm = this.formBuilder.group({
       idCurso: [null],
-      nombre: [null, [Validators.required, Validators.max(40)]],
-      descripcion: [null, [Validators.max(300)]]
+      nombre: [null, [Validators.required, Validators.maxLength(40)]],
+      descripcion: [null, [Validators.maxLength(300)]]
     });
     this.reset();
   }

@@ -1,0 +1,21 @@
+<app-header [rol]="rol"></app-header>
+<div class="d-flex border-bottom">
+    <app-menu></app-menu>
+    <main class="content flex-grow-1 p-4 border-start">
+
+        <h3 class="text-center titulo p-3">Definir los Curriculos Para los Grados</h3>
+
+        <div class="d-flex justify-content-center mb-5 gap-5">
+            <div class="d-flex flex-column gap-5">
+                <button class=" btn btn-primary t20" routerLink="/curriculo/crear/grado" >Crear Curriculo Grado</button>
+                <button class=" btn btn-primary t20" routerLink="/curriculo/modificar/grado" >Modificar Curriculo Grado</button>
+            </div>
+            <div class="d-flex flex-column gap-5">
+                <button class="btn btn-primary t20" routerLink="/curriculo/crear/carrera" >Crear Curriculo Carrera</button>
+                <button class="btn btn-primary t20" routerLink="/curriculo/modificar/carrera" >Modificar Curriculo Carrera</button>
+            </div>
+        </div>
+        
+    </main>
+</div>
+

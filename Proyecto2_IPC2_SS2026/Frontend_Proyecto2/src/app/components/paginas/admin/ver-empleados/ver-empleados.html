@@ -1,0 +1,41 @@
+<app-header [rol]="rol"></app-header>
+<div class="d-flex border-bottom">
+    <app-menu></app-menu>
+    <main class="content flex-grow-1 p-4 border-start">
+
+        <h3 class="text-center titulo p-3">Nuevo Contrato de Empleado</h3>
+
+        @if (mensajeError()) {
+            <div class="text-center t25 text-danger m-3">{{mensajeError()}}</div>
+        }
+
+        <div class="d-flex flex-row gap-3 mb-5">
+            @for (rol of roles | keyvalue; track rol.key) {
+                @if (rol.value != rolEstudiante) {
+                    <button class="btn btn-secondary" (click)="buscarEmpleados(rol.value)"> {{rol.key}} </button>
+                }
+            }
+        </div>
+
+        <div class="d-flex justify-content-center align-items-center mb-5 flex-column gap-3 t25">
+            <div >
+                <button (click)="moverPagina(-1)">
+                    <
+                </button>
+                {{pagina()}}
+                <button (click)="moverPagina(1)">
+                    >
+                </button>
+            </div>
+            @for (empleado of empleados(); track empleado.dpi) {
+                <div class="card shadow p-4 w-25">
+                    DPI: {{empleado.dpi}} <br>
+                    Nombre: {{empleado.nombre}} <br>
+                    Salario: {{empleado.salario}} <br>
+                    Fecha de Contratacion: {{empleado.fechaContratacion}}
+                </div>
+            }
+        </div>
+        
+    </main>
+</div>

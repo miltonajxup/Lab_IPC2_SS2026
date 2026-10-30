@@ -4,10 +4,11 @@ import { Menu } from '../componentes/menu/menu';
 
 @Component({
   imports: [Menu, Header],
-  selector: 'app-layout-super-admin',
+  selector: 'app-layout-admin',
   styles: ``,
   templateUrl: './layout-admin.html',
 })
 export class LayoutAdmin {
   rol: string = 'Administrador';
 }
+  

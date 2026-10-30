@@ -1,0 +1,48 @@
+<app-header [rol]="rol"></app-header>
+<div class="d-flex border-bottom">
+    <app-menu></app-menu>
+    <main class="content flex-grow-1 p-4 border-start">
+
+        <h3 class="text-center titulo p-3">Nuevo Contrato de Empleado</h3>
+
+        @if (mensajeError()) {
+            <div class="text-center t25 text-danger m-3">{{mensajeError()}}</div>
+        }
+        @if (operacionCompletada()) {
+            <div class="text-center t25 text-success m-3">Se ha generado el contrato con exito</div>
+        }
+
+        <div class="d-flex justify-content-center mb-5">
+            <form class="card shadow p-5 d-flex gap-3 t20" [formGroup]="empleadoForm" (submit)="submit()">
+                Datos del Empleado
+                <label >
+                    DPI
+                    <input type="text" formControlName="dpi">
+                </label>
+                <label >
+                    Nombre
+                    <input type="text" formControlName="nombre">
+                </label>
+                <label >
+                    Rol del Empleado
+                    <select formControlName="rol">
+                        @for (rol of roles | keyvalue; track rol.key) {
+                            <option [value]="rol.value">
+                                {{rol.key}}
+                            </option>
+                        }
+                    </select>
+                </label>
+                <label >
+                    Salario
+                    <input type="number" formControlName="salario">
+                </label>
+                <button class="btn btn-primary" [disabled]="empleadoForm.invalid">
+                    Contratar
+                </button>
+            </form>
+        </div>
+        
+    </main>
+</div>
+

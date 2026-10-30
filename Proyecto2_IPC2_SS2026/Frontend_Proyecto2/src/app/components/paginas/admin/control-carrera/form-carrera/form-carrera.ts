@@ -27,8 +27,8 @@ export class FormCarrera implements OnInit {
 
   ngOnInit(): void {
     this.carreraForm = this.formBuilder.group({
-      codigo: [null, [Validators.required, Validators.max(20)]],
-      nombre: [null, [Validators.required, Validators.max(60)]],
+      codigo: [null, [Validators.required, Validators.maxLength(20)]],
+      nombre: [null, [Validators.required, Validators.maxLength(60)]],
       gradosId: [[], [Validators.required]]
     });
     this.carreraService.getGradosDisponibles().subscribe({

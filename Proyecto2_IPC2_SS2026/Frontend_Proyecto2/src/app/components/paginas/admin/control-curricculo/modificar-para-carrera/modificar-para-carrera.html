@@ -1,0 +1,78 @@
+<app-header [rol]="rol"></app-header>
+<div class="d-flex border-bottom">
+    <app-menu></app-menu>
+    <main class="content flex-grow-1 p-4 border-start">
+
+        <h3 class="text-center titulo p-3">Elimina los cursos del curriculo de una carrera</h3>
+        <p class="t25">Selecciona una carrera y luego un grado para ver los Cursos del Curriculo</p>
+        
+        <button class="btn btn-primary" routerLink="/curriculo">Regresar</button>
+
+        @if (mensajeError()) {
+            <div class="text-danger text-center t20">{{mensajeError()}}</div>
+        }
+        @if (operacionCompletada()) {
+            <div class="text-success text-center t20">Se ha Eliminado un Curriculo</div>
+        }
+
+        <div class="t25 d-flex flex-row justify-content-center gap-5">
+            <div class="column text-center">
+                Carreras
+                <div class="d-flex gap-3 justify-content-center m-3">
+                    <button type="button" (click)="avanzarPaginaCarreras(-1)" > < </button>
+                    Pagina: {{pagina()}}
+                    <button type="button" (click)="avanzarPaginaCarreras(1)" > > </button>
+                </div>
+                @for (carrera of carreras(); track carrera.codigo) {
+                    <button
+                    type="button" 
+                    class="card w-100 mx-auto mb-2 text-center" 
+                    [class.eleccion]="codigoCarrera == carrera.codigo" 
+                    (click)="setCarrera(carrera)">
+                        {{carrera.nombre}}
+                    </button>
+                }
+            </div>
+            <div class="column text-center">
+                Grados
+                @if (grados()) {
+                    @for (grado of grados(); track grado.id) {
+                        <button
+                        type="button" 
+                        class="card w-100 mx-auto mb-2 text-center" 
+                        [class.eleccion]="idGrado === grado.id" 
+                        (click)="setGrado(grado.id)">
+                            {{grado.nombre}} {{grado.nombreNivel}}
+                        </button>
+                    }
+                }
+            </div>
+            <div class="column text-center">
+                Lista de Cursos
+                @if (curriculos()) {
+                    @for (curriculo of curriculos(); track curriculo.id) {
+                        <div class="card w-100 mx-auto mb-2 text-center align-items-center">
+                            {{curriculo.curso}}
+                            <button name="curriculo{{curriculo.id}}"
+                            type="button" 
+                            class="btn-del w-50"
+                            (click)="setOpcionEliminar(curriculo.id)" >
+                            Eliminar
+                            </button>
+                            @if (idCurriculo === curriculo.id) {
+                                <div class="p-4 bg-gray mt-3">
+                                    Confirma para Eliminar el curso del Curriculo
+                                    <div class="d-flex gap-3 justify-content-center">
+                                        <button (click)="eliminarCurriculo(curriculo.id)">Confirmar</button>
+                                        <button (click)="setOpcionEliminar(0)">Cancelar</button>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+        
+    </main>
+</div>

@@ -1,0 +1,62 @@
+<app-header [rol]="rol"></app-header>
+<div class="d-flex border-bottom">
+    <app-menu></app-menu>
+    <main class="content flex-grow-1 p-4 border-start">
+
+        <h3 class="text-center titulo p-3">Definir los Grupos del Ciclo Escolar</h3>
+
+        <button class="btn btn-primary" routerLink="/grupo">Regresar</button>
+
+        @if (mensajeError()) {
+            <div class="text-danger text-center t20">{{mensajeError()}}</div>
+        }
+        @if (operacionCompleatada()) {
+            <div class="text-success text-center t20">Se ha guardado el grupo academico</div>
+        }
+
+        <form [formGroup]="grupoForm" (submit)="submit()" >
+            <div class="t25 d-flex flex-row justify-content-center">
+                <div>
+                    Año que estará Vigente
+                    @for (anio of anios(); track anio.anio) {
+                        <button
+                    type="button" 
+                    class="card w-100 mx-auto mb-2 text-center" 
+                    [class.eleccion]="grupoForm.value.anioLectivo === anio.anio" 
+                    (click)="setAnio(anio.anio)">
+                        {{anio.anio}}
+                    </button>
+                }
+                </div>
+                <div class="column text-center">
+                    Grados
+                    @for (grado of grados(); track grado.id) {
+                        <button 
+                        type="button"
+                        class="card w-75 mx-auto mb-2"
+                        [class.eleccion]="grupoForm.value.grado === grado.id" 
+                        (click)="setGrado(grado.id)">
+                            {{grado.nombre}} {{grado.nombreNivel}}
+                        </button>
+                    }
+                </div>
+                <div >
+                    Secciones
+                    <select name="" id="" class="form-control" formControlName="seccion">
+                        @for (option of secciones | keyvalue; track option.key) {
+                            <option [value]="option.value" >
+                                {{option.key}}
+                            </option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="mx-auto w-25 d-flex justify-content-center">
+                <button class="btn btn-primary" [disabled]="grupoForm.invalid" >
+                    Guardar
+                </button>
+            </div>
+        </form>
+        
+    </main>
+</div>

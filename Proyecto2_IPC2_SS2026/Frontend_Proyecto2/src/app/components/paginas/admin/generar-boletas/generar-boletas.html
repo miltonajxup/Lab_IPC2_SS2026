@@ -1,0 +1,28 @@
+<app-header [rol]="rol"></app-header>
+<div class="d-flex border-bottom">
+    <app-menu></app-menu>
+    <main class="content flex-grow-1 p-4 border-start">
+
+        <h3 class="text-center titulo p-3">Generar Boletas de Pago para las Colegiaturas</h3>
+
+        <div class="d-flex flex-column justify-content-center align-items-center t25">
+            <form [formGroup]="boletaForm" (submit)="submit()" class="d-flex flex-column w-25 p-5 gap-4">
+                <select formControlName="mes">
+                    @for (mes of meses | keyvalue; track $index) {
+                        <option [value]="mes.value">
+                            {{mes.key}}
+                        </option>
+                    }
+                </select>
+                <button class="btn btn-primary mx-auto w-50" [disabled]="boletaForm.invalid">
+                    Generar
+                </button>
+            </form>
+
+            @if (mensaje()) {
+                <div class="text-center text-success">{{mensaje()}}</div>
+            }
+        </div>
+        
+    </main>
+</div>
