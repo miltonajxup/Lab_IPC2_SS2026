@@ -1,0 +1,29 @@
+<app-header [rol]="rol"></app-header>
+<div class="d-flex border-bottom">
+    <app-menu-maestro></app-menu-maestro>
+    <main class="content flex-grow-1 p-4 border-start t25">
+
+        <h3 class="text-center titulo p-3">Estudiantes Curso </h3>
+
+        @if (mensajeError()) {
+            <div class="text-danger text-center t20">{{mensajeError()}}</div>
+        }
+
+        <button class="btn btn-primary" routerLink="/maestro/opciones-curso/{{idMaes}}">Regresar</button>
+
+        <div class="d-flex justify-content-center w-50 mx-auto mb-4">
+            <div class="mx-auto ">DPI / CUI</div>
+            <div class="mx-auto ">Nombre</div>
+        </div>
+        
+        @for (estudiante of estudiantes(); track estudiante.idCursoEstudiante) {
+            <div class="d-flex justify-content-center w-50 mx-auto mb-3">
+            <div class="card mx-auto ">{{estudiante.dpi}}</div>
+            <div class="card mx-auto ">{{estudiante.nombre}}</div>
+            </div>
+        }
+            
+    </main>
+</div>
+
+

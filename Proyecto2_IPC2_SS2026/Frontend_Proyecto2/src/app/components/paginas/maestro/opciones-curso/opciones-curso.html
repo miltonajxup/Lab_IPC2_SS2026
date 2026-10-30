@@ -1,0 +1,37 @@
+<app-header [rol]="rol"></app-header>
+<div class="d-flex border-bottom">
+    <app-menu-maestro></app-menu-maestro>
+    <main class="content flex-grow-1 p-4 border-start">
+
+        @if (mensajeError()) {
+            <div class="text-danger text-center t20">{{mensajeError()}}</div>
+        } 
+        @if (curso()) {
+            <h3 class="text-center titulo p-3">Opciones del Curso </h3>
+            
+            <button class="btn btn-primary mb-4" routerLink="/maestro/curso">Regresar</button>
+
+            <div>
+                <div class="d-flex gap-5">
+                    <button class="btn btn-primary t25"
+                    routerLink="/maestro/estudianes/{{idMaes}}/{{curso()!.idGrupo}}/{{curso()!.idCurso}}">
+                        Estudiantes Curso
+                    </button>
+                    <button 
+                    class="btn btn-primary t25" 
+                    routerLink="/maestro/menu-asistencia/{{idMaes}}/{{curso()!.idGrupo}}/{{curso()!.idCurso}}">
+                        Asistencia
+                    </button>
+                    <button 
+                    class="btn btn-primary t25"
+                    routerLink="/maestro/menu-nota/{{idMaes}}/{{curso()!.idGrupo}}/{{curso()!.idCurso}}">
+                        Notas
+                    </button>
+                </div>
+            </div>
+        } @else {
+            <div class="text-danger text-center t20">No se pudo encontrar el curso</div>
+        }
+        
+    </main>
+</div>

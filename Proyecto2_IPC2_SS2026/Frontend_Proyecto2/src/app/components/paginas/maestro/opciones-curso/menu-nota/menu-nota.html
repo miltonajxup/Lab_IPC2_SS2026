@@ -1,0 +1,45 @@
+<app-header [rol]="rol"></app-header>
+<div class="d-flex border-bottom">
+    <app-menu-maestro></app-menu-maestro>
+    <main class="content flex-grow-1 p-4 border-start">
+
+        @if (mensajeError()) {
+            <div class="text-danger text-center t20">{{mensajeError()}}</div>
+        } @else {
+            <h3 class="text-center titulo p-3">Notas de Cursos</h3>
+
+            <button class="btn btn-primary" routerLink="/maestro/opciones-curso/{{idMaes}}">Regresar</button>
+
+            <div class="d-flex justify-content-center align-items-center flex-column gap-5">
+                <table class="t25">
+                    <tr>
+                        <th class="w-25 bt">Nombre</th>
+                        <th class="w-25 bt">Zona</th>
+                        <th class="w-25 bt">Examen Final</th>
+                        <th class="w-25 bt">Nota Final</th>
+                    </tr>
+                    @for (nota of notas(); track nota.idNota) {
+                        <tr>
+                            <td>{{nota.nombreIdentificador}}</td>
+                            <td>{{nota.zona}}</td>
+                            <td> {{nota.examenFinal}} </td>
+                            <td> {{nota.notaFinal}} </td>
+                            <td>
+                                <button routerLink="/maestro/menu-nota/modificar/{{idGrupo}}/{{idCurso}}/{{nota.idNota}}">
+                                    Modificar
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </table>
+                @if (!notas()) {
+                    <div class="text-center">
+                        No hay Estudiantes Asignados
+                    </div>
+                }
+            </div>
+        }
+        
+    </main>
+</div>
+

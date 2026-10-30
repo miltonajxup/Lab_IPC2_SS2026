@@ -1,0 +1,32 @@
+<app-header [rol]="rol"></app-header>
+<div class="d-flex border-bottom">
+    <app-menu-maestro></app-menu-maestro>
+    <main class="content flex-grow-1 p-4 border-start">
+
+        @if (mensajeError()) {
+            <div class="text-danger text-center t20">{{mensajeError()}}</div>
+        } @else {
+            <h3 class="text-center titulo p-3">Tomar Asistencia de los estudiantes</h3>
+
+            <button class="btn btn-primary" routerLink="/maestro/menu-asistencia/{{idMaes}}/{{idGrupo}}/{{idCurso}}">Regresar</button>
+
+            <div class="d-flex justify-content-center align-items-center flex-column t25 gap-5">
+                @for (asistencia of asistencias(); track asistencia.id) {
+                    <div>
+                        {{asistencia.nombre}} 
+                        @if (asistencia.estado) {
+                            <button class="btn activo" (click)="modificarEstado(asistencia)">
+                                Presente
+                            </button>
+                        } @else {
+                            <button class="btn desactivado" (click)="modificarEstado(asistencia)">
+                                Faltó
+                            </button>
+                        }
+                    </div>
+                }
+            </div>
+        }
+        
+    </main>
+</div>

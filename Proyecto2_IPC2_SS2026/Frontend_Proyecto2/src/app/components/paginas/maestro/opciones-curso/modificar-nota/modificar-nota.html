@@ -1,0 +1,42 @@
+<app-header [rol]="rol"></app-header>
+<div class="d-flex border-bottom">
+    <app-menu-maestro></app-menu-maestro>
+    <main class="content flex-grow-1 p-4 border-start">
+
+        @if (mensajeError()) {
+            <div class="text-danger text-center t20">{{mensajeError()}}</div>
+        } @else {
+            <h3 class="text-center titulo p-3">Modificar Nota</h3>
+
+            <button class="btn btn-primary" routerLink="/maestro/menu-nota/{{idGrupo}}/{{idCurso}}">Regresar</button>
+
+            @if (operacionCorrecta()) {
+                <div class="text-success text-center t25 mb-4">Se ha Actualizado la Nota</div>
+            }
+
+            <div class="d-flex justify-content-center t25">
+                <form [formGroup]="notaForm" (submit)="submit()" class="card shadow p-5 d-flex gap-3">
+                    Nota de {{nota()?.nombreIdentificador}}
+                    <div>
+                        <label >
+                            Zona (maximo 70 puntos)
+                            <input type="number" formControlName="zona" >
+                        </label>
+                    </div>
+                    <div>
+                        <label >
+                            Nota de Examen Final (maximo 30 puntos)
+                            <input type="number" formControlName="examenFinal" >
+                        </label>
+                    </div>
+                    <button class="btn btn-primary w-25 mx-auto"
+                    [disabled]="notaForm.invalid" >
+                        Guardar
+                    </button>
+                </form>
+            </div>
+
+        }
+        
+    </main>
+</div>
