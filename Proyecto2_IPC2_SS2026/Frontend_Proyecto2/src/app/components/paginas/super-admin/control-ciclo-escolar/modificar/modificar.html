@@ -1,0 +1,16 @@
+<app-header [rol]="rol"></app-header>
+<div class="d-flex border-bottom">
+    <app-menu></app-menu>
+    <main class="content flex-grow-1 p-4 border-start">
+
+        
+        @if (anioParaActuailzar) {
+            <app-form [anioParaActualizar]="anioParaActuailzar"></app-form>
+        } @else {
+            <button routerLink="/control-ciclo-escolar">Regresar</button>
+            <div>
+                <h1>No Se ha podido cargar un Año para actualizarlo</h1>
+            </div>
+        }
+    </main>
+</div>

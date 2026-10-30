@@ -1,0 +1,35 @@
+<app-header [rol]="rol"></app-header>
+<div class="d-flex border-bottom">
+    <app-menu></app-menu>
+    <main class="content flex-grow-1 p-4 border-start">
+
+        <h3 class="text-center titulo p-3">Años Lectivos del Colegio</h3>
+        
+        <div class="d-flex justify-content-center mb-5">
+            <button class="w-25 btn btn-primary t20" routerLink="/form-ciclo-escolar" >Crear Nuevo Año Lectivo</button>
+        </div>
+        
+        <div class="column text-center">
+            @if (mensaje()) {
+                <div class="text-danger">{{mensaje()}}</div>
+            }
+        
+            @for (anio of anios(); track anio.anio) {
+                <div class="card w-50 mx-auto t25 mb-5"> 
+                    Ciclo: {{anio.anio}} <br>
+                    Fecha Inicio: {{anio.fechaInicio | date: 'd MMM yyyy'}} <br>
+                    Fecha Fin: {{anio.fechaFin | date: 'd MMM yyyy'}} 
+                    <div class="w-50 mx-auto m-3 d-flex gap-5 justify-content-center">
+                        @if (anio.estado) {
+                            <button class="btn btn-primary activo" (click)="activarAnio(anio.anio)">Desactivar</button>
+                        } @else {
+                            <button class="btn btn-primary desactivado" (click)="activarAnio(anio.anio)">Activar</button>
+                        }
+                        <!-- <button routerLink="/modificar-ciclo-escolar" class="btn btn-primary ">Modificar</button> -->
+                    </div>
+                </div>
+            }
+        </div>
+        
+    </main>
+</div>
