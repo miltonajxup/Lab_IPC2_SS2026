@@ -18,15 +18,17 @@ public class PrestamoDB {
     private final LocalDate fechaDevolucionEsperada;
     private final String fechaDevolucionCompletada;
     private final String dpiPrestamista;
+    private final String nombrePrestamista;
     private final boolean devuelto;
     private final List<LibroPrestamoDB> libros;
 
-    public PrestamoDB(int id, LocalDate fechaPrestamo, LocalDate fechaDevolucionEsperada, String fechaDevolucionCompletada, String dpiPrestamista, boolean devuelto, List<LibroPrestamoDB> libros) {
+    public PrestamoDB(int id, LocalDate fechaPrestamo, LocalDate fechaDevolucionEsperada, String fechaDevolucionCompletada, String dpiPrestamista, String nombrePrestamista, boolean devuelto, List<LibroPrestamoDB> libros) {
         this.id = id;
         this.fechaPrestamo = fechaPrestamo;
         this.fechaDevolucionEsperada = fechaDevolucionEsperada;
         this.fechaDevolucionCompletada = fechaDevolucionCompletada;
         this.dpiPrestamista = dpiPrestamista;
+        this.nombrePrestamista = nombrePrestamista;
         this.devuelto = devuelto;
         this.libros = libros;
     }
@@ -49,6 +51,10 @@ public class PrestamoDB {
 
     public String getDpiPrestamista() {
         return dpiPrestamista;
+    }
+
+    public String getNombrePrestamista() {
+        return nombrePrestamista;
     }
 
     public boolean isDevuelto() {

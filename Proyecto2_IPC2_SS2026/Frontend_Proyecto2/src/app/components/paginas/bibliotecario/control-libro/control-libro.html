@@ -1,0 +1,45 @@
+<app-header [rol]="rol"></app-header>
+<div class="d-flex border-bottom">
+    <app-menu-bibliotecario></app-menu-bibliotecario>
+    <main class="content flex-grow-1 p-4 border-start">
+
+        <h3 class="text-center titulo p-3">Gestion de Los libros</h3>
+
+        @if (mensajeError()) {
+            <div class="text-center t25 text-danger m-3">{{mensajeError()}}</div>
+        }
+
+        <div >
+            <button 
+            class="btn btn-primary mx-auto t25"
+            routerLink="/libro/crear">
+                Agregar Libro
+            </button>
+        </div>
+
+        <div class="d-flex justify-content-center gap-5 t25 mb-4">
+            <button (click)="moverPagina(-1)">
+                <
+            </button>
+            {{pagina()}}
+            <button (click)="moverPagina(1)">
+                >
+            </button>
+        </div>
+
+        @for (libro of libros(); track libro.codigo) {
+            <div class="card w-50 mx-auto t25 mb-5 p-3"> 
+                Titulo: {{libro.titulo}} <br>
+                Autor: {{libro.autor}} <br>
+                Código: {{libro.codigo}}
+                <button 
+                class="w-25 mx-auto"
+                routerLink="/libro/modificar/{{libro.codigo}}">
+                    Modificar
+                </button>
+            </div>
+        }
+        
+        
+    </main>
+</div>

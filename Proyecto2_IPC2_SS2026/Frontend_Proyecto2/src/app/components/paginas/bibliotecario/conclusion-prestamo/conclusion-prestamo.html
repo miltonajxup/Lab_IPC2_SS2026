@@ -1,0 +1,22 @@
+<app-header [rol]="rol"></app-header>
+<div class="d-flex border-bottom">
+    <app-menu-bibliotecario></app-menu-bibliotecario>
+    <main class="content flex-grow-1 p-4 border-start">
+
+        <h3 class="text-center titulo p-3">Recepcion de Prestamos</h3>
+
+        <div class="mx-auto w-50 t20 ">
+            <div class="d-flex gap-5 justify-content-center mb-5">
+                <button (click)="moverPagina(-1)"> < </button>
+                {{pagina()}}
+                <button (click)="moverPagina(1)"> > </button>
+            </div>
+            @for (prestamo of prestamos(); track prestamo.id) {
+                <app-card-prestamo [prestamo]="prestamo" (prestamoParaAceptar)="elegirPrestamo($event)"></app-card-prestamo>
+            }
+
+            <app-modal [eventoSeleccionado]="prestamoElegido()!" (confirmationExecuter)="terminarPrestamo()"></app-modal>
+        </div>
+        
+    </main>
+</div>

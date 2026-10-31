@@ -10,8 +10,17 @@ package com.mycompany.proyecto2_ipc2_ss2026.ModelosRequest;
  */
 public class LibroPrestamoRequest {
     
+    private String titulo;
     private String codigo;
     private int cantidad;
+
+    public String getTitulo() {
+        return titulo;
+    }
+
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
+    }
 
     public String getCodigo() {
         return codigo;

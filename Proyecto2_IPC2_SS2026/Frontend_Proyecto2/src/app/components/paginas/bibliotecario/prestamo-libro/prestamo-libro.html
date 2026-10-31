@@ -1,0 +1,90 @@
+<app-header [rol]="rol"></app-header>
+<div class="d-flex border-bottom">
+    <app-menu-bibliotecario></app-menu-bibliotecario>
+    <main class="content flex-grow-1 p-4 border-start">
+        
+        <h3 class="text-center titulo p-3">Gestion del Prestamo de libros</h3>
+
+        <div class="d-flex t25 justify-content-center">
+            <div>
+                <h2 >Libros</h2>
+                <div class="d-flex gap-5 justify-content-center">
+                    <button (click)="moverPagina(-1)"> < </button>
+                    {{pagina()}}
+                    <button (click)="moverPagina(1)"> > </button>
+                </div>
+                <div class="mx-auto">
+                </div>
+                <div class="card m-5 ">
+                    @for (libro of libros(); track libro.codigo) {
+                        <div class="card d-flex flex-row p-3 align-items-center">
+                            <div>
+                                Titulo: {{libro.titulo}} <br>
+                                Autor: {{libro.autor}} <br>
+                                Cantidad Disponible: {{libro.cantidadDisponible}}
+                            </div>
+                            <div class="w-25 mx-auto">
+                                <button (click)="elegirLibro(libro)">Elegir</button>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+            <div >
+                <h2>Buscar al Usuario </h2>
+                <form [formGroup]="busquedaForm" (submit)="buscarUsuario()">
+                    <label class="form-label">
+                        Ingresa una Referencia como <br>
+                        el Nombre o el DPI
+                        <input type="text" formControlName="idUsuario" class="form-control">
+                    </label>
+                    <button class="btn btn-primary">Buscar</button>
+                </form>
+                @if (mensajeError()) {
+                    <div class="text-danger">{{mensajeError()}}</div>
+                }
+                @if (usuario()) {
+                    <div>
+                        {{usuario()?.nombre}} <button (click)="elegirUsuario()">Elegir</button>
+                    </div>
+                }
+
+                @if (operacionExitosa()) {
+                    <p class="text-success t25 text-center mt-5">Se ha acreditado el Prestamo</p>
+                }
+
+                <form [formGroup]="prestamoForm" (submit)="crearPrestamo()" 
+                    class="card shadow p-4 d-flex m-5 gap-1">
+                    @if (!prestamoForm.value.idPrestamista) {
+                        <p class="tn">Aun no se ha seleccionado <br> el usuario del prestamo</p>
+                    }
+                    <h4>Usuario de Prestamo: 
+                        <br> 
+                        @if (prestamoForm.value.idPrestamista) {
+                            {{usuario()?.nombre}}
+                        }
+                        <br>
+                    </h4>
+                    <label >
+                        Fecha del Prestamo: 
+                        <input type="date" formControlName="fechaPrestamo" class="form-control">
+                    </label> <br>
+                    <label >
+                        Fecha esperada de Devolucion:
+                        <input type="date" formControlName="fechaDevolucionEsperada" class="form-control">
+                    </label>
+                    <button [disabled]="prestamoForm.invalid">Crear Prestamo</button>
+                </form>
+                <div >
+                    @for (libro of librosElegidos(); track libro.codigo) {
+                        <div class="card">
+                            Titulo: {{libro.titulo}}
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+    </main>
+</div>
+

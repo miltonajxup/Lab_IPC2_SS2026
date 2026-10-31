@@ -40,7 +40,7 @@ public class ConsultaEstudianteDAO {
             """
             SELECT usu.*, est.* FROM usuario AS usu 
             JOIN estudiante AS est ON usu.dpi = est.dpi_estudiante 
-            WHERE usu.nombre LIKE CONCAT(?, '%')""";
+            WHERE usu.nombre LIKE CONCAT(?, '%') LIMIT 1""";
     private final String EXPEDIENTE_ESTUDIANTE = 
             """
             SELECT usu.*, est.estado, gra.nombre AS nombre_grado, niv.nombre AS nivel_academico 

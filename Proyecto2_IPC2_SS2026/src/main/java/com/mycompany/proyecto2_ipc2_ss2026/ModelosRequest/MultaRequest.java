@@ -4,8 +4,6 @@
  */
 package com.mycompany.proyecto2_ipc2_ss2026.ModelosRequest;
 
-import java.time.LocalDate;
-
 /**
  *
  * @author milton
@@ -13,8 +11,6 @@ import java.time.LocalDate;
 public class MultaRequest {
     
     private double monto;
-    private boolean estado;
-    private LocalDate fechaPago;
     private int idPrestamo;
 
     public double getMonto() {
@@ -23,22 +19,6 @@ public class MultaRequest {
 
     public void setMonto(double monto) {
         this.monto = monto;
-    }
-
-    public boolean isEstado() {
-        return estado;
-    }
-
-    public void setEstado(boolean estado) {
-        this.estado = estado;
-    }
-
-    public LocalDate getFechaPago() {
-        return fechaPago;
-    }
-
-    public void setFechaPago(LocalDate fechaPago) {
-        this.fechaPago = fechaPago;
     }
 
     public int getIdPrestamo() {

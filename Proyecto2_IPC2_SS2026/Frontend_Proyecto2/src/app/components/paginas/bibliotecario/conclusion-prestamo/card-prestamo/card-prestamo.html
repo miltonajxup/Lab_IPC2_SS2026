@@ -1,0 +1,23 @@
+<div class="card p-4 m-3">
+    ID: {{prestamo.id}} <br>
+    Fecha de Prestamo: {{prestamo.fechaPrestamo | date: 'd MMM yyyy'}} <br>
+    Fecha Devolucion Esperada: {{prestamo.fechaDevolucionEsperada | date: 'd MMM yyyy'}} <br>
+    Prestamista: {{prestamo.nombrePrestamista}} <br>
+    @if (prestamo.diasAtraso > 0) {
+        <p class="text-danger">El Prestamo se Encuentra Atrasado</p>
+        Dias de Atraso: {{prestamo.diasAtraso}} <br>
+        Precio Multa: {{prestamo.montoMulta | currency: 'Q'}} <br>
+    }
+    <br>Libros del Prestamo: <br>
+    <div class="bloque card" >
+        <ul>
+            @for (libro of prestamo.libros; track libro) {
+                <li>{{libro.titulo}}</li>
+            }
+        </ul>
+    </div>
+    <button type="button" data-bs-toggle="modal" data-bs-target="#deleteModal"
+        title="Confirmar Recepcion {{ prestamo.nombrePrestamista}}" 
+        class="w-25 mx-auto m-3"
+        (click)="elegirPrestamo()">Elegir</button>
+</div>

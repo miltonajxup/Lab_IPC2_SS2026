@@ -1,0 +1,24 @@
+<app-header [rol]="rol"></app-header>
+<div class="d-flex border-bottom">
+    <app-menu-bibliotecario></app-menu-bibliotecario>
+    <main class="content flex-grow-1 p-4 border-start">
+
+        <h3 class="text-center titulo p-3">Recepcion de Prestamos</h3>
+
+        <div class="mx-auto w-50 t20 ">
+            <div class="d-flex gap-5 justify-content-center mb-5">
+                <button (click)="moverPagina(-1)"> < </button>
+                {{pagina()}}
+                <button (click)="moverPagina(1)"> > </button>
+            </div>
+            @for (multa of multas(); track multa.id) {
+                <app-card-multa [multa]="multa" (multaParaAceptar)="elegirMulta($event)"></app-card-multa>
+            }
+
+            <app-modal-multa [multaSeleccionada]="multaElegida()!"></app-modal-multa>
+
+        </div>
+
+    </main>
+</div>
+

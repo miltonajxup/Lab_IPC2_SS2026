@@ -10,12 +10,18 @@ package com.mycompany.proyecto2_ipc2_ss2026.ModelosDB;
  */
 public class LibroPrestamoDB {
     
+    private final String titulo;
     private final String codigo;
     private final int cantidad;
     
-    public LibroPrestamoDB(String codigo, int cantidad) {
+    public LibroPrestamoDB(String titulo, String codigo, int cantidad) {
+        this.titulo = titulo;
         this.codigo = codigo;
         this.cantidad = cantidad;
+    }
+
+    public String getTitulo() {
+        return titulo;
     }
 
     public String getCodigo() {

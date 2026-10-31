@@ -111,4 +111,27 @@ public class UsuarioDAO {
         return null;
     }
     
+    public UsuarioDB busquedaUsuario(String referencia) throws AccesoALaDataException {
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement ps1 = connection.prepareStatement(GET_USUARIO_POR_NOMBRE);
+                PreparedStatement ps2 = connection.prepareStatement(GET_USUARIO_POR_ID)) {
+            ps1.setString(1, referencia);
+            try (ResultSet rs = ps1.executeQuery()) {
+                if (rs.next()) {
+                    return armarUsuario(rs);
+                }
+            }
+            
+            ps2.setString(1, referencia);
+            try (ResultSet rs = ps2.executeQuery()) {
+                if (rs.next()) {
+                    return armarUsuario(rs);
+                }
+            }
+        } catch (Exception e) {
+            throw new AccesoALaDataException("Error al buscar un usuario por referencia: " + e.getMessage());
+        }
+        return null;
+    }
+    
 }

@@ -1,0 +1,21 @@
+<app-header [rol]="rol"></app-header>
+<div class="d-flex border-bottom">
+    <app-menu-bibliotecario></app-menu-bibliotecario>
+    <main class="content flex-grow-1 p-4 border-start">
+
+        @if (libroParaActualizar()) {
+            <h3 class="text-center titulo p-3">Crear un Libro</h3>
+
+            <button 
+            routerLink="/control-libro"
+            class="btn btn-primary t20">
+                Regresar
+            </button>
+
+            <app-form-libro [libroParaEditar]="libroParaActualizar()!" [isEditMode]="true"></app-form-libro>
+        } @else {
+            <div>{{mensajeError()}} </div>
+        }
+        
+    </main>
+</div>

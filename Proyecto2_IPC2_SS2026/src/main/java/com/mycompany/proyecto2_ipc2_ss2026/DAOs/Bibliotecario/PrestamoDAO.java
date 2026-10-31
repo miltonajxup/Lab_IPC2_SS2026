@@ -5,11 +5,13 @@
 package com.mycompany.proyecto2_ipc2_ss2026.DAOs.Bibliotecario;
 
 import com.mycompany.proyecto2_ipc2_ss2026.Connection.DBConnectionSingleton;
+import com.mycompany.proyecto2_ipc2_ss2026.Constantes.LibroPrestamo;
 import com.mycompany.proyecto2_ipc2_ss2026.Constantes.LimitePagina;
 import com.mycompany.proyecto2_ipc2_ss2026.Exceptions.AccesoALaDataException;
 import com.mycompany.proyecto2_ipc2_ss2026.ModelosDB.LibroDB;
 import com.mycompany.proyecto2_ipc2_ss2026.ModelosDB.PrestamoDB;
 import com.mycompany.proyecto2_ipc2_ss2026.ModelosDB.LibroPrestamoDB;
+import com.mycompany.proyecto2_ipc2_ss2026.ModelosDB.PrestamoAtrasado;
 import com.mycompany.proyecto2_ipc2_ss2026.ModelosRequest.LibroPrestamoRequest;
 import com.mycompany.proyecto2_ipc2_ss2026.ModelosRequest.PrestamoRequest;
 import java.sql.Connection;
@@ -17,6 +19,8 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,19 +33,27 @@ public class PrestamoDAO {
     private final String GENERAR_PRESTAMO = "INSERT INTO prestamo_biblioteca (fecha_prestamo, fecha_devolucion_esperada, prestamista) VALUES (?,?,?)";
     private final String GET_ULTIMO_ID = "SELECT * FROM prestamo_biblioteca ORDER BY id DESC LIMIT 1";
     private final String AGREGAR_LIBRO_PRESTAMO = "INSERT INTO libro_prestamo (id_prestamo, codigo_libro, cantidad) VALUES (?,?,?)";
-    private final String CONCLUIR_PRESTAMO = "UPDATE prestamo_biblioteca SET fecha_devolucion_completada = ? WHERE id = ?";
-    private final String GET_PRESTAMO_POR_ID = "SELECT * FROM prestamo_biblioteca WHERE id = ?";
+    private final String CONCLUIR_PRESTAMO = "UPDATE prestamo_biblioteca SET fecha_devolucion_completada = CURDATE() WHERE id = ?";
+    
+    private final String PLANTILLA_CONSULTA = "SELECT pres.*, usu.nombre FROM prestamo_biblioteca AS pres JOIN usuario AS usu ON pres.prestamista = usu.dpi ";
+    private final String GET_PRESTAMO_POR_ID = PLANTILLA_CONSULTA + " WHERE id = ? ";
+    private final String GET_PRESTAMO_POR_PRESTAMISTA = PLANTILLA_CONSULTA + " WHERE usu.dpi = ?";
     private final String GET_PRESTAMO_POR_NOMBRE = 
             """
-            SELECT pres.* 
+            SELECT pres.*, usu.nombre 
             FROM prestamo_biblioteca AS pres 
             JOIN usuario AS usu ON pres.prestamista = usu.dpi 
             WHERE fecha_devolucion_completada IS NULL AND usu.nombre LIKE CONCAT(?, '%')""";
-    private final String CONSULTAR_PRESTAMOS_SIN_TERMINAR = "SELECT * FROM prestamo_biblioteca WHERE fecha_devolucion_completada IS NULL LIMIT ?, ?";
-    private final String GET_TODOS_LOS_REGISTROS = "SELECT * FROM prestamo_biblioteca ORDER BY id DESC LIMIT ?, ?";
-    private final String GET_LIBROS_PRESTAMO = "SELECT * FROM libro_prestamo WHERE id_prestamo = ?";
+    private final String CONSULTAR_PRESTAMOS_SIN_TERMINAR = PLANTILLA_CONSULTA + " WHERE fecha_devolucion_completada IS NULL ORDER BY pres.id DESC LIMIT ?, ?";
+    private final String GET_TODOS_LOS_REGISTROS = PLANTILLA_CONSULTA + " ORDER BY pres.id DESC LIMIT ?, ?";
+    private final String GET_LIBROS_PRESTAMO = 
+            "SELECT pres.*, lib.titulo "
+            + "FROM libro_prestamo AS pres "
+            + "JOIN libro AS lib ON pres.codigo_libro = lib.codigo_isbn "
+            + "WHERE id_prestamo = ?";
     
     private final LibroDAO librodao;
+    private final int MONTO_MULTA_POR_DIA = 2;
     
     public PrestamoDAO() {
         librodao = new LibroDAO();
@@ -57,7 +69,7 @@ public class PrestamoDAO {
                     Date dateDevolucion = Date.valueOf(prestamo.getFechaDevolucionEsperada());
                     ps.setDate(1, datePrestamo);
                     ps.setDate(2, dateDevolucion);
-                    ps.setString(3, prestamo.getPrestamista());
+                    ps.setString(3, prestamo.getIdPrestamista());
                     ps.executeUpdate();
                 }
 
@@ -98,11 +110,11 @@ public class PrestamoDAO {
             for (LibroPrestamoRequest libro : prestamo.getLibrosPrestamo()) {
                 ps.setInt(1, idPrestamo);
                 ps.setString(2, libro.getCodigo());
-                ps.setInt(3, libro.getCantidad());
+                ps.setInt(3, LibroPrestamo.CANTIDAD);//libro.getCantidad());
                 ps.executeUpdate();
                 
                 LibroDB librodb = librodao.getLibroPorId(libro.getCodigo());
-                int cantidadActual = librodb.getCantidadDisponible() - libro.getCantidad();
+                int cantidadActual = librodb.getCantidadDisponible() - LibroPrestamo.CANTIDAD;//libro.getCantidad();
                 librodao.modificarCantidadLibros(connection, cantidadActual, librodb.getCodigo());
             }
         } catch (SQLException e) {
@@ -110,15 +122,13 @@ public class PrestamoDAO {
         }
     }
     
-    public void concluirPrestamo(PrestamoRequest prestamo, int idPrestamo) throws AccesoALaDataException {
+    public void concluirPrestamo(int idPrestamo) throws AccesoALaDataException {
         try (Connection connection = DBConnectionSingleton.getInstancia().getConnection()) {
             connection.setAutoCommit(false);
 
             try {
                 try (PreparedStatement ps = connection.prepareStatement(CONCLUIR_PRESTAMO)) {
-                    Date dateFinal = Date.valueOf(prestamo.getFechaDevolucionCompletada());
-                    ps.setDate(1, dateFinal);
-                    ps.setInt(2, idPrestamo);
+                    ps.setInt(1, idPrestamo);
                     ps.executeUpdate();
                 }
 
@@ -184,10 +194,19 @@ public class PrestamoDAO {
     public List<PrestamoDB> getPrestamoPorNombre(String nombrePrestamista) throws AccesoALaDataException {
         List<PrestamoDB> prestamos = new ArrayList<>();
         try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
-                PreparedStatement ps = connection.prepareStatement(GET_PRESTAMO_POR_NOMBRE)) {
+                PreparedStatement ps = connection.prepareStatement(GET_PRESTAMO_POR_NOMBRE); 
+                PreparedStatement ps2 = connection.prepareStatement(GET_PRESTAMO_POR_PRESTAMISTA)) {
             ps.setString(1, nombrePrestamista);
             
             try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    List<LibroPrestamoDB> libros = getLibrosPrestamo(connection, rs.getInt("id"));
+                    prestamos.add(armarPrestamo(libros, rs));
+                }
+            }
+            
+            ps2.setString(1, nombrePrestamista);
+            try (ResultSet rs = ps2.executeQuery()) {
                 if (rs.next()) {
                     List<LibroPrestamoDB> libros = getLibrosPrestamo(connection, rs.getInt("id"));
                     prestamos.add(armarPrestamo(libros, rs));
@@ -199,9 +218,9 @@ public class PrestamoDAO {
         return prestamos;
     }
     
-    public List<PrestamoDB> getPrestamosSinTerminar(int numeroPagina) throws AccesoALaDataException {
+    public List<PrestamoAtrasado> getPrestamosSinTerminar(int numeroPagina) throws AccesoALaDataException {
         int inicioPaginacion = (numeroPagina - 1) * LimitePagina.LIMITE;
-        List<PrestamoDB> prestamos = new ArrayList<>();
+        List<PrestamoAtrasado> prestamos = new ArrayList<>();
         try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
                 PreparedStatement ps = connection.prepareStatement(CONSULTAR_PRESTAMOS_SIN_TERMINAR)) {
             ps.setInt(1, inicioPaginacion);
@@ -210,7 +229,7 @@ public class PrestamoDAO {
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     List<LibroPrestamoDB> libros = getLibrosPrestamo(connection, rs.getInt("id"));
-                    prestamos.add(armarPrestamo(libros, rs));
+                    prestamos.add(armarPrestamoAtrasado(libros, rs));
                 }
             }
         } catch (SQLException | AccesoALaDataException e) {
@@ -250,8 +269,36 @@ public class PrestamoDAO {
                 rs.getDate("fecha_devolucion_esperada").toLocalDate(), 
                 fechaCompletada, 
                 rs.getString("prestamista"), 
+                rs.getString("nombre"), 
                 estado, 
                 libros);
+    }
+    
+    public PrestamoAtrasado armarPrestamoAtrasado(List<LibroPrestamoDB> libros, ResultSet rs) throws SQLException, AccesoALaDataException {
+        String fechaCompletada = rs.getString("fecha_devolucion_completada");
+        boolean estado = fechaCompletada != null;
+        
+        LocalDate fechaDevolucion = rs.getDate("fecha_devolucion_esperada").toLocalDate();
+        LocalDate hoy = LocalDate.now();
+        
+        int diasAtraso = 0;
+        double montoMulta = 0;
+        if (hoy.isAfter(fechaDevolucion)) {
+            diasAtraso = Period.between(fechaDevolucion, hoy).getDays();
+            montoMulta = diasAtraso * MONTO_MULTA_POR_DIA;
+        }
+        
+        return new PrestamoAtrasado(
+                rs.getInt("id"), 
+                rs.getDate("fecha_prestamo").toLocalDate(), 
+                fechaDevolucion, 
+                fechaCompletada, 
+                rs.getString("prestamista"), 
+                rs.getString("nombre"), 
+                estado, 
+                libros, 
+                diasAtraso, 
+                montoMulta);
     }
     
     public List<LibroPrestamoDB> getLibrosPrestamo(Connection connection, int idPrestamo) throws AccesoALaDataException {
@@ -263,6 +310,7 @@ public class PrestamoDAO {
             ResultSet rsPres = ps.executeQuery();
             while (rsPres.next()) {
                 libros.add(new LibroPrestamoDB( 
+                                rsPres.getString("titulo"),
                                 rsPres.getString("codigo_libro"),
                                 rsPres.getInt("cantidad"))
                 );

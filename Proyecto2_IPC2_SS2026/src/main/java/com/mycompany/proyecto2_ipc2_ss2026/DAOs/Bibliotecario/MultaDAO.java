@@ -27,8 +27,14 @@ public class MultaDAO {
     private final String MULTA_POR_ID = "SELECT * FROM multa WHERE id = ?";
     private final String AGREGAR_MULTA = "INSERT INTO multa (monto, prestamo_id) VALUES (?,?)";
     private final String PAGAR_MULTA = "UPDATE multa SET estado = TRUE, fecha_pago = CURDATE() WHERE id = ?";
-    private final String GET_MULTAS_SIN_PAGAR = "SELECT * FROM multa WHERE estado = FALSE LIMIT ?, ?";
-    private final String GET_MULTA_POR_PRESTAMO = "SELECT * FROM multa WHERE prestamo_id = ?";
+    private final String FORMATO_MULTA = 
+            """
+            SELECT mul.*, usu.nombre 
+            FROM multa AS mul 
+            JOIN prestamo_biblioteca AS pres ON mul.prestamo_id = pres.id 
+            JOIN usuario AS usu ON pres.prestamista = usu.dpi """;
+    private final String GET_MULTAS_SIN_PAGAR = FORMATO_MULTA + " WHERE estado = FALSE ORDER BY id DESC LIMIT ?, ?";
+    private final String GET_MULTA_POR_PRESTAMO = FORMATO_MULTA + " WHERE prestamo_id = ?";
     
     public boolean existeMulta(int id) throws AccesoALaDataException {
         try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
@@ -124,7 +130,8 @@ public class MultaDAO {
                 rs.getDouble("monto"), 
                 rs.getBoolean("estado"), 
                 fecha, 
-                rs.getInt("prestamo_id"));
+                rs.getInt("prestamo_id"), 
+                rs.getString("nombre"));
     }
     
 }

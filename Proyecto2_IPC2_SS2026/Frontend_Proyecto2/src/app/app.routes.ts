@@ -53,6 +53,9 @@ import { ReportSuperAdminHistorialPago } from './components/paginas/super-admin/
 import { ReportesAdminHistorialPago } from './components/paginas/admin/reportes-admin-historial-pago/reportes-admin-historial-pago';
 import { ReporteSupAdmIngresos } from './components/paginas/super-admin/reporte-sup-adm-ingresos/reporte-sup-adm-ingresos';
 import { ReporteAdminIngresos } from './components/paginas/admin/reporte-admin-ingresos/reporte-admin-ingresos';
+import { PrestamoLibro } from './components/paginas/bibliotecario/prestamo-libro/prestamo-libro';
+import { ConclusionPrestamo } from './components/paginas/bibliotecario/conclusion-prestamo/conclusion-prestamo';
+import { RecepcionMulta } from './components/paginas/bibliotecario/recepcion-multa/recepcion-multa';
 
 export const routes: Routes = [
     { path: '', component: Login },
@@ -120,4 +123,7 @@ export const routes: Routes = [
     { path: 'control-libro', component: ControlLibro }, 
     { path: 'libro/crear', component: CrearLibro }, 
     { path: 'libro/modificar/:codigo', component: ModificarLibro }, 
+    { path: 'prestamo', component: PrestamoLibro }, 
+    { path: 'recepcion-prestamo', component: ConclusionPrestamo } ,
+    { path: 'recepcion-multa', component: RecepcionMulta }, 
 ];

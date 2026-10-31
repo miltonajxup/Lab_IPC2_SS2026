@@ -58,3 +58,16 @@ td {
 .fin {
     margin-bottom: 150px;
 }
+
+h2 {
+    text-align: center;
+}
+
+.bloque {
+    max-height: 100px;
+    overflow: auto;
+}
+
+.tn {
+    color: #ff7803;
+}

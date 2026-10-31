@@ -3,5 +3,6 @@ export interface Multa {
     monto: number,
     estado: boolean,
     fechaPago: Date,
-    idPrestamo: number
+    idPrestamo: number, 
+    deudor: string
 }

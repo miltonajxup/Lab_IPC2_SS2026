@@ -45,9 +45,6 @@ public class ServicioMulta {
     }
     
     public String agregarMulta(MultaRequest multa) throws AccesoALaDataException, ValorInvalidoException, DataInexistenteException {
-        if (multa == null || multa.getFechaPago() == null) {
-            throw new ValorInvalidoException("Faltan datos para crear una multa");
-        }
         if (!prestamodao.existePrestamo(multa.getIdPrestamo())) {
             throw new DataInexistenteException("No se pudo encontrar el prestamo al cual se le quiere agregar una multa");
         }

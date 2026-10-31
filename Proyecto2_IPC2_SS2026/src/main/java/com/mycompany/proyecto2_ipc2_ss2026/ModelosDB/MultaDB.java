@@ -17,13 +17,15 @@ public class MultaDB {
     private final boolean estado;
     private final LocalDate fechaPago;
     private final int idPrestamo;
+    private final String deudor;
 
-    public MultaDB(int id, double monto, boolean estado, LocalDate fechaPago, int idPrestamo) {
+    public MultaDB(int id, double monto, boolean estado, LocalDate fechaPago, int idPrestamo, String deudor) {
         this.id = id;
         this.monto = monto;
         this.estado = estado;
         this.fechaPago = fechaPago;
         this.idPrestamo = idPrestamo;
+        this.deudor = deudor;
     }
 
     public int getId() {
@@ -44,6 +46,10 @@ public class MultaDB {
 
     public int getIdPrestamo() {
         return idPrestamo;
+    }
+
+    public String getDeudor() {
+        return deudor;
     }
 
 }

@@ -88,7 +88,8 @@ public class PrestamoController {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response prestarLibro(PrestamoRequest prestamo) {
         try {
-            return Response.status(Response.Status.CREATED).entity(servicio.prestarLibro(prestamo)).build();
+            servicio.prestarLibro(prestamo);
+            return Response.status(Response.Status.CREATED).build();
         } catch (AccesoALaDataException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         } catch (DataInexistenteException e) {
@@ -101,9 +102,9 @@ public class PrestamoController {
     @PUT
     @Path("{id}")
     @Consumes(MediaType.APPLICATION_JSON) 
-    public Response concluirPrestamo(PrestamoRequest prestamo, @PathParam("id") int id) {
+    public Response concluirPrestamo(@PathParam("id") int id) {
         try {
-            servicio.terminarPrestamo(prestamo, id);
+            servicio.terminarPrestamo(id);
             return Response.ok().build();
         } catch (AccesoALaDataException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();

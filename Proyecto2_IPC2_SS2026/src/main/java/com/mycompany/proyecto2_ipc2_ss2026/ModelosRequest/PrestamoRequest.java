@@ -16,7 +16,7 @@ public class PrestamoRequest {
     private LocalDate fechaPrestamo;
     private LocalDate fechaDevolucionEsperada;
     private LocalDate fechaDevolucionCompletada;
-    private String prestamista;
+    private String idPrestamista;
     private List<LibroPrestamoRequest> librosPrestamo;
 
     public LocalDate getFechaPrestamo() {
@@ -43,12 +43,12 @@ public class PrestamoRequest {
         this.fechaDevolucionCompletada = fechaDevolucionCompletada;
     }
 
-    public String getPrestamista() {
-        return prestamista;
+    public String getIdPrestamista() {
+        return idPrestamista;
     }
 
-    public void setPrestamista(String prestamista) {
-        this.prestamista = prestamista;
+    public void setIdPrestamista(String idPrestamista) {
+        this.idPrestamista = idPrestamista;
     }
 
     public List<LibroPrestamoRequest> getLibrosPrestamo() {

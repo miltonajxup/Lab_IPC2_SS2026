@@ -1,0 +1,43 @@
+
+<div class="row justify-content-center">
+    <div class="text-center t20 mb-4">
+        @if (mensajeError()) {
+            <div class="text-danger ">{{mensajeError()}}</div>
+        }
+        @if (operacionCompletada()) {
+            <div class="text-success"> La Tarea fué completada con éxito </div>
+        }
+    </div>
+    <form [formGroup]="libroForm" class=" card shadow w-25 h-100 p-4" (submit)="submit()">
+        @if (isEditMode) {
+            <label class="form-label p-3">
+                Codigo: {{libroParaEditar.codigo}}
+                <input type="hidden" [value]="libroParaEditar.codigo" readonly>
+            </label>
+        } @else {
+            <label class="form-label p-3">
+                Codigo:
+                <input class="form-control" type="text" formControlName="codigo" >
+            </label>
+        }
+        <label class="form-label p-3">
+            Titulo: 
+            <input class="form-control" type="text" formControlName="titulo" >
+        </label>
+        <label class="form-label p-3">
+            Autor:
+            <input class="form-control" type="text" formControlName="autor" >
+        </label>
+        <label class="form-label p-3">
+            Editorial:
+            <input class="form-control" type="text" formControlName="editorial" >
+        </label>
+        <label class="form-label p-3">
+            Cantidad Disponible: 
+            <input class="form-control" type="number" formControlName="cantidadDisponible" >
+        </label>
+        <button class="btn btn-primary w-25 mx-auto" [disabled]="libroForm.invalid">
+            Guardar
+        </button>
+    </form>
+</div>
