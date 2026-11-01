@@ -1,6 +1,7 @@
 package com.mycompany.proyecto2_ipc2_ss2026;
 
 import jakarta.ws.rs.ApplicationPath;
+import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.ServerProperties;
 
@@ -12,7 +13,9 @@ import org.glassfish.jersey.server.ServerProperties;
 public class JakartaRestConfiguration extends ResourceConfig {
     
     public JakartaRestConfiguration() {
-        packages("com.mycompany.proyecto2_ipc2_ss2026.resources").property(ServerProperties.RESPONSE_SET_STATUS_OVER_SEND_ERROR, true);
+        packages("com.mycompany.proyecto2_ipc2_ss2026.resources")
+                .register(MultiPartFeature.class)
+                .property(ServerProperties.RESPONSE_SET_STATUS_OVER_SEND_ERROR, true);
     }
     
 }

@@ -23,6 +23,7 @@ INSERT INTO usuario (dpi, nombre, rol) VALUES ('202600001', 'supadm1', 'SUPER_AD
 
 CREATE TABLE empleado (
     dpi_empleado VARCHAR(13) NOT NULL, 
+    estado BOOLEAN DEFAULT TRUE, 
     CONSTRAINT pk_empleado PRIMARY KEY(dpi_empleado), 
     CONSTRAINT fk_emp_dpi FOREIGN KEY (dpi_empleado) REFERENCES usuario(dpi)
 );
@@ -119,6 +120,7 @@ CREATE TABLE grado (
     costo_inscripcion DECIMAL(8,2), 
     costo_colegiatura DECIMAL(8,2), 
     nivel_id INT NOT NULL, 
+    estado BOOLEAN DEFAULT TRUE, 
     CONSTRAINT pk_carrera PRIMARY KEY(id),
     CONSTRAINT fk_gra_nivel_id FOREIGN KEY (nivel_id) REFERENCES nivel_academico(id),
     UNIQUE uk_grado (nombre, nivel_id) 
@@ -175,8 +177,8 @@ CREATE TABLE grupo_ciclo_escolar (
     CONSTRAINT pk_grupo_cliclo_escolar PRIMARY KEY (id), 
     CONSTRAINT fk_gce_ciclo FOREIGN KEY (ciclo_escolar_id) REFERENCES ciclo_escolar(anio), 
     CONSTRAINT fk_gce_grado FOREIGN KEY (grado_id) REFERENCES grado(id), 
-    CONSTRAINT fk_gce_carrera FOREIGN KEY (carrera_id) REFERENCES carrera(codigo), 
-    CONSTRAINT fk_ins_seccion FOREIGN KEY (seccion_id) REFERENCES seccion(nombre) 
+    CONSTRAINT fk_gce_carrera FOREIGN KEY (carrera_id) REFERENCES carrera(codigo) 
+    -- CONSTRAINT fk_ins_seccion FOREIGN KEY (seccion_id) REFERENCES seccion(nombre) 
 );
 
 CREATE TABLE inscripcion (

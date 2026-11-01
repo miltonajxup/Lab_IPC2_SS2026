@@ -1,0 +1,99 @@
+<!-- Created with Jaspersoft Studio version 7.0.8.final using JasperReports Library version 7.0.8-6f896111  -->
+<jasperReport name="reporte_ingresos" language="java" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="398f79cc-1a03-4b1a-84e2-6bb92679443a">
+	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<dataset name="dsIngresos" uuid="c91e2200-f522-47d5-beef-ac41350d16f5">
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+		<query language="sql"><![CDATA[]]></query>
+		<field name="tipoPago" class="java.lang.String"/>
+		<field name="totalIngreso" class="java.lang.Double"/>
+	</dataset>
+	<parameter name="ds" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
+	<query language="sql"><![CDATA[]]></query>
+	<background/>
+	<title height="72">
+		<element kind="frame" uuid="f9c7a66e-cabf-48f7-a59e-872d94a12da4" x="-20" y="-20" width="595" height="92" backcolor="#006699" mode="Opaque">
+			<element kind="staticText" uuid="00e3c0ee-ab8c-40eb-bad3-5a6df8a49b34" x="20" y="26" width="290" height="40" forecolor="#FFFFFF" fontSize="19.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+				<text><![CDATA[Reporte de Ingresos]]></text>
+			</element>
+		</element>
+	</title>
+	<detail>
+		<band height="145">
+			<element kind="component" uuid="c32b915a-05fc-4544-abaf-7acc93be7b23" x="112" y="40" width="330" height="60">
+				<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+				<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
+				<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
+				<property name="com.jaspersoft.studio.table.style.detail" value="Table_TD"/>
+				<component kind="table">
+					<datasetRun uuid="c9eff1d7-2102-409e-aedb-62dcdbd9ae7e" subDataset="dsIngresos">
+						<dataSourceExpression><![CDATA[$P{ds}]]></dataSourceExpression>
+					</datasetRun>
+					<column kind="single" uuid="a132ccf7-e95f-469e-b8b4-f2925405c32f" width="160">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
+						<columnHeader height="30" rowSpan="1" style="Table_CH">
+							<element kind="staticText" uuid="51edaaf7-e2dd-4b27-8fcb-febd9f902e0f" x="0" y="0" width="160" height="30" fontSize="15.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+								<text><![CDATA[Tipo de Ingreso]]></text>
+							</element>
+						</columnHeader>
+						<detailCell height="30" style="Table_TD">
+							<element kind="textField" uuid="75c3135d-b3f1-4ce8-8e44-6501742f4eae" x="0" y="0" width="160" height="30" hTextAlign="Center" vTextAlign="Middle">
+								<expression><![CDATA[$F{tipoPago}]]></expression>
+							</element>
+						</detailCell>
+					</column>
+					<column kind="single" uuid="9cf5521c-da18-4665-96ab-293527905ce4" width="170">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
+						<columnHeader height="30" rowSpan="1" style="Table_CH">
+							<element kind="staticText" uuid="4de75adf-399f-4374-92d7-a5d7244d1e71" x="0" y="0" width="170" height="30" fontSize="15.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+								<text><![CDATA[Total Ingreso]]></text>
+							</element>
+						</columnHeader>
+						<detailCell height="30" style="Table_TD">
+							<element kind="textField" uuid="e463440e-a056-404b-ab1b-75135d334457" x="0" y="0" width="170" height="30" hTextAlign="Center" vTextAlign="Middle">
+								<expression><![CDATA[$F{totalIngreso}]]></expression>
+							</element>
+						</detailCell>
+					</column>
+				</component>
+			</element>
+		</band>
+	</detail>
+	<columnFooter/>
+	<pageFooter height="17">
+		<element kind="textField" uuid="1b6969d6-6d8f-4a48-8be7-4ab115ac6ed8" x="0" y="4" width="515" height="13" backcolor="#E6E6E6" mode="Opaque" hTextAlign="Right">
+			<expression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></expression>
+		</element>
+		<element kind="textField" uuid="6ac776c1-c6a2-43a0-8c78-e2f064c22b75" x="515" y="4" width="40" height="13" backcolor="#E6E6E6" mode="Opaque" evaluationTime="Report">
+			<expression><![CDATA[" " + $V{PAGE_NUMBER}]]></expression>
+		</element>
+		<element kind="textField" uuid="97c43492-f6cd-40ee-a7a8-5d4bb6f31107" x="0" y="4" width="100" height="13" pattern="EEEEE dd MMMMM yyyy">
+			<expression><![CDATA[new java.util.Date()]]></expression>
+		</element>
+	</pageFooter>
+</jasperReport>
