@@ -5,8 +5,7 @@ import { MaestroService } from '../../../../servicios/maestro-service';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Header } from '../../../header/header';
 import { MenuMaestro } from '../componentes/menu-maestro/menu-maestro';
-import { SesionService } from '../../../../servicios/sesion-service';
-import { Usuario } from '../../../modelos/usuario';
+import { AuthService } from '../../../../servicios/auth-service';
 
 @Component({
   imports: [Header, MenuMaestro, RouterLink],
@@ -24,18 +23,11 @@ export class OpcionesCurso implements OnInit {
   constructor(
     private router: ActivatedRoute, 
     private maestroService: MaestroService, 
-    private sesionService: SesionService) {}
+    private authService: AuthService) {}
 
   ngOnInit(): void {
-    const usuario: Usuario = this.sesionService.getUsuario();
-    let idUsuario: string;
-    if (usuario == null) {
-      idUsuario = '';
-    } else {
-      idUsuario = usuario.dpi!;
-    }
     this.idMaes = this.router.snapshot.params['idMaes'];
-    this.maestroService.getCursoPorId(this.idMaes, idUsuario).subscribe({
+    this.maestroService.getCursoPorId(this.idMaes, this.authService.getUserId()!).subscribe({
       next: (curso: CursoMaestro) => {
         this.curso.set(curso);
       }, 

@@ -5,6 +5,7 @@
 package com.mycompany.proyecto2_ipc2_ss2026.ModelosDB;
 
 import com.mycompany.proyecto2_ipc2_ss2026.Constantes.RolUsuario;
+import java.util.Set;
 
 /**
  *
@@ -15,6 +16,7 @@ public class UsuarioDB {
     private final String dpi;
     private final String nombre;
     private final RolUsuario rol;
+    private Set<RolUsuario> roles;
 
     public UsuarioDB(String dpi, String nombre, RolUsuario rol) {
         this.dpi = dpi;
@@ -32,6 +34,14 @@ public class UsuarioDB {
 
     public RolUsuario getRol() {
         return rol;
+    }
+
+    public Set<RolUsuario> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<RolUsuario> roles) {
+        this.roles = roles;
     }
 
 }

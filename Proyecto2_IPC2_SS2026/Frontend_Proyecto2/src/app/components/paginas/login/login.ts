@@ -1,8 +1,11 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RouterLink } from '@angular/router';
-import { LoginService } from '../../../servicios/login-service';
-import { Usuario } from '../../modelos/usuario';
+import { Router, RouterLink } from '@angular/router';
+import { LoginRequest } from '../../modelos/login/login-request';
+import { AuthService } from '../../../servicios/auth-service';
+import { ErrorResponse } from '../../modelos/error-response';
+import { LoginResponse } from '../../modelos/login/login-response';
+import { RolUsuario } from '../../modelos/rol-usuario-enum';
 
 @Component({
   imports: [ReactiveFormsModule, RouterLink],
@@ -17,24 +20,48 @@ export class Login implements OnInit {
 
   constructor(
     private formBuider: FormBuilder, 
-    private loginService: LoginService) {}
+    private authService: AuthService, 
+    private router: Router) {}
 
   ngOnInit(): void {
     this.formLogin = this.formBuider.group({
-      nombre: [null, [Validators.required, Validators.maxLength(60)]], 
+      nombreUsuario: [null, [Validators.required, Validators.maxLength(60)]], 
       contrasenia: [null, [Validators.required, Validators.maxLength(100)]]
     });
   }
 
   sumbit(): void {
-    this.loginService.login(this.formLogin.value).subscribe({
-      next: (usuario: Usuario) => {
-        console.log(usuario);
+    this.mensaje.set('');
+    const usuarioLog: LoginRequest = this.formLogin.value;
+    this.authService.login(usuarioLog).subscribe({
+      next: (response: LoginResponse) => {
+        this.authService.saveToken(response.token);
+        if (this.comprobarRol([RolUsuario.SUPER_ADMINISTRADOR])) {
+           this.router.navigate(['/super-admin']);
+         } else if (this.comprobarRol([RolUsuario.ADMINISTRADOR])) {
+          this.router.navigate(['/admin']);
+        } else if (this.comprobarRol([RolUsuario.SECRETARIA])) {
+          this.router.navigate(['/secretaria']);
+        } else if (this.comprobarRol([RolUsuario.MAESTRO])) {
+          this.router.navigate(['/maestro']);
+        } else if (this.comprobarRol([RolUsuario.BIBLIOTECARIO])) {
+          this.router.navigate(['/bibliotecario']);
+        } else if (this.comprobarRol([RolUsuario.ESTUDIANTE])) {
+          this.router.navigate(['/estudiante']);
+        } else {
+          console.log('El rol no tiene una vista');
+        }
       }, 
-      error: (error: any) => {
-        this.mensaje.set(error.error);
+      error: (error: ErrorResponse) => {
+        this.mensaje.set(error.mensaje);
       }
     })
+  }
+
+  private comprobarRol(token: string[]):boolean {
+    const rolesEnToken = this.authService.getRoles();
+    const hasAnyCommon = rolesEnToken.some(element => token.includes(element));
+    return hasAnyCommon;
   }
   
 }

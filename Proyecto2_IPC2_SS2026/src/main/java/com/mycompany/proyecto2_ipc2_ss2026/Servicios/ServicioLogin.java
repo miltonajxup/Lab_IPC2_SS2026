@@ -5,15 +5,11 @@
 package com.mycompany.proyecto2_ipc2_ss2026.Servicios;
 
 import com.mycompany.proyecto2_ipc2_ss2026.Constantes.LimiteTamaño;
-import com.mycompany.proyecto2_ipc2_ss2026.Constantes.RolUsuario;
-import com.mycompany.proyecto2_ipc2_ss2026.DAOs.Administrador.EmpleadoDAO;
-import com.mycompany.proyecto2_ipc2_ss2026.DAOs.Estudiante.EstudianteDAO;
 import com.mycompany.proyecto2_ipc2_ss2026.DAOs.LoginDAO;
 import com.mycompany.proyecto2_ipc2_ss2026.DAOs.UsuarioDAO;
 import com.mycompany.proyecto2_ipc2_ss2026.Exceptions.AccesoALaDataException;
 import com.mycompany.proyecto2_ipc2_ss2026.Exceptions.DataExistenteException;
 import com.mycompany.proyecto2_ipc2_ss2026.Exceptions.ValorInvalidoException;
-import com.mycompany.proyecto2_ipc2_ss2026.ModelosDB.EmpleadoDB;
 import com.mycompany.proyecto2_ipc2_ss2026.ModelosDB.RespuestaLog;
 import com.mycompany.proyecto2_ipc2_ss2026.ModelosDB.UsuarioCompleto;
 import com.mycompany.proyecto2_ipc2_ss2026.ModelosRequest.UsuarioRequest;
@@ -31,57 +27,10 @@ public class ServicioLogin {
     
     private final LoginDAO logindao;
     private final UsuarioDAO usuariodao;
-    private final EstudianteDAO estudiantedao;
-    private final EmpleadoDAO empleadodao;
     
     public ServicioLogin() {
         logindao = new LoginDAO();
         usuariodao = new UsuarioDAO();
-        estudiantedao = new EstudianteDAO();
-        empleadodao = new EmpleadoDAO();
-    }
-    
-    public RespuestaLog ingresar(UsuarioRequest usuario) throws AccesoALaDataException {
-        if (verificarValores(usuario)) {
-            return new RespuestaLog(false, MENSAJE_INGRESO);
-        }
-        
-        UsuarioCompleto usuarioCompleto = usuariodao.usuarioCompletoPorNombre(usuario.getNombre());
-        
-        if (usuarioCompleto == null) {
-            return new RespuestaLog(false, MENSAJE_INGRESO);
-        }
-        
-        if (usuarioCompleto.getContraseña() == null) {
-            return new RespuestaLog(false, "El usuario no ha sido activado");
-        }
-        
-        String contraseñaEntrante = Base64.getEncoder().encodeToString(usuario.getContrasenia().getBytes(StandardCharsets.UTF_8));
-        
-        if (!usuarioCompleto.getContraseña().equals(contraseñaEntrante) ) {
-            return new RespuestaLog(false, MENSAJE_INGRESO);
-        }
-        
-        if (usuarioCompleto.getRol() == RolUsuario.ESTUDIANTE) {
-//            return new RespuestaLog(true, estudiantedao.getEstudiantePorID(usuarioCompleto.getDpi()));
-//        } else if (usuarioCompleto.getRol() == RolUsuario.SUPER_ADMINISTRADOR) {
-//            return new RespuestaLog(true, empleadodao.getEmpleadoSinContrato(usuarioCompleto.getDpi()));
-//        } else {
-//            EmpleadoDB empleado = empleadodao.getEmpleadoPorID(usuarioCompleto.getDpi());
-//            if (empleado == null) {
-//                return new RespuestaLog(false, "El empleado " + usuarioCompleto.getNombre() + " no se encuentra contratado para el año vigente");
-//            } else {
-//                return new RespuestaLog(true, empleado);
-//            }
-            return new RespuestaLog(true, estudiantedao.getEstudiantePorID(usuarioCompleto.getDpi()));
-        } else {
-            EmpleadoDB empleado = empleadodao.getEmpleadoSinContrato(usuarioCompleto.getDpi());
-            if (empleado.isEstado()) {
-                return new RespuestaLog(true, empleado);
-            } else {
-                return new RespuestaLog(false, "No se pudo acceder porque el usuario ha sido bloqueado");
-            }
-        }
     }
     
     public RespuestaLog colocarContraseña(UsuarioRequest usuario) throws AccesoALaDataException, ValorInvalidoException, DataExistenteException {

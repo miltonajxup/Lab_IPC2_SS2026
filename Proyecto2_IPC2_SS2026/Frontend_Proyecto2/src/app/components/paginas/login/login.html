@@ -11,14 +11,14 @@
     <div class="text-danger text-center mb-5"> {{mensaje()}} </div>
   }
 
-  <!-- Panel de login -->
+  
   <div class="card shadow p-5 w-25 h-25 mx-auto">
     <h2 class="text-center mb-4">Iniciar sesión</h2>
     
     <form [formGroup]="formLogin" (submit)="sumbit()" >
       <div class="mb-3">
         <label class="form-label">Nombre de Usuario</label>
-        <input class="form-control" formControlName="nombre" >
+        <input class="form-control" formControlName="nombreUsuario" >
       </div>
         
       <div class="mb-5">
@@ -33,11 +33,18 @@
   </div>
 
   <div class="w-25 p-5 mx-auto align-items-start row g-3">
-    <a class="btn btn-secondary">Ingresar por Primera vez</a>
-    <a class="btn btn-secondary">Recuperar Contraseña</a>
+    <a class="btn btn-secondary" routerLink="/login/primer-ingreso">Ingresar por Primera vez</a>
+    <a class="btn btn-secondary" routerLink="/login/recuperar-contrasenia">Recuperar Contraseña</a>
 
     <a class="btn btn-secondary" routerLink="/super-admin">Super Administrador</a>
     <a class="btn btn-secondary" routerLink="/admin">Administrador</a>
+
+    <a class="btn btn-secondary" routerLink="/secretaria">Secretaria</a>
+    <a class="btn btn-secondary" routerLink="/maestro">Maestro</a>
+    
+    <a class="btn btn-secondary" routerLink="/bibliotecario">Bibliotecario</a>
+    <a class="btn btn-secondary" routerLink="/estudiante">Estudiante</a>
+    
   </div>
 
 </div>

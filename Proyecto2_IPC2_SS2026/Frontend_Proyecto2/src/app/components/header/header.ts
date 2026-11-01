@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { SesionService } from '../../servicios/sesion-service';
+import { AuthService } from '../../servicios/auth-service';
 
 @Component({
   imports: [RouterLink],
@@ -12,9 +12,10 @@ export class Header {
   @Input({required: true})
   rol!: string;
 
-  constructor(private sesionService: SesionService) {}
+  constructor(
+    private authService: AuthService) {}
 
   cerrarSesion(): void {
-    this.sesionService.cerrarSesion();
+    this.authService.logout();
   }
 }

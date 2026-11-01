@@ -56,6 +56,10 @@ import { ReporteAdminIngresos } from './components/paginas/admin/reporte-admin-i
 import { PrestamoLibro } from './components/paginas/bibliotecario/prestamo-libro/prestamo-libro';
 import { ConclusionPrestamo } from './components/paginas/bibliotecario/conclusion-prestamo/conclusion-prestamo';
 import { RecepcionMulta } from './components/paginas/bibliotecario/recepcion-multa/recepcion-multa';
+import { LayoutEstudiante } from './components/paginas/estudiante/layout-estudiante/layout-estudiante';
+import { ConsultarNotas } from './components/paginas/estudiante/consultar-notas/consultar-notas';
+import { RolUsuario } from './components/modelos/rol-usuario-enum';
+import { RoleGuardService } from './servicios/role-guard-service';
 
 export const routes: Routes = [
     { path: '', component: Login },
@@ -64,66 +68,252 @@ export const routes: Routes = [
     { path: 'login/cambiar-contrasenia/:idUsuario', component: CambiarContrasenia },
 
 
-    { path: 'super-admin', component: LayoutSuperAdmin }, 
-    { path: 'control-ciclo-escolar', component: ControlCicloEscolar }, 
-    { path: 'modificar-ciclo-escolar', component: Modificar },
-    { path: 'form-ciclo-escolar', component: Form }, 
-    { path: 'super-admin/control-grado', component: ControlGrado }, 
-    { path: 'reporte/sup-adm-promedios', component: ReportesSupAdmPromedio }, 
-    { path: 'reporte/sup-adm-solvencia', component: ReportesSupAdmSolvencias }, 
-    { path: 'reporte/sup-adm-historial-pago', component: ReportSuperAdminHistorialPago }, 
-    { path: 'reporte/sup-adm-ingresos', component: ReporteSupAdmIngresos }, 
+
+    {  
+        path: 'super-admin', component: LayoutSuperAdmin, 
+        canActivate: [RoleGuardService], data: {allowedRoles:[RolUsuario.SUPER_ADMINISTRADOR]}
+    }, 
+    { 
+        path: 'control-ciclo-escolar', component: ControlCicloEscolar, 
+        canActivate: [RoleGuardService], data: {allowedRoles:[RolUsuario.SUPER_ADMINISTRADOR]}
+    }, 
+    { 
+        path: 'modificar-ciclo-escolar', component: Modificar, 
+        canActivate: [RoleGuardService], data: { allowedRoles:[RolUsuario.SUPER_ADMINISTRADOR] }
+    },
+    { 
+        path: 'form-ciclo-escolar', component: Form, 
+        canActivate: [RoleGuardService], data: { allowedRoles:[RolUsuario.SUPER_ADMINISTRADOR] }
+    }, 
+    { 
+        path: 'super-admin/control-grado', component: ControlGrado, 
+        canActivate: [RoleGuardService], data: { allowedRoles:[RolUsuario.SUPER_ADMINISTRADOR] }
+    }, 
+    { 
+        path: 'reporte/sup-adm-promedios', component: ReportesSupAdmPromedio, 
+        canActivate: [RoleGuardService], data: { allowedRoles:[RolUsuario.SUPER_ADMINISTRADOR] }
+    }, 
+    { 
+        path: 'reporte/sup-adm-solvencia', component: ReportesSupAdmSolvencias, 
+        canActivate: [RoleGuardService], data: { allowedRoles:[RolUsuario.SUPER_ADMINISTRADOR] }
+    }, 
+    { 
+        path: 'reporte/sup-adm-historial-pago', component: ReportSuperAdminHistorialPago, 
+        canActivate: [RoleGuardService], data: { allowedRoles:[RolUsuario.SUPER_ADMINISTRADOR] }
+    }, 
+    { 
+        path: 'reporte/sup-adm-ingresos', component: ReporteSupAdmIngresos, 
+        canActivate: [RoleGuardService], data: { allowedRoles:[RolUsuario.SUPER_ADMINISTRADOR] }
+    }, 
 
 
-    { path: 'admin', component: LayoutAdmin }, 
-    { path: 'asingar-curso-maestro', component: AsignarCursoMaestro }, 
-    { path: 'carrera', component: ControlCarrera }, 
-    { path: 'carrera/crear', component: CrearCarrera },
-    { path: 'carrera/modificar/:codigo', component: ModificarCarrera },
-    { path: 'admin/nuevo-contrato', component: NuevoContrato }, 
-    { path: 'admin/ver-empleados', component: VerEmpleados }, 
-    { path: 'admin/generar-boletas', component: GenerarBoletas },
-    { path: 'admin/reportes/promedios', component: ReportesAdmin }, 
-    { path: 'admin/reportes/solvencia', component: ReportesAdminSolvencia },
-    { path: 'admin/reportes/historial-pago', component: ReportesAdminHistorialPago }, 
-    { path: 'admin/reportes/ingresos', component: ReporteAdminIngresos }, 
+
+
+    { 
+        path: 'admin', component: LayoutAdmin, 
+        canActivate: [RoleGuardService], data: { allowedRoles:[RolUsuario.SUPER_ADMINISTRADOR, RolUsuario.ADMINISTRADOR] }
+    }, 
+    { 
+        path: 'asingar-curso-maestro', component: AsignarCursoMaestro, 
+        canActivate: [RoleGuardService], data: { allowedRoles:[RolUsuario.SUPER_ADMINISTRADOR, RolUsuario.ADMINISTRADOR] }
+    }, 
+    { 
+        path: 'carrera', component: ControlCarrera, 
+        canActivate: [RoleGuardService], data: { allowedRoles:[RolUsuario.SUPER_ADMINISTRADOR, RolUsuario.ADMINISTRADOR] }
+    }, 
+    { 
+        path: 'carrera/crear', component: CrearCarrera, 
+        canActivate: [RoleGuardService], data: { allowedRoles:[RolUsuario.SUPER_ADMINISTRADOR, RolUsuario.ADMINISTRADOR] }
+    },
+    { 
+        path: 'carrera/modificar/:codigo', component: ModificarCarrera, 
+        canActivate: [RoleGuardService], data: { allowedRoles:[RolUsuario.SUPER_ADMINISTRADOR, RolUsuario.ADMINISTRADOR] }
+    },
+
+
+    { 
+        path: 'curso', component: ControlCurso, 
+        canActivate: [RoleGuardService], data: { allowedRoles:[RolUsuario.SUPER_ADMINISTRADOR, RolUsuario.ADMINISTRADOR] } 
+    },
+    { 
+        path: 'curso/crear', component: CrearCurso, 
+        canActivate: [RoleGuardService], data: { allowedRoles:[RolUsuario.SUPER_ADMINISTRADOR, RolUsuario.ADMINISTRADOR] } 
+    }, 
+    { 
+        path: 'curso/modificar/:id', component: ModificarCurso, 
+        canActivate: [RoleGuardService], data: { allowedRoles:[RolUsuario.SUPER_ADMINISTRADOR, RolUsuario.ADMINISTRADOR] } 
+    },
+
+    { 
+        path: 'grupo', component: ControlGrupo, 
+        canActivate: [RoleGuardService], data: { allowedRoles:[RolUsuario.SUPER_ADMINISTRADOR, RolUsuario.ADMINISTRADOR] } 
+    },
+    { 
+        path: 'grupo/crear/grado', component: CrearParaGrado, 
+        canActivate: [RoleGuardService], data: { allowedRoles:[RolUsuario.SUPER_ADMINISTRADOR, RolUsuario.ADMINISTRADOR] } 
+    }, 
+    { 
+        path: 'grupo/crear/carrera', component: CrearParaCarrera, 
+        canActivate: [RoleGuardService], data: { allowedRoles:[RolUsuario.SUPER_ADMINISTRADOR, RolUsuario.ADMINISTRADOR] } 
+    }, 
+
+
+    { 
+        path: 'curriculo', component: ControlCurricculo, 
+        canActivate: [RoleGuardService], data: { allowedRoles:[RolUsuario.SUPER_ADMINISTRADOR, RolUsuario.ADMINISTRADOR] } 
+    }, 
+    { 
+        path: 'curriculo/crear/grado', component: CrearCurriculoGrado, 
+        canActivate: [RoleGuardService], data: { allowedRoles:[RolUsuario.SUPER_ADMINISTRADOR, RolUsuario.ADMINISTRADOR] } 
+    }, 
+    { 
+        path: 'curriculo/crear/carrera', component: CrearCurriculoCarrera, 
+        canActivate: [RoleGuardService], data: { allowedRoles:[RolUsuario.SUPER_ADMINISTRADOR, RolUsuario.ADMINISTRADOR] } 
+    }, 
+    { 
+        path: 'curriculo/modificar/grado', component: ModificarCurriculoGrado, 
+        canActivate: [RoleGuardService], data: { allowedRoles:[RolUsuario.SUPER_ADMINISTRADOR, RolUsuario.ADMINISTRADOR] } 
+    }, 
+    { 
+        path: 'curriculo/modificar/carrera', component: ModificarCurriculoCarrera, 
+        canActivate: [RoleGuardService], data: { allowedRoles:[RolUsuario.SUPER_ADMINISTRADOR, RolUsuario.ADMINISTRADOR] } 
+    }, 
+
+
+    { 
+        path: 'admin/nuevo-contrato', component: NuevoContrato, 
+        canActivate: [RoleGuardService], data: { allowedRoles:[RolUsuario.SUPER_ADMINISTRADOR, RolUsuario.ADMINISTRADOR] }
+    }, 
+    { 
+        path: 'admin/ver-empleados', component: VerEmpleados, 
+        canActivate: [RoleGuardService], data: { allowedRoles:[RolUsuario.SUPER_ADMINISTRADOR, RolUsuario.ADMINISTRADOR] }
+    }, 
+    { 
+        path: 'admin/generar-boletas', component: GenerarBoletas, 
+        canActivate: [RoleGuardService], data: { allowedRoles:[RolUsuario.SUPER_ADMINISTRADOR, RolUsuario.ADMINISTRADOR] }
+    },
+    { 
+        path: 'admin/reportes/promedios', component: ReportesAdmin, 
+        canActivate: [RoleGuardService], data: { allowedRoles:[RolUsuario.SUPER_ADMINISTRADOR, RolUsuario.ADMINISTRADOR] }
+    }, 
+    { 
+        path: 'admin/reportes/solvencia', component: ReportesAdminSolvencia, 
+        canActivate: [RoleGuardService], data: { allowedRoles:[RolUsuario.SUPER_ADMINISTRADOR, RolUsuario.ADMINISTRADOR] } 
+    },
+    { 
+        path: 'admin/reportes/historial-pago', component: ReportesAdminHistorialPago, 
+        canActivate: [RoleGuardService], data: { allowedRoles:[RolUsuario.SUPER_ADMINISTRADOR, RolUsuario.ADMINISTRADOR] } 
+    }, 
+    { 
+        path: 'admin/reportes/ingresos', component: ReporteAdminIngresos, 
+        canActivate: [RoleGuardService], data: { allowedRoles:[RolUsuario.SUPER_ADMINISTRADOR, RolUsuario.ADMINISTRADOR] } 
+    }, 
     
 
-    { path: 'curso', component: ControlCurso },
-    { path: 'curso/crear', component: CrearCurso }, 
-    { path: 'curso/modificar/:id', component: ModificarCurso },
 
-    { path: 'grupo', component: ControlGrupo },
-    { path: 'grupo/crear/grado', component: CrearParaGrado }, 
-    { path: 'grupo/crear/carrera', component: CrearParaCarrera }, 
 
-    { path: 'curriculo', component: ControlCurricculo }, 
-    { path: 'curriculo/crear/grado', component: CrearCurriculoGrado }, 
-    { path: 'curriculo/crear/carrera', component: CrearCurriculoCarrera }, 
-    { path: 'curriculo/modificar/grado', component: ModificarCurriculoGrado}, 
-    { path: 'curriculo/modificar/carrera', component: ModificarCurriculoCarrera }, 
+    { 
+        path: 'secretaria', component: LayoutSecretaria, 
+        canActivate: [RoleGuardService], data: { allowedRoles:[RolUsuario.SUPER_ADMINISTRADOR, RolUsuario.SECRETARIA] } 
+    },
+    { 
+        path: 'inscripcion/primer-ingreso', component: InscripcionPrimerIngreso, 
+        canActivate: [RoleGuardService], data: { allowedRoles:[RolUsuario.SUPER_ADMINISTRADOR, RolUsuario.SECRETARIA] } 
+    }, 
+    { 
+        path: 'recepcion-pago', component: RecepcionPago, 
+        canActivate: [RoleGuardService], data: { allowedRoles:[RolUsuario.SUPER_ADMINISTRADOR, RolUsuario.SECRETARIA] } 
+    }, 
+    { 
+        path: 'consulta-expediente', component: ConsularExpediente, 
+        canActivate: [RoleGuardService], data: { allowedRoles:[RolUsuario.SUPER_ADMINISTRADOR, RolUsuario.SECRETARIA] } 
+    }, 
+    { 
+        path: 'reporte/secre/promedios', component: ReportesSecretariaPromedio, 
+        canActivate: [RoleGuardService], data: { allowedRoles:[RolUsuario.SUPER_ADMINISTRADOR, RolUsuario.SECRETARIA] } 
+    }, 
+    { 
+        path: 'reporte/secre/solvencias', component: ReporteSecreSolvencia, 
+        canActivate: [RoleGuardService], data: { allowedRoles:[RolUsuario.SUPER_ADMINISTRADOR, RolUsuario.SECRETARIA] } 
+    }, 
 
-    { path: 'secretaria', component: LayoutSecretaria },
-    { path: 'inscripcion/primer-ingreso', component: InscripcionPrimerIngreso }, 
-    { path: 'recepcion-pago', component: RecepcionPago }, 
-    { path: 'consulta-expediente', component: ConsularExpediente }, 
-    { path: 'reporte/secre/promedios', component: ReportesSecretariaPromedio }, 
-    { path: 'reporte/secre/solvencias', component: ReporteSecreSolvencia }, 
 
-    { path: 'maestro', component:LayoutMaestro }, 
-    { path: 'maestro/curso', component: ConsultaCurso }, 
-    { path: 'maestro/opciones-curso/:idMaes', component: OpcionesCurso }, 
-    { path: 'maestro/estudianes/:idMaes/:idGrupo/:idCurso', component: Estudiantes }, 
-    { path: 'maestro/menu-asistencia/:idMaes/:idGrupo/:idCurso', component: ControlAsistencia }, 
-    { path: 'maestro/tomar-asistencia/:idMaes/:idGrupo/:idCurso/:fecha', component:  TomarAsistencia}, 
-    { path: 'maestro/menu-nota/:idMaes/:idGrupo/:idCurso', component: MenuNota }, 
-    { path: 'maestro/menu-nota/modificar/:idGrupo/:idCurso/:idNota', component: ModificarNota }, 
 
-    { path: 'bibliotecario', component: LayoutBibliotecario }, 
-    { path: 'control-libro', component: ControlLibro }, 
-    { path: 'libro/crear', component: CrearLibro }, 
-    { path: 'libro/modificar/:codigo', component: ModificarLibro }, 
-    { path: 'prestamo', component: PrestamoLibro }, 
-    { path: 'recepcion-prestamo', component: ConclusionPrestamo } ,
-    { path: 'recepcion-multa', component: RecepcionMulta }, 
+
+    { 
+        path: 'maestro', component:LayoutMaestro, 
+        canActivate: [RoleGuardService], data: { allowedRoles:[RolUsuario.SUPER_ADMINISTRADOR, RolUsuario.MAESTRO] }
+    }, 
+    { 
+        path: 'maestro/curso', component: ConsultaCurso, 
+        canActivate: [RoleGuardService], data: { allowedRoles:[RolUsuario.SUPER_ADMINISTRADOR, RolUsuario.MAESTRO] } 
+    }, 
+    { 
+        path: 'maestro/opciones-curso/:idMaes', component: OpcionesCurso, 
+        canActivate: [RoleGuardService], data: { allowedRoles:[RolUsuario.SUPER_ADMINISTRADOR, RolUsuario.MAESTRO] } 
+    }, 
+    { 
+        path: 'maestro/estudianes/:idMaes/:idGrupo/:idCurso', component: Estudiantes, 
+        canActivate: [RoleGuardService], data: { allowedRoles:[RolUsuario.SUPER_ADMINISTRADOR, RolUsuario.MAESTRO] } 
+    }, 
+    { 
+        path: 'maestro/menu-asistencia/:idMaes/:idGrupo/:idCurso', component: ControlAsistencia, 
+        canActivate: [RoleGuardService], data: { allowedRoles:[RolUsuario.SUPER_ADMINISTRADOR, RolUsuario.MAESTRO] } 
+    }, 
+    { 
+        path: 'maestro/tomar-asistencia/:idMaes/:idGrupo/:idCurso/:fecha', component:  TomarAsistencia, 
+        canActivate: [RoleGuardService], data: { allowedRoles:[RolUsuario.SUPER_ADMINISTRADOR, RolUsuario.MAESTRO] } 
+    }, 
+    { 
+        path: 'maestro/menu-nota/:idMaes/:idGrupo/:idCurso', component: MenuNota, 
+        canActivate: [RoleGuardService], data: { allowedRoles:[RolUsuario.SUPER_ADMINISTRADOR, RolUsuario.MAESTRO] } 
+    }, 
+    { 
+        path: 'maestro/menu-nota/modificar/:idGrupo/:idCurso/:idNota', component: ModificarNota, 
+        canActivate: [RoleGuardService], data: { allowedRoles:[RolUsuario.SUPER_ADMINISTRADOR, RolUsuario.MAESTRO] } 
+    }, 
+
+
+
+
+    { 
+        path: 'bibliotecario', component: LayoutBibliotecario, 
+        canActivate: [RoleGuardService], data: { allowedRoles:[RolUsuario.SUPER_ADMINISTRADOR, RolUsuario.BIBLIOTECARIO] } 
+    }, 
+    { 
+        path: 'control-libro', component: ControlLibro, 
+        canActivate: [RoleGuardService], data: { allowedRoles:[RolUsuario.SUPER_ADMINISTRADOR, RolUsuario.BIBLIOTECARIO] } 
+    }, 
+    { 
+        path: 'libro/crear', component: CrearLibro, 
+        canActivate: [RoleGuardService], data: { allowedRoles:[RolUsuario.SUPER_ADMINISTRADOR, RolUsuario.BIBLIOTECARIO] } 
+    }, 
+    { 
+        path: 'libro/modificar/:codigo', component: ModificarLibro, 
+        canActivate: [RoleGuardService], data: { allowedRoles:[RolUsuario.SUPER_ADMINISTRADOR, RolUsuario.BIBLIOTECARIO] } 
+    }, 
+    { 
+        path: 'prestamo', component: PrestamoLibro, 
+        canActivate: [RoleGuardService], data: { allowedRoles:[RolUsuario.SUPER_ADMINISTRADOR, RolUsuario.BIBLIOTECARIO] } 
+    }, 
+    { 
+        path: 'recepcion-prestamo', component: ConclusionPrestamo, 
+        canActivate: [RoleGuardService], data: { allowedRoles:[RolUsuario.SUPER_ADMINISTRADOR, RolUsuario.BIBLIOTECARIO] } 
+    } ,
+    { 
+        path: 'recepcion-multa', component: RecepcionMulta, 
+        canActivate: [RoleGuardService], data: { allowedRoles:[RolUsuario.SUPER_ADMINISTRADOR, RolUsuario.BIBLIOTECARIO] } 
+    }, 
+
+
+
+
+    { 
+        path: 'estudiante', component: LayoutEstudiante, 
+        //canActivate: [RoleGuardService], data: { allowedRoles:[RolUsuario.SUPER_ADMINISTRADOR, RolUsuario.ESTUDIANTE] } 
+    }, 
+    { 
+        path: 'consultar-notas', component: ConsultarNotas, 
+        //canActivate: [RoleGuardService], data: { allowedRoles:[RolUsuario.SUPER_ADMINISTRADOR, RolUsuario.ESTUDIANTE] } 
+    },
 ];

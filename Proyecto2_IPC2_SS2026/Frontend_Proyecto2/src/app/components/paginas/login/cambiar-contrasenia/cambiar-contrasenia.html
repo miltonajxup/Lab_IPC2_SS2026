@@ -1,0 +1,47 @@
+<div class="container-fluid min-vh-100">
+    
+    <div class="row p-5 text-center titulo">
+        <div class="">
+        <h1>Modificar Contraseña</h1>
+        </div>
+    </div>
+
+    <button class="btn btn-primary ml-5" routerLink="">Regresar</button>
+    <p class="t25 text-center">Define una nueva contraseña </p>
+
+    @if (mensajeError()) {
+        <div class="text-danger text-center mb-5 t20"> {{mensajeError()}} </div>
+    }
+    
+    @if (operacionCompletada()) {
+        <div class="text-center text-success t20 mb-4">
+            La contraseña se ha establecido de forma exitosa <br>
+            Ahora se puede ingresar en login
+        </div>
+    }
+
+    <div class="card shadow p-5 w-25 h-25 mx-auto">
+        <h2 class="text-center mb-4"></h2>
+        
+        <form [formGroup]="contraseniaForm" (submit)="submit()" >
+        
+        <div class="mb-5">
+            <label class="form-label">Contraseña</label>
+            <input type="password" class="form-control" formControlName="contrasenia" >
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Confirma la contraseña</label>
+            <input type="password" class="form-control" formControlName="confirmacion" >
+        </div>
+        
+        <button class="btn btn-primary w-100" [disabled]="contraseniaForm.invalid">
+            Ingresar
+        </button>
+        </form>
+    </div>
+
+</div>
+
+
+

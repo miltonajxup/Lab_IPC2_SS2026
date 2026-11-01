@@ -13,10 +13,6 @@ export class LoginService {
 
     constructor(private httpClient: HttpClient) {}
 
-    public login(usuario: Usuario): Observable<Usuario> {
-        return this.httpClient.post<Usuario>(`${this.restConstants.getApiUrl()}/login/ingresar`, usuario);
-    }
-
     public colocarContraseña(usuario: Usuario): Observable<void> {
         return this.httpClient.post<void>(`${this.restConstants.getApiUrl()}/login/colocar-contrasenia`, usuario);
     }

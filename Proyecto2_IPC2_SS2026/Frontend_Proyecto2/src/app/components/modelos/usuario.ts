@@ -4,7 +4,6 @@ export interface Usuario {
     dpi?: string, 
     nombre: string, 
     contrasenia?: string,
-    //tipo: string,
     rol?: RolUsuario,
     salario?: number,
     fechaContratacion?: Date,

@@ -15,7 +15,6 @@ import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
@@ -30,23 +29,6 @@ public class LoginController {
     
     public LoginController() {
         servicio = new ServicioLogin();
-    }
-    
-    @POST
-    @Path("ingresar")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response ingresarAlSistema(UsuarioRequest usuario) {
-        try {
-            RespuestaLog respuesta = servicio.ingresar(usuario);
-            if (respuesta.isAcceso()) {
-                return Response.ok(respuesta.getUsuario()).build();
-            } else {
-                return Response.status(Response.Status.UNAUTHORIZED).entity(respuesta.getMensaje()).build();
-            }
-        } catch (AccesoALaDataException e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
-        }
     }
     
     @POST
