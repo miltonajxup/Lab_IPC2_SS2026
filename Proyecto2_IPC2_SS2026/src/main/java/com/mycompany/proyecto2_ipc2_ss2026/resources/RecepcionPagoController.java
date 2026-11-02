@@ -4,7 +4,6 @@
  */
 package com.mycompany.proyecto2_ipc2_ss2026.resources;
 
-import com.mycompany.proyecto2_ipc2_ss2026.DAOs.Secretaria.RecepcionPagoDAO;
 import com.mycompany.proyecto2_ipc2_ss2026.Exceptions.AccesoALaDataException;
 import com.mycompany.proyecto2_ipc2_ss2026.Exceptions.DataExistenteException;
 import com.mycompany.proyecto2_ipc2_ss2026.Exceptions.DataInexistenteException;
@@ -26,14 +25,16 @@ import jakarta.ws.rs.core.Response;
 public class RecepcionPagoController {
     
     @GET
-    @Path("{idEstudiante}")
+    @Path("{pagina}/{idEstudiante}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getBoletasEstudiante(@PathParam("idEstudiante") String idEstudiante) {
-        RecepcionPagoDAO recepciondao = new RecepcionPagoDAO();
+    public Response getBoletasEstudiante(@PathParam("pagina") int pagina, @PathParam("idEstudiante") String idEstudiante) {
+        ServicioRecepcionPago servicio = new ServicioRecepcionPago();
         try {
-            return Response.ok(recepciondao.getBoletasPendientesEstudiante(idEstudiante)).build();
+            return Response.ok(servicio.buscarBoletas(pagina, idEstudiante)).build();
         } catch (AccesoALaDataException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        } catch (ValorInvalidoException e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
         }
     }
     

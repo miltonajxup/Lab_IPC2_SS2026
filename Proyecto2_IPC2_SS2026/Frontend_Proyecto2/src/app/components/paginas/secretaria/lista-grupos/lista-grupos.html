@@ -1,0 +1,16 @@
+<div class="d-flex gap-3 justify-content-center m-3 flex-column">
+    <div class="mx-auto">
+        <button type="button" (click)="cambiarPagina(-1)" > < </button>
+        Pagina: {{pagina()}}
+        <button type="button" (click)="cambiarPagina(1)" > > </button>
+    </div>
+    @for (grupo of gruposAnuales(); track grupo.id) {
+        <button class="t20 btn "
+    type="button"
+    [class.eleccion]="idGrupo === grupo.id"
+    (click)="elegirGrupo(grupo.id)">
+        {{grupo.nombreGrado}} {{grupo.nivelAcademico}} <br>
+        Seccion: {{grupo.seccion}} 
+    </button>
+    }
+</div>

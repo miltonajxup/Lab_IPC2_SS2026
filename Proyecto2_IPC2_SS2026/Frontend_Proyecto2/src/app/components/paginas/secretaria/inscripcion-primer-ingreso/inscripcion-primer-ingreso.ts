@@ -7,9 +7,10 @@ import { InscripcionService } from '../../../../servicios/inscripcion-service';
 import { GrupoSeccionDB } from '../../../modelos/admin/grupo-seccion-db';
 import { GrupoService } from '../../../../servicios/grupo-service';
 import { EventoInscripcionPrimerIngreso } from '../../../modelos/secretaria/inscripcion-primer-ingreso';
+import { ListaGrupos } from '../lista-grupos/lista-grupos';
 
 @Component({
-  imports: [Header, MenuSecretaria, ReactiveFormsModule],
+  imports: [Header, MenuSecretaria, ReactiveFormsModule, ListaGrupos],
   selector: 'app-inscripcion-primer-ingreso',
   styles: ``,
   templateUrl: './inscripcion-primer-ingreso.html',
@@ -21,7 +22,6 @@ export class InscripcionPrimerIngreso implements OnInit {
   operacionCompletada = signal<boolean>(false);
   pagina = signal<number>(1);
   estudianteForm!: FormGroup;
-  gruposAnuales = signal<GrupoSeccionDB[]>([]);
 
   constructor(private formBuilder: FormBuilder, private inscripcionService: InscripcionService, private grupoService: GrupoService) {}
 
@@ -34,32 +34,9 @@ export class InscripcionPrimerIngreso implements OnInit {
       grupoId: [null, Validators.required]
     });
 
-    this.grupoService.getGruposDelAño(this.pagina()).subscribe({
-      next: (grupos: GrupoSeccionDB[]) => {
-        this.gruposAnuales.set(grupos);
-      }, 
-      error: (error: any) => {
-        this.mensajeError.set(error.error);
-      }
-    });
   }
 
-  cambiarPagina(paso: number): void {
-    const pagina = this.pagina() + paso;
-    if (pagina < 1) {
-      return;
-    }
-    this.grupoService.getGruposDelAño(pagina).subscribe({
-      next: (grupos: GrupoSeccionDB[]) => {
-        if (grupos.length === 0) {
-          return;
-        }
-        this.gruposAnuales.set(grupos);
-        this.pagina.set(pagina);
-      }
-    });
-  }
-
+  
   setGrupo(grupoId: number): void {
     this.estudianteForm.patchValue({
       grupoId: grupoId

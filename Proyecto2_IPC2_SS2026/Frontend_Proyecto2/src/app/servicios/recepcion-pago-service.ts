@@ -13,8 +13,8 @@ export class RecepcionPagoService {
 
     constructor(private httpClient: HttpClient) {}
 
-    public getBoletaEstudiante(idEstudiante: string): Observable<BoletaPago[]> {
-        return this.httpClient.get<BoletaPago[]>(`${this.restConstants.getApiUrl()}/recepcion-pago/${idEstudiante}`);
+    public getBoletaEstudiante(pagina: number, idEstudiante: string): Observable<BoletaPago[]> {
+        return this.httpClient.get<BoletaPago[]>(`${this.restConstants.getApiUrl()}/recepcion-pago/${pagina}/${idEstudiante}`);
     }
 
     public pagarBoleta(idPago: number, idSecretaria: string): Observable<void> {

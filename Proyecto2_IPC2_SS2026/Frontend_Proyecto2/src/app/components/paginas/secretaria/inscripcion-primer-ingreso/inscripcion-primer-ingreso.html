@@ -13,7 +13,7 @@
         }
 
         <form [formGroup]="estudianteForm"  (submit)="submit()">
-            <div class="d-flex flex-row justify-content-center ">
+            <div class="d-flex flex-row  ">
                 <div class="card shadow p-5  mx-auto">
                     <h2 class="text-center mb-4">Registro de Estudiante</h2>
 
@@ -40,21 +40,8 @@
                         </button>
                     </div>
                 </div>
-                <div class="w-25 d-flex gap-3 flex-column mx-auto">
-                    <div class="d-flex gap-3 justify-content-center m-3">
-                        <button type="button" (click)="cambiarPagina(-1)" > < </button>
-                        Pagina: {{pagina()}}
-                        <button type="button" (click)="cambiarPagina(1)" > > </button>
-                    </div>
-                    @for (grupo of gruposAnuales(); track grupo.id) {
-                        <button class="t20 btn "
-                        type="button"
-                        [class.eleccion]="estudianteForm.value.grupoId === grupo.id"
-                        (click)="setGrupo(grupo.id)">
-                            {{grupo.nombreGrado}} {{grupo.nivelAcademico}} <br>
-                            Seccion: {{grupo.seccion}} 
-                        </button>
-                    }
+                <div class=" d-flex gap-3 flex-column mx-auto">
+                    <app-lista-grupos [idGrupo]="estudianteForm.value.grupoId" (grupoElegido)="setGrupo($event)"></app-lista-grupos>
                 </div>
             </div>
         </form>

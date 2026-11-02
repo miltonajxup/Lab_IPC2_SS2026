@@ -43,7 +43,9 @@ export class VerEmpleados {
   llamarEmpleados(pagina: number): void {
     this.empleadoService.getEmpleadosPorRol(this.rolElegido, pagina).subscribe({
       next:(empleados: Empleado[]) => {
-        
+        if (empleados.length === 0) {
+          return;
+        }
         this.empleados.set(empleados);
         this.pagina.set(pagina);
       }

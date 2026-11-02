@@ -62,6 +62,7 @@ import { RolUsuario } from './components/modelos/rol-usuario-enum';
 import { RoleGuardService } from './servicios/role-guard-service';
 import { EstadoCuenta } from './components/paginas/estudiante/estado-cuenta/estado-cuenta';
 import { ConsultarLibros } from './components/paginas/estudiante/consultar-libros/consultar-libros';
+import { Reinscripcion } from './components/paginas/secretaria/reinscripcion/reinscripcion';
 
 export const routes: Routes = [
     { path: '', component: Login },
@@ -220,6 +221,10 @@ export const routes: Routes = [
     },
     { 
         path: 'inscripcion/primer-ingreso', component: InscripcionPrimerIngreso, 
+        canActivate: [RoleGuardService], data: { allowedRoles:[RolUsuario.SUPER_ADMINISTRADOR, RolUsuario.SECRETARIA] } 
+    }, 
+    {
+        path: 'inscripcion/reingreso', component: Reinscripcion, 
         canActivate: [RoleGuardService], data: { allowedRoles:[RolUsuario.SUPER_ADMINISTRADOR, RolUsuario.SECRETARIA] } 
     }, 
     { 

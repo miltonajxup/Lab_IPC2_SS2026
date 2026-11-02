@@ -5,6 +5,7 @@
 package com.mycompany.proyecto2_ipc2_ss2026.DAOs.Secretaria;
 
 import com.mycompany.proyecto2_ipc2_ss2026.Connection.DBConnectionSingleton;
+import com.mycompany.proyecto2_ipc2_ss2026.Constantes.LimitePagina;
 import com.mycompany.proyecto2_ipc2_ss2026.DAOs.ArmarBoletaPago;
 import com.mycompany.proyecto2_ipc2_ss2026.Exceptions.AccesoALaDataException;
 import com.mycompany.proyecto2_ipc2_ss2026.Exceptions.DataInexistenteException;
@@ -22,7 +23,7 @@ import java.util.List;
  */
 public class RecepcionPagoDAO {
     
-    private final String BOLETAS_POR_ESTUDIANTE = "SELECT bol.*, usu.nombre AS nombre_estudiante FROM boleta_pago AS bol JOIN usuario AS usu ON bol.estudiante_dpi = usu.dpi WHERE bol.estudiante_dpi = ?";
+    private final String BOLETAS_POR_ESTUDIANTE = "SELECT bol.*, usu.nombre AS nombre_estudiante FROM boleta_pago AS bol JOIN usuario AS usu ON bol.estudiante_dpi = usu.dpi WHERE bol.estudiante_dpi = ? ORDER BY bol.id DESC LIMIT ?, ?";
     private final String BOLETA_PAGO_POR_ID = "SELECT bol.*, usu.nombre AS nombre_estudiante FROM boleta_pago AS bol JOIN usuario AS usu ON bol.estudiante_dpi = usu.dpi WHERE bol.id = ?";
     private final String PAGAR_BOLETA_PAGO = "UPDATE boleta_pago SET estado = TRUE WHERE id = ?";
     private final String AGREGAR_PAGO = "INSERT INTO pago (boleta_id, secretaria_dpi) VALUES (?,?)";
@@ -33,11 +34,14 @@ public class RecepcionPagoDAO {
         armar = new ArmarBoletaPago();
     }
     
-    public List<BoletaPagoDB> getBoletasPendientesEstudiante(String idEstudiante) throws AccesoALaDataException {
+    public List<BoletaPagoDB> getBoletasPendientesEstudiante(int pagina, String idEstudiante) throws AccesoALaDataException {
         List<BoletaPagoDB> boletas = new ArrayList<>();
+        int paginacion = (pagina - 1) * LimitePagina.LIMITE;
         try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
                 PreparedStatement ps = connection.prepareStatement(BOLETAS_POR_ESTUDIANTE)) {
             ps.setString(1, idEstudiante);
+            ps.setInt(2, paginacion);
+            ps.setInt(3, LimitePagina.LIMITE);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     boletas.add(armar.armar(rs));

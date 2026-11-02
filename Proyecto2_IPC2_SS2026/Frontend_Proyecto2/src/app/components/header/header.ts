@@ -1,9 +1,10 @@
 import { Component, Input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../servicios/auth-service';
+import { SuperMenu } from '../paginas/super-admin/super-menu/super-menu';
 
 @Component({
-  imports: [RouterLink],
+  imports: [RouterLink, SuperMenu],
   selector: 'app-header',
   styles: ``,
   templateUrl: './header.html',

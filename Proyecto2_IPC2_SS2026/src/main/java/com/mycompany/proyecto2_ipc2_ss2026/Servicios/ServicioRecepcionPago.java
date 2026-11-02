@@ -4,6 +4,7 @@
  */
 package com.mycompany.proyecto2_ipc2_ss2026.Servicios;
 
+import com.mycompany.proyecto2_ipc2_ss2026.Constantes.LimitePagina;
 import com.mycompany.proyecto2_ipc2_ss2026.Constantes.RolUsuario;
 import com.mycompany.proyecto2_ipc2_ss2026.DAOs.Secretaria.RecepcionPagoDAO;
 import com.mycompany.proyecto2_ipc2_ss2026.DAOs.UsuarioDAO;
@@ -13,6 +14,7 @@ import com.mycompany.proyecto2_ipc2_ss2026.Exceptions.DataInexistenteException;
 import com.mycompany.proyecto2_ipc2_ss2026.Exceptions.ValorInvalidoException;
 import com.mycompany.proyecto2_ipc2_ss2026.ModelosDB.BoletaPagoDB;
 import com.mycompany.proyecto2_ipc2_ss2026.ModelosDB.UsuarioDB;
+import java.util.List;
 
 /**
  *
@@ -28,6 +30,13 @@ public class ServicioRecepcionPago {
         usuariodao = new UsuarioDAO();
     }
     
+    public List<BoletaPagoDB> buscarBoletas(int pagina, String idEstudiante) throws AccesoALaDataException, ValorInvalidoException {
+        if (pagina < LimitePagina.PAGINA_MINIMA) {
+            throw new ValorInvalidoException("El numero de pagina no puede ser menor a " + LimitePagina.PAGINA_MINIMA);
+        }
+        return recepciondao.getBoletasPendientesEstudiante(pagina, idEstudiante);
+    }
+    
     public BoletaPagoDB realizarPago(int idBoleta, String idSecretaria) throws AccesoALaDataException, ValorInvalidoException, DataInexistenteException, DataExistenteException {
         if (idSecretaria == null) {
             throw new ValorInvalidoException("No se ha incluido el ID de la secretaria");
@@ -36,7 +45,7 @@ public class ServicioRecepcionPago {
         if (secretaria == null) {
             throw new DataInexistenteException("No se pudo encontrar al usuario que efectua el pago");
         }
-        if (secretaria.getRol() != RolUsuario.SECRETARIA) {
+        if (secretaria.getRol() != RolUsuario.SECRETARIA && secretaria.getRol() != RolUsuario.SUPER_ADMINISTRADOR) {
             throw new ValorInvalidoException("El usuario que esta recibiendo el pago no esta autorizado para recibir el pago");
         }
         if (recepciondao.estaPagada(idBoleta)) {

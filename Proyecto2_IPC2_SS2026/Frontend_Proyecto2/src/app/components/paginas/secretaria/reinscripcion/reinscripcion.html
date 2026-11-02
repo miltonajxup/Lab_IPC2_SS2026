@@ -1,0 +1,36 @@
+<app-header [rol]="rol"></app-header>
+<div class="d-flex border-bottom">
+    <app-menu-secretaria></app-menu-secretaria>
+    <main class="content flex-grow-1 p-4 border-start">
+
+        <h3 class="text-center titulo p-3">Reincripcion al Colegio</h3>
+
+        @if (mensajeError()) {
+            <div class="text-danger text-center t20">{{mensajeError()}}</div>
+        }
+        @if (mensaje()) {
+            <div class="text-success text-center t20">{{mensaje()}}</div>
+        }
+
+        <div class="d-flex flex-row ">
+            <form [formGroup]="estudianteForm"  (submit)="submit() " class="mx-auto">
+                <div class="card shadow p-5  mx-auto d-flex flex-column gap-4">
+                    <h2 class="t25">Registro de Estudiante</h2>
+                    <label >
+                        DPI/CUI del Estudiante
+                        <input type="text" formControlName="dpiEstudiante">
+                    </label>
+                    <button class="btn btn-primary"
+                    [disabled]="estudianteForm.invalid">
+                        Inscribir
+                    </button>
+                </div>
+            </form>
+            <div class=" d-flex gap-3 flex-column mx-auto">
+                <app-lista-grupos [idGrupo]="estudianteForm.value.grupoId" (grupoElegido)="setGrupo($event)"></app-lista-grupos>
+            </div>
+        </div>
+        
+    </main>
+</div>
+

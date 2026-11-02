@@ -5,7 +5,6 @@ import { RolUsuario } from '../../../modelos/rol-usuario-enum';
 import { RecepcionPagoService } from '../../../../servicios/recepcion-pago-service';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { BoletaPago } from '../../../modelos/admin/boleta-pago';
-import { Usuario } from '../../../modelos/usuario';
 import { AuthService } from '../../../../servicios/auth-service';
 
 @Component({
@@ -21,6 +20,7 @@ export class RecepcionPago implements OnInit {
   boletas = signal<BoletaPago[]>([]);
   idEstudiante!: string;
   idBoleta = signal<number>(0);
+  pagina = signal<number>(1);
 
   constructor(
     private pagoService: RecepcionPagoService, 
@@ -34,14 +34,15 @@ export class RecepcionPago implements OnInit {
   }
 
   buscar(): void {
+    this.pagina.set(1);
     this.idEstudiante = this.busquedaForm.value.idEstudiante;
-    this.llamarBoletas();
+    this.llamarBoletas(this.pagina());
   }
 
   pagarBoleta(idBoleta: number): void {
     this.pagoService.pagarBoleta(idBoleta, this.authService.getUserId()!).subscribe({
       next: () => {
-        this.llamarBoletas();
+        this.llamarBoletas(this.pagina());
       },
       error: (error: any) => {
         this.mensajeError.set(error.error);
@@ -49,15 +50,16 @@ export class RecepcionPago implements OnInit {
     });
   }
 
-  private llamarBoletas(): void {
+  private llamarBoletas(pagina: number): void {
     this.mensajeError.set('');
-    this.pagoService.getBoletaEstudiante(this.idEstudiante).subscribe({
+    this.pagoService.getBoletaEstudiante(pagina, this.idEstudiante).subscribe({
       next: (boletas: BoletaPago[]) => {
         if (boletas.length === 0) {
-          this.mensajeError.set('No se encontraron boletas del estudiante');
+          return;
         }
         this.setIdBoleta(0);
         this.boletas.set(boletas);
+        this.pagina.set(pagina);
       }, 
       error: (error: any) => {
         this.mensajeError.set(error.error);
@@ -67,6 +69,14 @@ export class RecepcionPago implements OnInit {
 
   setIdBoleta(idBoleta: number): void {
     this.idBoleta.set(idBoleta);
+  }
+
+  moverPagina(paso: number): void {
+    const pagina: number = this.pagina() + paso;
+    if (pagina < 1) {
+      return;
+    }
+    this.llamarBoletas(pagina);
   }
 
 }
