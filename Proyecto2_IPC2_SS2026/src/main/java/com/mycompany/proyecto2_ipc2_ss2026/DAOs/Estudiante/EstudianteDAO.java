@@ -11,6 +11,7 @@ import com.mycompany.proyecto2_ipc2_ss2026.DAOs.Bibliotecario.MultaDAO;
 import com.mycompany.proyecto2_ipc2_ss2026.DAOs.Bibliotecario.PrestamoDAO;
 import com.mycompany.proyecto2_ipc2_ss2026.DAOs.CicloEscolar;
 import com.mycompany.proyecto2_ipc2_ss2026.Exceptions.AccesoALaDataException;
+import com.mycompany.proyecto2_ipc2_ss2026.ModelosDB.AñoInscrito;
 import com.mycompany.proyecto2_ipc2_ss2026.ModelosDB.BoletaPagoDB;
 import com.mycompany.proyecto2_ipc2_ss2026.ModelosDB.EstudianteDB;
 import com.mycompany.proyecto2_ipc2_ss2026.ModelosDB.InformacionMedicaDB;
@@ -38,6 +39,15 @@ public class EstudianteDAO {
             SELECT usu.*, est.* FROM usuario AS usu 
             JOIN estudiante AS est ON usu.dpi = est.dpi_estudiante 
             WHERE usu.dpi = ?""";
+    private final String AÑOS_INSCRITO = 
+            """
+            SELECT grup.ciclo_escolar_id AS anio, gra.nombre AS nombre_grado, niv.nombre AS nombre_nivel, grup.seccion_id, carr.nombre AS nombre_carrera 
+            FROM inscripcion AS ins 
+            JOIN grupo_ciclo_escolar AS grup ON ins.grupo_id = grup.id 
+            JOIN grado AS gra ON grup.grado_id = gra.id 
+            JOIN nivel_academico AS niv ON gra.nivel_id = niv.id 
+            LEFT JOIN carrera AS carr ON carr.codigo = grup.carrera_id 
+            WHERE ins.estudiante = ?""";
     private final String NOTAS_ESTUDIANTE = 
             """
             SELECT cur.nombre AS nombre_curso, notas.* FROM notas 
@@ -45,7 +55,7 @@ public class EstudianteDAO {
             JOIN curso AS cur ON cures.curso_id = cur.id 
             JOIN inscripcion AS ins ON cures.inscripcion_id = ins.id 
             JOIN grupo_ciclo_escolar AS grup ON ins.grupo_id = grup.id 
-            WHERE cures.estudiante_id = ?""";
+            WHERE grup.ciclo_escolar_id = ? AND cures.estudiante_id = ?""";
     private final String MODIFICAR_INFORMACION_MEDICA = "UPDATE informacion_medica SET condicion_medica = ?, alergias = ?, medicamentos = ? WHERE dpi_estudiante = ?";
     private final String GET_INFORMACION_POR_ESTUDIANTE = "SELECT * FROM informacion_medica WHERE dpi_estudiante = ?";
     private final String PRESTAMOS_PENDIENTES = "SELECT * FROM prestamo_biblioteca WHERE fecha_devolucion_completada IS NULL AND prestamista = ?";
@@ -83,11 +93,32 @@ public class EstudianteDAO {
         return null;
     }
     
-    public List<NotaDB> getNotas(String idEstudiante) throws AccesoALaDataException {
+    public List<AñoInscrito> getAñosInscrito(String idEstudiante) throws AccesoALaDataException {
+        List<AñoInscrito> años = new ArrayList<>();
+        try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
+                PreparedStatement ps = connection.prepareStatement(AÑOS_INSCRITO)) {
+            ps.setString(1, idEstudiante);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    años.add(new AñoInscrito(
+                            rs.getInt("anio"), 
+                            rs.getString("nombre_carrera"), 
+                            rs.getString("nombre_grado") + "  " + rs.getString("nombre_nivel") + "  " + rs.getString("seccion_id"))
+                    );
+                }
+            }
+        } catch (SQLException e) {
+            throw new AccesoALaDataException("Error al buscar los años inscritos del estudiante: " + e.getMessage());
+        }
+        return años;
+    }
+    
+    public List<NotaDB> getNotas(int año, String idEstudiante) throws AccesoALaDataException {
         List<NotaDB> notas = new ArrayList<>();
         try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
                 PreparedStatement ps = connection.prepareStatement(NOTAS_ESTUDIANTE)) {
-            ps.setString(1, idEstudiante);
+            ps.setInt(1, año);
+            ps.setString(2, idEstudiante);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     notas.add(armarNota(rs));

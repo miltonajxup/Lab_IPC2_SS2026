@@ -10,6 +10,7 @@ import com.mycompany.proyecto2_ipc2_ss2026.DAOs.UsuarioDAO;
 import com.mycompany.proyecto2_ipc2_ss2026.Exceptions.AccesoALaDataException;
 import com.mycompany.proyecto2_ipc2_ss2026.Exceptions.DataInexistenteException;
 import com.mycompany.proyecto2_ipc2_ss2026.Exceptions.ValorInvalidoException;
+import com.mycompany.proyecto2_ipc2_ss2026.ModelosDB.AñoInscrito;
 import com.mycompany.proyecto2_ipc2_ss2026.ModelosDB.BoletaPagoDB;
 import com.mycompany.proyecto2_ipc2_ss2026.ModelosDB.InformacionMedicaDB;
 import com.mycompany.proyecto2_ipc2_ss2026.ModelosDB.MultaDB;
@@ -33,10 +34,14 @@ public class ServicioEstudiante {
         usuariodao = new UsuarioDAO();
     }
     
-    public List<NotaDB> buscarNotasEstudiante(String idEstudiante) throws AccesoALaDataException, DataInexistenteException {
+    public List<AñoInscrito> buscarAñosEstudiado(String idEstudiante) throws AccesoALaDataException, DataInexistenteException {
         revisarExistencia(idEstudiante);
-        
-        return estudiantedao.getNotas(idEstudiante);
+        return estudiantedao.getAñosInscrito(idEstudiante);
+    }
+    
+    public List<NotaDB> buscarNotasEstudiante(int año, String idEstudiante) throws AccesoALaDataException, DataInexistenteException {
+        revisarExistencia(idEstudiante);
+        return estudiantedao.getNotas(año, idEstudiante);
     }
     
     public InformacionMedicaDB getInformacionMedica(String idEstudiante) throws AccesoALaDataException, DataInexistenteException {

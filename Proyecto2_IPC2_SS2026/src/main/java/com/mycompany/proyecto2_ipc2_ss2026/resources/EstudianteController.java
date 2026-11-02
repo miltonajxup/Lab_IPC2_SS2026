@@ -32,11 +32,25 @@ public class EstudianteController {
     }
     
     @GET
-    @Path("notas/{idEstudiante}")
+    @Path("anios-inscrito/{idEstudiante}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response buscarNotas(@PathParam("idEstudiante") String idEsudiante) {
+    public Response buscarAñosInscrito(@PathParam("idEstudiante") String idEstudiante) {
         try {
-            return Response.ok(servicio.buscarNotasEstudiante(idEsudiante)).build();
+            return Response.ok(servicio.buscarAñosEstudiado(idEstudiante)).build();
+        } catch (AccesoALaDataException e) {
+            System.out.println(e.getMessage());
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        } catch (DataInexistenteException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        }
+    }
+    
+    @GET
+    @Path("notas/{anio}/{idEstudiante}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response buscarNotas(@PathParam("anio") int año, @PathParam("idEstudiante") String idEsudiante) {
+        try {
+            return Response.ok(servicio.buscarNotasEstudiante(año, idEsudiante)).build();
         } catch (AccesoALaDataException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         } catch (DataInexistenteException e) {

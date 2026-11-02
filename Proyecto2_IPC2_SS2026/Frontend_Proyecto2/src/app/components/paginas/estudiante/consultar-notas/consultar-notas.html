@@ -1,0 +1,43 @@
+<app-header [rol]="rol"></app-header>
+<div class="d-flex border-bottom">
+    <app-menu-estudiante></app-menu-estudiante>
+    <main class="content flex-grow-1 p-4 border-start">
+
+        <h3 class="text-center titulo p-3">Consultar Notas por Año Inscrito</h3>
+
+        <div class="d-flex">
+            <div class=" d-flex justify-content-center flex-column p-4">
+                <h2>Años Inscrito al Colegio</h2>
+                @for(ciclo of ciclosEscolares(); track ciclo.anio) {
+                    <button 
+                    class="btn btn-primary mx-auto"
+                    (click)="buscarNotas(ciclo.anio)">
+                        {{ciclo.anio}} {{ciclo.carrera}} {{ciclo.grado}}
+                    </button>
+                }
+            </div>
+            <div>
+                @if (notas().length > 0) {
+                    <h2>Notas</h2>
+                    <table>
+                        <tr>
+                            <th>Curso</th>
+                            <th>zona</th>
+                            <th>Examen Final</th>
+                            <th>Nota Final</th>
+                        </tr>
+                        @for (nota of notas(); track nota.idNota) {
+                            <tr>
+                                <td>{{nota.nombreIdentificador}}</td>
+                                <td>{{nota.zona}}</td>
+                                <td>{{nota.examenFinal}}</td>
+                                <td>{{nota.notaFinal}}</td>
+                            </tr>
+                        }
+                    </table>
+                }
+            </div>
+        </div>
+        
+    </main>
+</div>

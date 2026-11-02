@@ -4,6 +4,7 @@
  */
 package com.mycompany.proyecto2_ipc2_ss2026.resources;
 
+import com.mycompany.proyecto2_ipc2_ss2026.DAOs.CicloEscolar;
 import com.mycompany.proyecto2_ipc2_ss2026.DAOs.Secretaria.ConsultaEstudianteDAO;
 import com.mycompany.proyecto2_ipc2_ss2026.Exceptions.AccesoALaDataException;
 import com.mycompany.proyecto2_ipc2_ss2026.Exceptions.DataInexistenteException;
@@ -28,7 +29,9 @@ public class SecretariaController {
     public Response getExpediente(@PathParam("idEstudiante") String idEstudiante) {
         try {
             ServicioEstudiante servEst = new ServicioEstudiante();
-            List<NotaDB> notas = servEst.buscarNotasEstudiante(idEstudiante);
+            CicloEscolar ciclo = new CicloEscolar();
+            int año = ciclo.getAñoActivo();
+            List<NotaDB> notas = servEst.buscarNotasEstudiante(año, idEstudiante);
             ConsultaEstudianteDAO consultadao = new ConsultaEstudianteDAO();
             ExpedienteEstudiante expediente = consultadao.getExpediente(idEstudiante);
             expediente.setNotas(notas);

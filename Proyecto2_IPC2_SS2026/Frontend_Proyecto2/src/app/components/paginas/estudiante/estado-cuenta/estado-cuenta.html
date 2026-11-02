@@ -1,0 +1,40 @@
+<app-header [rol]="rol"></app-header>
+<div class="d-flex border-bottom">
+    <app-menu-estudiante></app-menu-estudiante>
+    <main class="content flex-grow-1 p-4 border-start">
+
+        <h3 class="text-center titulo p-3">Estado de Cuenta</h3>
+
+        <div class="d-flex justify-content-center flex-column t20">
+            <div class="mx-auto">
+                @if (historial()) {
+                    <!-- <a href="{{exportar()}}" target="_blank" class="btn btn-primary mb-3"> 
+                        Exportar Reporte
+                    </a> -->
+                    <div class="d-flex gap-5 justify-content-center border p-2">
+                        <button (click)="moverPagina(-1)"> < </button>
+                        {{pagina()}}
+                        <button (click)="moverPagina(1)"> > </button>
+                    </div>
+
+                    <h2 class="text-center ">Estado de Cuenta</h2>
+                    <div class="text-center t25 m-5">
+                        Total de Dinero Cancelado: {{historial()?.dineroIngresado}} <br>
+                        Saldo Pendiente: {{historial()?.saldoPendiente}} <br>
+                    </div>
+
+                    <h2 class="text-center m-5">Historial de Pagos</h2>
+                    <app-tabla-his-estudiante [pagos]="historial()?.historial"></app-tabla-his-estudiante>
+
+                    <h2 class="text-center m-5">Pagos Pendientes</h2>
+                    <app-tabla-his-estudiante [pagos]="historial()?.pagosPendientes"></app-tabla-his-estudiante>
+                    <div class="m-5"></div>
+
+                    @if (historial()?.pagosPendientes.length === 0) {
+                        <h2 class="text-center m-5">No Tiene Pagos Pendientes</h2>
+                    }
+                }
+            </div>
+        </div>
+    </main>
+</div>
