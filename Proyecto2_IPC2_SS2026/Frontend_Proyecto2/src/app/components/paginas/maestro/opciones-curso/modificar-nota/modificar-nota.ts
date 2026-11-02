@@ -18,6 +18,7 @@ export class ModificarNota implements OnInit {
 
   mensajeError = signal<string>('');
   operacionCorrecta = signal<boolean>(false);
+  idMaes!: number;
   idCurso!: number;
   idGrupo!: number;
   nota = signal<Nota | undefined>(undefined);
@@ -26,6 +27,7 @@ export class ModificarNota implements OnInit {
   constructor(private maestroService: MaestroService, private router: ActivatedRoute, private formBuilder: FormBuilder) {}
 
   ngOnInit(): void {
+    this.idMaes = this.router.snapshot.params['idMaes'];
     this.idGrupo = this.router.snapshot.params['idGrupo'];
     this.idCurso = this.router.snapshot.params['idCurso'];
     const idNota = this.router.snapshot.params['idNota'];

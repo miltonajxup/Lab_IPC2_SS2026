@@ -71,7 +71,7 @@ public class ServicioAdministrador {
             throw new DataInexistenteException("No se pudo encontar el grupo academico");
         }
         EmpleadoDAO empleadodao = new EmpleadoDAO();
-        EmpleadoDB empleado = empleadodao.getEmpleadoPorID(cursoMaestro.getMaestro());
+        EmpleadoDB empleado = empleadodao.getEmpleadoSinContrato(cursoMaestro.getMaestro());
         if (empleado == null) {
             throw new DataInexistenteException("El maestro elegido para el curso no se encuentra contratado para el año vigente");
         }

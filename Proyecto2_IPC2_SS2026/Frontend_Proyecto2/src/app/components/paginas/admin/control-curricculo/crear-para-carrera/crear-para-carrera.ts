@@ -11,9 +11,10 @@ import { CursoService } from '../../../../../servicios/curso-service';
 import { CarreraService } from '../../../../../servicios/carrera-service';
 import { CurriculoRequest } from '../../../../modelos/admin/curriculo-request';
 import { RouterLink } from '@angular/router';
+import { ListaCursos } from '../../lista-cursos/lista-cursos';
 
 @Component({
-  imports: [Header, Menu, ReactiveFormsModule, RouterLink],
+  imports: [Header, Menu, ReactiveFormsModule, RouterLink, ListaCursos],
   selector: 'app-crear-para-carrera',
   styles: ``,
   templateUrl: './crear-para-carrera.html',

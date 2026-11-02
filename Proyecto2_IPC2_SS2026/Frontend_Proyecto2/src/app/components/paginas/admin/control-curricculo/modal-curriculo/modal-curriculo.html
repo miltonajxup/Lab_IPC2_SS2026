@@ -1,0 +1,21 @@
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            @if (curriculoSeleccionado != null) {
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Eliminar el Curriculo {{curriculoSeleccionado.curso}}</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Estas seguo de querer eliminar el curriculo del curso: {{curriculoSeleccionado.curso}} <br>
+                Para {{curriculoSeleccionado.carrera}} {{curriculoSeleccionado.grado}} {{curriculoSeleccionado.nivel}}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal"
+                    (click)="confirmar()">Eliminar</button>
+            </div>
+            }
+        </div>
+    </div>
+</div>

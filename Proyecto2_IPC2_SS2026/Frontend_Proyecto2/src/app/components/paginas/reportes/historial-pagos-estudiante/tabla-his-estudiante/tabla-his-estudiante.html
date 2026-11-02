@@ -1,0 +1,30 @@
+@if (pagos) {
+    <table>
+        <tr>
+            <th> ID </th>
+            <th> ID Boleta </th>
+            <th> Monto </th>
+            <th> Estado </th>
+            <th> Tipo de Pago </th>
+            <th> Año </th>
+            <th> Nombre Estudiante </th>
+            <th> Fecha de Pago </th>
+            <th> Secretaria Recepcion </th>
+        </tr>
+        @for (pago of pagos; track pago.idPago) {
+            <tr>
+                <td> {{pago.idPago}} </td>
+                <td> {{pago.idBoleta}} </td>
+                <td> {{pago.monto}} </td>
+                <td> {{pago.pagado}} </td>
+                <td> {{pago.tipoPago}} </td>
+                <td> {{pago.anio}} </td>
+                <td> {{pago.nombreEstudiante}} </td>
+                <td> {{pago.fechaPago}} </td>
+                <td> {{pago.nombreSecretaria}} </td>
+            </tr>
+        }
+    </table>
+} @else {
+    <h2 class="text-center m-5">No hay boletas</h2>
+}

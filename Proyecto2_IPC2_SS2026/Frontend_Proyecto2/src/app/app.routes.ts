@@ -60,6 +60,8 @@ import { LayoutEstudiante } from './components/paginas/estudiante/layout-estudia
 import { ConsultarNotas } from './components/paginas/estudiante/consultar-notas/consultar-notas';
 import { RolUsuario } from './components/modelos/rol-usuario-enum';
 import { RoleGuardService } from './servicios/role-guard-service';
+import { EstadoCuenta } from './components/paginas/estudiante/estado-cuenta/estado-cuenta';
+import { ConsultarLibros } from './components/paginas/estudiante/consultar-libros/consultar-libros';
 
 export const routes: Routes = [
     { path: '', component: Login },
@@ -269,7 +271,7 @@ export const routes: Routes = [
         canActivate: [RoleGuardService], data: { allowedRoles:[RolUsuario.SUPER_ADMINISTRADOR, RolUsuario.MAESTRO] } 
     }, 
     { 
-        path: 'maestro/menu-nota/modificar/:idGrupo/:idCurso/:idNota', component: ModificarNota, 
+        path: 'maestro/menu-nota/modificar/:idMaes/:idGrupo/:idCurso/:idNota', component: ModificarNota, 
         canActivate: [RoleGuardService], data: { allowedRoles:[RolUsuario.SUPER_ADMINISTRADOR, RolUsuario.MAESTRO] } 
     }, 
 
@@ -310,10 +312,18 @@ export const routes: Routes = [
 
     { 
         path: 'estudiante', component: LayoutEstudiante, 
-        //canActivate: [RoleGuardService], data: { allowedRoles:[RolUsuario.SUPER_ADMINISTRADOR, RolUsuario.ESTUDIANTE] } 
+        canActivate: [RoleGuardService], data: { allowedRoles:[RolUsuario.SUPER_ADMINISTRADOR, RolUsuario.ESTUDIANTE] } 
     }, 
     { 
-        path: 'consultar-notas', component: ConsultarNotas, 
-        //canActivate: [RoleGuardService], data: { allowedRoles:[RolUsuario.SUPER_ADMINISTRADOR, RolUsuario.ESTUDIANTE] } 
+        path: 'estudiante/consultar-notas', component: ConsultarNotas, 
+        canActivate: [RoleGuardService], data: { allowedRoles:[RolUsuario.SUPER_ADMINISTRADOR, RolUsuario.ESTUDIANTE] } 
     },
+    {
+        path: 'estudiante/estado-cuenta', component: EstadoCuenta, 
+        canActivate: [RoleGuardService], data: { allowedRoles:[RolUsuario.SUPER_ADMINISTRADOR, RolUsuario.ESTUDIANTE] } 
+    }, 
+    {
+        path: 'estudiante/consultar-libros', component: ConsultarLibros, 
+        canActivate: [RoleGuardService], data: { allowedRoles:[RolUsuario.SUPER_ADMINISTRADOR, RolUsuario.ESTUDIANTE] } 
+    }
 ];

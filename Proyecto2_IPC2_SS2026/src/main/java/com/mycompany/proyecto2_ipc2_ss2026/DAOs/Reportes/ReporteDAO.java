@@ -59,8 +59,8 @@ public class ReporteDAO {
             JOIN usuario AS usu ON bol.estudiante_dpi = usu.dpi 
             LEFT JOIN usuario AS usuSec ON pago.secretaria_dpi = usuSec.dpi 
             WHERE bol.estudiante_dpi = ? """;
-    private final String HISTORIAL_PAGOS_ESTUDIANTE_SIN_FECHA = HISTORIAL_PAGOS_ESTUDIANTE + "LIMIT ?, ?";
-    private final String HISTORIAL_PAGOS_ESTUDIANTE_CON_FECHA = HISTORIAL_PAGOS_ESTUDIANTE + " AND pago.fecha_pago BETWEEN ? AND ? LIMIT ?, ?";
+    private final String HISTORIAL_PAGOS_ESTUDIANTE_SIN_FECHA = HISTORIAL_PAGOS_ESTUDIANTE + " ORDER BY bol.id DESC LIMIT ?, ?";
+    private final String HISTORIAL_PAGOS_ESTUDIANTE_CON_FECHA = HISTORIAL_PAGOS_ESTUDIANTE + " AND pago.fecha_pago BETWEEN ? AND ? ORDER BY bol.id LIMIT ?, ?";
     private final String PAGOS_REALIZADOS = 
             """
             SELECT bol.tipo_pago, SUM(bol.monto) AS total_ingreso 

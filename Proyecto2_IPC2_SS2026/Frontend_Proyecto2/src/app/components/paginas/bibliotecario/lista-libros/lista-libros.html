@@ -1,0 +1,17 @@
+@if (mensajeError()) {
+    <div class="text-center t25 text-danger m-3">{{mensajeError()}}</div>
+}
+
+<div class="d-flex justify-content-center gap-5 t25 mb-4">
+    <button (click)="moverPagina(-1)">
+        <
+    </button>
+    {{pagina()}}
+    <button (click)="moverPagina(1)">
+        >
+    </button>
+</div>
+
+@for (libro of libros(); track libro.codigo) {
+    <app-card-libro [libro]="libro"></app-card-libro>
+}

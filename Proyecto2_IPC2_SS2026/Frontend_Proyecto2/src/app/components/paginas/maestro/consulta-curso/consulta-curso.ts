@@ -5,8 +5,7 @@ import { RolUsuario } from '../../../modelos/rol-usuario-enum';
 import { CursoMaestro } from '../../../modelos/maestro/curso-maestro';
 import { MaestroService } from '../../../../servicios/maestro-service';
 import { RouterLink } from '@angular/router';
-import { SesionService } from '../../../../servicios/sesion-service';
-import { Usuario } from '../../../modelos/usuario';
+import { AuthService } from '../../../../servicios/auth-service';
 
 @Component({
   imports: [MenuMaestro, Header, RouterLink],
@@ -21,15 +20,10 @@ export class ConsultaCurso implements OnInit {
   operacionCompletada = signal<boolean>(false);
   cursos = signal<CursoMaestro[]>([]);
 
-  constructor(private maestroService: MaestroService, private sesionService: SesionService) {}
+  constructor(private maestroService: MaestroService, private authService: AuthService) {}
 
   ngOnInit(): void {
-    const usuario: Usuario = this.sesionService.getUsuario();
-    if (usuario === null) {
-      this.mensajeError.set('No se ha iniciado sesion')
-      return;
-    }
-    this.maestroService.getCursos(usuario.dpi!).subscribe({
+    this.maestroService.getCursos(this.authService.getUserId()!).subscribe({
       next: (cursos: CursoMaestro[]) => {
         this.cursos.set(cursos);
       }, 

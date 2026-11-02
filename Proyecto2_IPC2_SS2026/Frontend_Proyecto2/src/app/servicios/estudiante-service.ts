@@ -8,6 +8,7 @@ import { Prestamo } from "../components/modelos/biblioteca/prestamo";
 import { Multa } from "../components/modelos/biblioteca/multa";
 import { BoletaPago } from "../components/modelos/admin/boleta-pago";
 import { PagoBoleta } from "../components/modelos/estudiante/pago-boleta";
+import { AñoInscrito } from "../components/modelos/estudiante/anio-inscrito";
 
 @Injectable({
     providedIn: 'root'
@@ -18,8 +19,12 @@ export class EstudianteService {
 
     constructor(private httpClient: HttpClient) {}
 
-    public buscarNotas(idEstudiante: string): Observable<Nota[]> {
-        return this.httpClient.get<Nota[]>(`${this.restConstants.getApiUrl()}/estudiante/notas/${idEstudiante}`);
+    public getAñosEstudiados(idEstudiante: string): Observable<AñoInscrito[]> {
+        return this.httpClient.get<AñoInscrito[]>(`${this.restConstants.getApiUrl()}/estudiante/anios-inscrito/${idEstudiante}`);
+    }
+
+    public buscarNotas(año: number, idEstudiante: string): Observable<Nota[]> {
+        return this.httpClient.get<Nota[]>(`${this.restConstants.getApiUrl()}/estudiante/notas/${año}/${idEstudiante}`);
     }
 
     public buscarInformacionMedica(idEstudiante: string): Observable<InformacionMedica> {

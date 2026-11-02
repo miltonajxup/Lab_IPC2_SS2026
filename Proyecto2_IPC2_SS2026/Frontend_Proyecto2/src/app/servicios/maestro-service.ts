@@ -30,8 +30,8 @@ export class MaestroService {
         return this.httpClient.get<EstudianteCurso[]>(`${this.restConstants.getApiUrl()}/maestro/estudiantes-curso/${idGrupo}/${idCurso}`);
     }
 
-    public getFechasAsistencia(idGrupo: number, idCurso: number): Observable<Date[]> {
-        return this.httpClient.get<Date[]>(`${this.restConstants.getApiUrl()}/maestro/fechas-aisitencia/${idGrupo}/${idCurso}`);
+    public getFechasAsistencia(pagina: number, idGrupo: number, idCurso: number): Observable<Date[]> {
+        return this.httpClient.get<Date[]>(`${this.restConstants.getApiUrl()}/maestro/fechas-aisitencia/${pagina}/${idGrupo}/${idCurso}`);
     }
 
     public getAsistenciasFecha(idGrupo: number, idCurso: number, fecha: Date): Observable<Asistencia[]> {

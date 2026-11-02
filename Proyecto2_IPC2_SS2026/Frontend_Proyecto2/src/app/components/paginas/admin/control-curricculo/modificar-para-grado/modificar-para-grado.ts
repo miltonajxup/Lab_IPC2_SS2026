@@ -6,39 +6,29 @@ import { CurriculoDB } from '../../../../modelos/admin/curriculo-db';
 import { Header } from '../../../../header/header';
 import { Menu } from '../../componentes/menu/menu';
 import { RouterLink } from '@angular/router';
+import { ModalCurriculo } from '../modal-curriculo/modal-curriculo';
+import { ListaGradosNormales } from '../../lista-grados-normales/lista-grados-normales';
 
 @Component({
-  imports: [Header, Menu, RouterLink],
+  imports: [Header, Menu, RouterLink, ModalCurriculo, ListaGradosNormales],
   selector: 'app-modificar-para-grado',
   styles: ``,
   templateUrl: './modificar-para-grado.html',
 })
-export class ModificarCurriculoGrado implements OnInit {
+export class ModificarCurriculoGrado  {
   rol: RolUsuario = RolUsuario.ADMINISTRADOR;
 
   mensajeError = signal<string>('');
   operacionCompletada = signal<boolean>(false);
-  grados = signal<Grado[]>([]);
   curriculos = signal<CurriculoDB[]>([]);
-  idGrado!: number;
-  idCurriculo!: number;
+  idGrado = signal<number | undefined>(undefined);
+  curriculoSeleccionado = signal<CurriculoDB | undefined>(undefined);
 
   constructor(private grupoService: GrupoService) {}
-
-  ngOnInit(): void {
-    this.grupoService.getGradosNormales().subscribe({
-      next: (grados: Grado[]) => {
-        this.grados.set(grados);
-      },
-      error: (error: any) => {
-        this.mensajeError.set(error.error);
-      }
-    });
-  }
-
+  
   setGrado(id: number): void {
     this.operacionCompletada.set(false);
-    this.idGrado = id;
+    this.idGrado.set(id);
     this.grupoService.getCursosCurriculoGrado(id).subscribe({
       next: (curriculos: CurriculoDB[]) => {
         this.curriculos.set(curriculos);
@@ -49,17 +39,17 @@ export class ModificarCurriculoGrado implements OnInit {
     });
   }
 
-  setOpcionEliminar(id: number): void {
-    this.idCurriculo = id;
+  setOpcionEliminar(curriculo: CurriculoDB): void {
+    this.curriculoSeleccionado.set(curriculo);
   }
 
-  eliminarCurriculo(id: number): void {
-    this.grupoService.eliminarCurriculo(id).subscribe({
+  eliminarCurriculo(): void {
+    this.grupoService.eliminarCurriculo(this.curriculoSeleccionado()!.id).subscribe({
       next: () => {
         this.operacionCompletada.set(true);
         this.curriculos.set([]);
-        this.idGrado = 0;
-        this.idCurriculo = 0;
+        this.idGrado.set(undefined);
+        this.curriculoSeleccionado.set(undefined);
       }, 
       error: (error: any) => {
         this.mensajeError.set(error.error);

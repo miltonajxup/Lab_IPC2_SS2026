@@ -64,8 +64,8 @@
                         <button 
                         class="card w-50 mx-auto t25 text-center" 
                         type="button"
-                        [class.eleccion]="curso.id === formAsignar.value.cursoId"
-                        (click)="setCurso(curso.id!)">
+                        [class.eleccion]="curso.cursoId === formAsignar.value.cursoId"
+                        (click)="setCurso(curso.cursoId)">
                             {{curso.curso}}
                         </button>
                     }

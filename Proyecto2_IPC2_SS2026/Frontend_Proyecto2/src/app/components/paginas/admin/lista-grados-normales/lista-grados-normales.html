@@ -1,0 +1,12 @@
+<div class="column text-center">
+    <h2>Grados</h2>
+    @for (grado of grados(); track grado.id) {
+        <button
+        type="button" 
+        class="card w-100 mx-auto mb-2 text-center" 
+        [class.eleccion]="idGrado === grado.id" 
+        (click)="elegirGrado(grado.id)">
+            {{grado.nombre}} {{grado.nombreNivel}}
+        </button>
+    }
+</div>

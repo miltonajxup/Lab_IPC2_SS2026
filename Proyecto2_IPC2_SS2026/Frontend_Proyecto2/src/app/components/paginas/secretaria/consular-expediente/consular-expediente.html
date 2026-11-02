@@ -1,0 +1,52 @@
+<app-header [rol]="rol"></app-header>
+<div class="d-flex border-bottom">
+    <app-menu-secretaria></app-menu-secretaria>
+    <main class="content flex-grow-1 p-4 border-start">
+
+        <h3 class="text-center titulo p-3">Consultar Expedientes de Estudiantes</h3>
+
+        <div class="d-flex justify-content-center t20">
+            <form [formGroup]="busquedaForm" (submit)="buscar()" class="d-flex flex-column gap-3" >
+                <label >
+                    DPI / CUI del Estudiante
+                    <input type="text" formControlName="idEstudiante">
+                </label>
+                <button class="btn btn-primary mx-auto">
+                    Buscar
+                </button>
+            </form>
+        </div>
+
+        <div class="d-flex justify-content-center t20 flex-column m-3 gap-3">
+            @if (expediente()) {
+                <div class="card shadow mx-auto p-4">
+                    DPI / CUI: {{expediente()?.dpi}} <br>
+                    Nombre: {{expediente()?.nombre}} <br>
+                    Grado: {{expediente()?.grado}} <br>
+                    Estado: {{expediente()?.estado}} <br>
+                </div>
+
+                <div class="card shadow mx-auto p-4">
+                    <table >
+                        <tr>
+                            <th>Nombre Del Curso</th>
+                            <th>Nota de la Zona</th>
+                            <th>Nota del Examen Final</th>
+                            <th>Nota Final</th>
+                        </tr>
+                        @for (nota of notas(); track nota.idNota) {
+                            <tr>
+                                <td> {{nota.nombreIdentificador}} </td>
+                                <td> {{nota.zona}} </td>
+                                <td> {{nota.examenFinal}} </td>
+                                <td> {{nota.notaFinal}} </td>
+                            </tr>
+                        }
+                    </table>
+                </div>
+            }
+        </div>
+        
+    </main>
+</div>
+

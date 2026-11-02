@@ -15,7 +15,7 @@
         }
 
         <form [formGroup]="grupoForm" (submit)="submit()" >
-            <div class="t25 d-flex flex-row justify-content-center">
+            <div class="t25 d-flex flex-row justify-content-center gap-5">
                 <div>
                     Año que estará Vigente
                     @for (anio of anios(); track anio.anio) {
@@ -28,18 +28,9 @@
                     </button>
                 }
                 </div>
-                <div class="column text-center">
-                    Grados
-                    @for (grado of grados(); track grado.id) {
-                        <button 
-                        type="button"
-                        class="card w-75 mx-auto mb-2"
-                        [class.eleccion]="grupoForm.value.grado === grado.id" 
-                        (click)="setGrado(grado.id)">
-                            {{grado.nombre}} {{grado.nombreNivel}}
-                        </button>
-                    }
-                </div>
+                
+                <app-lista-grados-normales [idGrado]="grupoForm.value.grado" (gradoSelecionado)="setGrado($event)"></app-lista-grados-normales>
+
                 <div >
                     Secciones
                     <select name="" id="" class="form-control" formControlName="seccion">

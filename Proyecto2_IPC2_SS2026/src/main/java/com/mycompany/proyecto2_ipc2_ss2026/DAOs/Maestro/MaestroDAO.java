@@ -5,6 +5,7 @@
 package com.mycompany.proyecto2_ipc2_ss2026.DAOs.Maestro;
 
 import com.mycompany.proyecto2_ipc2_ss2026.Connection.DBConnectionSingleton;
+import com.mycompany.proyecto2_ipc2_ss2026.Constantes.LimitePagina;
 import com.mycompany.proyecto2_ipc2_ss2026.DAOs.CicloEscolar;
 import com.mycompany.proyecto2_ipc2_ss2026.Exceptions.AccesoALaDataException;
 import com.mycompany.proyecto2_ipc2_ss2026.ModelosDB.AsistenciaDB;
@@ -84,7 +85,7 @@ public class MaestroDAO {
             JOIN curso_estudiante AS cures ON asi.curso_estudiante_id = cures.id 
             JOIN inscripcion AS ins ON cures.inscripcion_id = ins.id 
             JOIN grupo_ciclo_escolar AS grup ON ins.grupo_id = grup.id 
-            WHERE grup.id = ? AND cures.curso_id = ? GROUP BY asi.fecha""";
+            WHERE grup.id = ? AND cures.curso_id = ? GROUP BY asi.fecha ORDER BY asi.fecha DESC LIMIT ? , ?""";
     private final String EXISTE_ASISENCIA = "SELECT * FROM asistencia WHERE curso_estudiante_id = ? AND fecha = ?";
     private final String GENERAR_ASISTENCIAS = "INSERT asistencia (curso_estudiante_id, fecha) VALUES (?,?)";
     private final String GET_ASISTENCIAS_DEL_DIA = 
@@ -196,12 +197,15 @@ public class MaestroDAO {
         }
     }
     
-    public List<LocalDate> fechasTomadasAsitencia(int idGrupo, int idCurso) throws AccesoALaDataException {
+    public List<LocalDate> fechasTomadasAsitencia(int pagina, int idGrupo, int idCurso) throws AccesoALaDataException {
         List<LocalDate> fechas = new ArrayList<>();
+        int paginacion = (pagina - 1) * LimitePagina.LIMITE;
         try (Connection connection = DBConnectionSingleton.getInstancia().getConnection();
                 PreparedStatement ps = connection.prepareStatement(DIAS_TOMADOS_ASISTENCIA)) {
             ps.setInt(1, idGrupo);
             ps.setInt(2, idCurso);
+            ps.setInt(3, paginacion);
+            ps.setInt(4, LimitePagina.LIMITE);
             
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {

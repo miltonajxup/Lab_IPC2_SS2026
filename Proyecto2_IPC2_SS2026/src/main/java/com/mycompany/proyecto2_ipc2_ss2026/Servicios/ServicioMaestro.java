@@ -4,11 +4,13 @@
  */
 package com.mycompany.proyecto2_ipc2_ss2026.Servicios;
 
+import com.mycompany.proyecto2_ipc2_ss2026.Constantes.LimitePagina;
 import com.mycompany.proyecto2_ipc2_ss2026.Constantes.Nota;
 import com.mycompany.proyecto2_ipc2_ss2026.Constantes.RolUsuario;
 import com.mycompany.proyecto2_ipc2_ss2026.DAOs.Administrador.EmpleadoDAO;
 import com.mycompany.proyecto2_ipc2_ss2026.DAOs.Maestro.MaestroDAO;
 import com.mycompany.proyecto2_ipc2_ss2026.Exceptions.AccesoALaDataException;
+import com.mycompany.proyecto2_ipc2_ss2026.Exceptions.DataExistenteException;
 import com.mycompany.proyecto2_ipc2_ss2026.Exceptions.DataInexistenteException;
 import com.mycompany.proyecto2_ipc2_ss2026.Exceptions.ValorInvalidoException;
 import com.mycompany.proyecto2_ipc2_ss2026.ModelosDB.AsistenciaDB;
@@ -37,7 +39,7 @@ public class ServicioMaestro {
     }
     
     public List<CursoMaestro> buscarCursosMaestro(String dpiMaestro) throws AccesoALaDataException, DataInexistenteException, ValorInvalidoException {
-        EmpleadoDB usuario = usuariodao.getEmpleadoPorID(dpiMaestro);
+        EmpleadoDB usuario = usuariodao.getEmpleadoSinContrato(dpiMaestro);
         if (usuario == null) {
             throw new DataInexistenteException("No se pudo encontrar el maestro para buscar sus cursos");
         }
@@ -79,8 +81,11 @@ public class ServicioMaestro {
         return maestrodao.getEstudiantesCurso(idGrupo, curso);
     }
     
-    public List<LocalDate> getFechaTomadasAsistencia(int grupo, int idCurso) throws AccesoALaDataException {
-        return maestrodao.fechasTomadasAsitencia(grupo, idCurso);
+    public List<LocalDate> getFechaTomadasAsistencia(int pagina, int grupo, int idCurso) throws AccesoALaDataException, ValorInvalidoException {
+        if (pagina < LimitePagina.PAGINA_MINIMA) {
+            throw new ValorInvalidoException("El valor de la pagina no puede ser menor a " + LimitePagina.PAGINA_MINIMA);
+        }
+        return maestrodao.fechasTomadasAsitencia(pagina, grupo, idCurso);
     }
     
     public List<AsistenciaDB> getAsistencias(int idGrupo, int idCurso, String fecha) throws AccesoALaDataException, ValorInvalidoException, DataInexistenteException {
@@ -100,12 +105,13 @@ public class ServicioMaestro {
         return maestrodao.getAsistenciasDelDia(idGrupo, idCurso, date);
     }
     
-    public List<AsistenciaDB> generarAsistencias(AsistenciaDiaRequest asistencia) throws AccesoALaDataException, ValorInvalidoException {
+    public List<AsistenciaDB> generarAsistencias(AsistenciaDiaRequest asistencia) throws AccesoALaDataException, ValorInvalidoException, DataExistenteException {
         if (asistencia == null || asistencia.getFecha() == null) {
             throw new ValorInvalidoException("Falta incluir la fecha");
         }
         if (maestrodao.asistenciaTomadaDia(asistencia.getIdGrupoEstudiantes(), asistencia.getIdCurso(), asistencia.getFecha())) {
-            return maestrodao.getAsistenciasDelDia(asistencia.getIdGrupoEstudiantes(), asistencia.getIdCurso(), asistencia.getFecha());
+            throw new DataExistenteException("Ya existen asistencias para el dia " + asistencia.getFecha());
+            //return maestrodao.getAsistenciasDelDia(asistencia.getIdGrupoEstudiantes(), asistencia.getIdCurso(), asistencia.getFecha());
         }
         return maestrodao.generarAsistencias(asistencia);
     }

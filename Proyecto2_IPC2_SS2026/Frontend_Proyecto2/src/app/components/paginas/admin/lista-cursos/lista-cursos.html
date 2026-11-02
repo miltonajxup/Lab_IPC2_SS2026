@@ -1,0 +1,17 @@
+<div class="column text-center">
+    <h2>Cursos</h2>
+    <div class="d-flex gap-3 justify-content-center m-3">
+        <button type="button" (click)="avanzarPaginaCursos(-1)" > < </button>
+        Pagina: {{paginaCursos()}}
+        <button type="button" (click)="avanzarPaginaCursos(1)" > > </button>
+    </div>
+    @for (curso of cursos(); track curso.idCurso) {
+        <button 
+        type="button"
+        class="card w-100 mx-auto mb-2"
+        [class.eleccion]="idCurso === curso.idCurso" 
+        (click)="elegirCurso(curso.idCurso)">
+            {{curso.nombre}}
+        </button>
+    }
+</div>

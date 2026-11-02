@@ -1,0 +1,13 @@
+<div class="card w-50 mx-auto t25 mb-5 p-3"> 
+    Titulo: {{libro.titulo}} <br>
+    Autor: {{libro.autor}} <br>
+    Código: {{libro.codigo}} <br>
+    Cantidad Disponible: {{libro.cantidadDisponible}}
+    @if (authService.hasRole(rolSuperAdmin) || authService.hasRole(rolBibliotecario)) {
+        <button 
+        class="w-25 mx-auto"
+        routerLink="/libro/modificar/{{libro.codigo}}">
+            Modificar
+        </button>
+    }
+</div>

@@ -1,0 +1,54 @@
+<app-header [rol]="rol"></app-header>
+<div class="d-flex border-bottom">
+    <app-menu-secretaria></app-menu-secretaria>
+    <main class="content flex-grow-1 p-4 border-start">
+        
+        <h3 class="text-center titulo p-3">Pago de Boletas</h3>
+
+        @if (mensajeError()) {
+            <div class="text-danger text-center t20">{{mensajeError()}}</div>
+        }
+        <div class="d-flex justify-content-center">
+            <form [formGroup]="busquedaForm" (submit)="buscar()" class="card shadow p-4">
+                <label >
+                    Nombre del estudiante
+                    <input type="text" formControlName="idEstudiante">
+                </label>
+                <button class="btn btn-primary w-50 mt-4">
+                    Buscar
+                </button>
+            </form>
+        </div>
+
+        <div class="d-flex mt-5 gap-5">
+            @for (boleta of boletas(); track boleta.id) {
+                <div class="card t20 p-4">
+                    ID de Boleta: {{boleta.id}} <br>
+                    Monto: {{boleta.monto}} <br>
+                    Estado: {{boleta.estado}} <br>
+                    Tipo: {{boleta.tipoPago}} <br>
+                    Mes: {{boleta.mesPago}} <br>
+                    Ciclo Escolar: {{boleta.cicloEscolar}}
+                    @if (!boleta.estado) {
+                        <button (click)="setIdBoleta(boleta.id)">Pagar Boleta</button>
+                    } @else {
+                        <div class="activo">Boleta Pagada</div>
+                    }
+                    @if (idBoleta() === boleta.id) {
+                        <div class="bg-gray">
+                            Confirma el pago <br> de la boleta <br>
+                            <button (click)="pagarBoleta(boleta.id)" >
+                                Pagar
+                            </button>
+                            <button (click)="setIdBoleta(0)">
+                                Cancelar
+                            </button>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+
+    </main>
+</div>
+

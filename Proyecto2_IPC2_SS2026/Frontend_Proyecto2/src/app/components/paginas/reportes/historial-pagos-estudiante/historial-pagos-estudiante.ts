@@ -2,9 +2,10 @@ import { Component, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ReporteSercvice } from '../../../../servicios/reporte-service';
 import { HistorialPagoEstudiante } from '../../../modelos/admin/reporte/historial-pago-estudiante';
+import { TablaHisEstudiante } from './tabla-his-estudiante/tabla-his-estudiante';
 
 @Component({
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, TablaHisEstudiante],
   selector: 'app-historial-pagos-estudiante',
   styles: ``,
   templateUrl: './historial-pagos-estudiante.html',

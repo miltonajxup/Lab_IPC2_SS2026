@@ -16,44 +16,29 @@
         }
 
         <div class="t25 d-flex flex-row justify-content-center gap-5">
-            <div class="column text-center">
-                Grados
-                @for (grado of grados(); track grado.id) {
-                    <button
-                    type="button" 
-                    class="card w-100 mx-auto mb-2 text-center" 
-                    [class.eleccion]="idGrado === grado.id" 
-                    (click)="setGrado(grado.id)">
-                        {{grado.nombre}} {{grado.nombreNivel}}
-                    </button>
-                }
-            </div>
+
+            <app-lista-grados-normales [idGrado]="idGrado()" (gradoSelecionado)="setGrado($event)"></app-lista-grados-normales>
+            
             <div class="column text-center ">
                 Lista de Cursos
                 @if (curriculos()) {
                     @for (curriculo of curriculos(); track curriculo.id) {
                         <div class="card w-100 mx-auto mb-2 text-center align-items-center">
                             {{curriculo.curso}}
-                            <button name="curriculo{{curriculo.id}}"
+                            <button type="button" data-bs-toggle="modal" data-bs-target="#deleteModal"
+                            title="Confirmar Eliminacion {{ curriculo.id}}" 
                             type="button" 
                             class="btn-del w-50"
-                            (click)="setOpcionEliminar(curriculo.id)" >
+                            (click)="setOpcionEliminar(curriculo)" >
                             Eliminar
                             </button>
-                            @if (idCurriculo === curriculo.id) {
-                                <div class="p-4 bg-gray mt-3">
-                                    Confirma para Eliminar el curso del Curriculo
-                                    <div class="d-flex gap-3 justify-content-center">
-                                        <button (click)="eliminarCurriculo(curriculo.id)">Confirmar</button>
-                                        <button (click)="setOpcionEliminar(0)">Cancelar</button>
-                                    </div>
-                                </div>
-                            }
                         </div>
                     }
                 }
             </div>
         </div>
+
+        <app-modal-curriculo [curriculoSeleccionado]="curriculoSeleccionado()!" (confirmacionDeAccion)="eliminarCurriculo()"></app-modal-curriculo>
         
     </main>
 </div>

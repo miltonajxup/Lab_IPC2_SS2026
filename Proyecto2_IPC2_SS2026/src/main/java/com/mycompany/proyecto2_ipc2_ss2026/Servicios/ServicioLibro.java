@@ -53,6 +53,7 @@ public class ServicioLibro {
         revisarDatos(libro, codigo);
         
         revisarExistenciaLibro(codigo);
+        modificarCantidadLibros(libro, codigo);
         
         return librodao.modificarLibro(libro, codigo);
     }

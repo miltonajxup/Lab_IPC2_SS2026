@@ -5,6 +5,7 @@
 package com.mycompany.proyecto2_ipc2_ss2026.resources;
 
 import com.mycompany.proyecto2_ipc2_ss2026.Exceptions.AccesoALaDataException;
+import com.mycompany.proyecto2_ipc2_ss2026.Exceptions.DataExistenteException;
 import com.mycompany.proyecto2_ipc2_ss2026.Exceptions.DataInexistenteException;
 import com.mycompany.proyecto2_ipc2_ss2026.Exceptions.ValorInvalidoException;
 import com.mycompany.proyecto2_ipc2_ss2026.ModelosRequest.AsistenciaDiaRequest;
@@ -88,13 +89,15 @@ public class MaestroController {
     }
     
     @GET
-    @Path("fechas-aisitencia/{idGrupo}/{idCurso}")
+    @Path("fechas-aisitencia/{pagina}/{idGrupo}/{idCurso}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response buscarFechasAsistencia(@PathParam("idGrupo") int idGrupo, @PathParam("idCurso") int idCurso) {
+    public Response buscarFechasAsistencia(@PathParam("pagina") int pagina, @PathParam("idGrupo") int idGrupo, @PathParam("idCurso") int idCurso) {
         try {
-            return Response.ok(servicio.getFechaTomadasAsistencia(idGrupo, idCurso)).build();
+            return Response.ok(servicio.getFechaTomadasAsistencia(pagina, idGrupo, idCurso)).build();
         } catch (AccesoALaDataException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        } catch (ValorInvalidoException e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
         }
     }
     
@@ -123,6 +126,8 @@ public class MaestroController {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         } catch (ValorInvalidoException e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+        } catch (DataExistenteException e) {
+            return Response.status(Response.Status.CONFLICT).entity(e.getMessage()).build();
         }
     }
     

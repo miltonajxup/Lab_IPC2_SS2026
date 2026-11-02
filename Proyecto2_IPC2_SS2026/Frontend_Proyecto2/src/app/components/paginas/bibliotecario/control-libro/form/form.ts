@@ -56,6 +56,7 @@ export class FormLibro implements OnInit {
   }
 
   private modificarLibro(): void {
+    this.libroParaEditar = this.libroForm.value;
     const libro = this.libroForm.value;
     this.libroService.modificar(libro, libro.codigo).subscribe({
       next: () => {

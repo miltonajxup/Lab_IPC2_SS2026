@@ -11,9 +11,10 @@ import { Seccion } from '../../../../modelos/seccion-enum';
 import { KeyValuePipe } from '@angular/common';
 import { GrupoSeccionRequest } from '../../../../modelos/admin/grupo-seccion-request';
 import { RouterLink } from '@angular/router';
+import { ListaGradosNormales } from '../../lista-grados-normales/lista-grados-normales';
 
 @Component({
-  imports: [Menu, Header, ReactiveFormsModule, KeyValuePipe, RouterLink],
+  imports: [Menu, Header, ReactiveFormsModule, KeyValuePipe, RouterLink, ListaGradosNormales],
   selector: 'app-crear-para-grado',
   styles: ``,
   templateUrl: './crear-para-grado.html',
@@ -24,7 +25,6 @@ export class CrearParaGrado implements OnInit {
   operacionCompleatada = signal<boolean>(false);
   mensajeError = signal<string>('');
   anios = signal<AñoLectivo[]>([]);
-  grados = signal<Grado[]>([]);
   grupoForm!: FormGroup;
   secciones =  Seccion;
 
@@ -44,14 +44,6 @@ export class CrearParaGrado implements OnInit {
       next: (anios: AñoLectivo[]) => {
         this.anios.set(anios);
       }, 
-      error: (error: any) => {
-        this.mensajeError.set(error.error);
-      }
-    });
-    this.grupoService.getGradosNormales().subscribe({
-      next: (grados: Grado[]) => {
-        this.grados.set(grados);
-      },
       error: (error: any) => {
         this.mensajeError.set(error.error);
       }

@@ -1,7 +1,6 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { Header } from '../../../header/header';
 import { EmpleadoService } from '../../../../servicios/empleado-service';
-import { CursoService } from '../../../../servicios/curso-service';
 import { Empleado } from '../../../modelos/empleado';
 import { RolUsuario } from '../../../modelos/rol-usuario-enum';
 import { Menu } from '../componentes/menu/menu';
@@ -34,7 +33,6 @@ export class AsignarCursoMaestro implements OnInit {
 
   constructor(
     private empleadoService: EmpleadoService, 
-    private cursoService: CursoService, 
     private formBuilder: FormBuilder,
     private adminService: AdminService, 
     private grupoService: GrupoService) {}
